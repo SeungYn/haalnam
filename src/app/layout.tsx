@@ -17,9 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={inter.className}>
-      <body className='flex '>
+      <body className='flex bg-gray-500'>
         <Sidebar />
-        <main className='w-full'>{children}</main>
+        <main className='w-full max-w-screen-xl mx-auto '>{children}</main>
       </body>
     </html>
   );
