@@ -1,7 +1,4 @@
-import Image from 'next/image';
-import { begel } from './font';
-import { sincerity } from '@/fonts';
-import Timer from '@/components/home/Timer';
+import { ReduceTimer } from '@/components/home';
 
 export default function Home() {
   return (
@@ -10,7 +7,7 @@ export default function Home() {
         하루를 <strong className='text-red-300'>어떻게</strong> <br />{' '}
         사용하셨나요?
       </h1>
-      <Timer />
+      <ReduceTimer />
     </div>
   );
 }

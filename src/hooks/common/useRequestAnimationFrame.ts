@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 type Callback = () => void;
 
-export default function useRequestAnimationFrame(cb: Callback) {
+export function useRequestAnimationFrame(cb: Callback) {
   useEffect(() => {
     let animationFrameId: number;
 
