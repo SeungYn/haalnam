@@ -18,9 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={sincerity.className}>
-      <body className='flex bg-gray-500'>
+      <body className='flex flex-col-reverse bg-gray-500 sm:flex-row'>
         <Sidebar />
-        <main className='w-full max-w-screen-xl mx-auto '>{children}</main>
+        <main className='w-full grow max-w-screen-xl mx-auto '>{children}</main>
       </body>
     </html>
   );

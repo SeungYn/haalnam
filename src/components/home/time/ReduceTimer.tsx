@@ -5,6 +5,7 @@ import {
   useRequestAnimationFrame,
 } from '@/hooks/common';
 import { useState } from 'react';
+import { Time } from './Time';
 
 const FrameSeconds = 16.7;
 
@@ -24,8 +25,13 @@ export function ReduceTimer() {
   const { hours, minutes, seconds, milliseconds } = formatTime(time);
 
   return (
-    <div suppressHydrationWarning>
-      {`${hours} ${minutes} ${seconds} ${milliseconds} `}
+    <div className='mt-4 w-full'>
+      <Time
+        hours={hours}
+        minutes={minutes}
+        seconds={seconds}
+        milliseconds={milliseconds}
+      />
     </div>
   );
 }
