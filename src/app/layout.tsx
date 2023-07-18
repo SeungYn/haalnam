@@ -2,6 +2,7 @@ import Sidebar from '@/components/common/Sidebar';
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { sincerity } from '@/fonts';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='ko' className={inter.className}>
+    <html lang='ko' className={sincerity.className}>
       <body className='flex bg-gray-500'>
         <Sidebar />
         <main className='w-full max-w-screen-xl mx-auto '>{children}</main>
