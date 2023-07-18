@@ -1,1 +1,1 @@
-export * from './ReduceTimer';
+export * from './time';
