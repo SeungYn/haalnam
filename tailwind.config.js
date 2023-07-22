@@ -10,6 +10,9 @@ module.exports = {
       fontFamily: {
         sincer: ['var(--font-sincVariable'],
       },
+      colors: {
+        accent: 'rgb(252 165 165)',
+      },
     },
   },
   plugins: [],

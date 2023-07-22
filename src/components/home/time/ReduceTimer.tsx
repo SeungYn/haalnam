@@ -6,12 +6,12 @@ import {
 } from '@/hooks/common';
 import { useState } from 'react';
 import { Time } from './Time';
+import { TimeMoney } from './TimeMoney';
 
 const FrameSeconds = 16.7;
 
 export function ReduceTimer() {
   const [time, setTime] = useState(getRemainingTime);
-
   useRequestAnimationFrame(() => {
     setTime(reduceTime);
   });
@@ -32,6 +32,7 @@ export function ReduceTimer() {
         seconds={seconds}
         milliseconds={milliseconds}
       />
+      <TimeMoney time={time} />
     </div>
   );
 }
