@@ -1,4 +1,4 @@
-import { ReduceTimer } from '@/components/home';
+import { IntroLogin, ReduceTimer } from '@/components/home';
 
 export default function Home() {
   return (
@@ -8,6 +8,7 @@ export default function Home() {
         사용하셨나요?
       </h1>
       <ReduceTimer />
+      <IntroLogin />
     </div>
   );
 }
