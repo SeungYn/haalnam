@@ -12,6 +12,7 @@ const FrameSeconds = 16.7;
 
 export function ReduceTimer() {
   const [time, setTime] = useState(getRemainingTime);
+
   useRequestAnimationFrame(() => {
     setTime(reduceTime);
   });
