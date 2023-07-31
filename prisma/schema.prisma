@@ -7,33 +7,39 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:tmddbs3124@localhost:3306/haalnam"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            String    @id @default(cuid())
   name          String    @db.VarChar(255)
   createdAt     DateTime  @default(now())
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  test          String?   @map("test_id")
   accounts      Account[]
   Time          Time[]
 }
 
 model Account {
-  id                Int     @id @default(autoincrement())
-  userId            Int
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
+  id                       Int     @id @default(autoincrement())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  profile_nickname         String? @db.Text
+  profile_image            String? @db.Text
+  account_email            String?
+  id_token                 String? @db.Text
+  expires_in               Int?
+  refresh_token_expires_in Int?
+  session_state            String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -42,7 +48,7 @@ model Account {
 
 model Time {
   id      Int      @id @default(autoincrement())
-  userId  Int
+  userId  String
   subject String
   time    DateTime
   status  Status
@@ -53,3 +59,11 @@ enum Status {
   START
   END
 }
+
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   userId       Int
+//   expires      DateTime
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
