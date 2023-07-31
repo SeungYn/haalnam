@@ -1,6 +1,10 @@
 import { IntroLogin, ReduceTimer } from '@/components/home';
+import { getServerSession } from 'next-auth';
+import { nextOptions } from './api/auth/[...nextauth]/route';
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(nextOptions);
+  //console.log(session);
   return (
     <div className='w-full h-full flex items-center flex-col'>
       <h1 className={`text-5xl text-neutral-100 mt-8 text-center font-bold `}>

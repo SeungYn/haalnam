@@ -1,4 +1,3 @@
-import client from '@/lib/db';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { PrismaClient } from '@prisma/client';
 import NextAuth, { AuthOptions } from 'next-auth';
@@ -7,7 +6,8 @@ import KakaoProvider from 'next-auth/providers/kakao';
 
 const prisma = new PrismaClient();
 
-const nextOptions: AuthOptions = {
+export const nextOptions: AuthOptions = {
+  // 타입 Adapter를 명시해 줘야함
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     KakaoProvider({
@@ -15,6 +15,36 @@ const nextOptions: AuthOptions = {
       clientSecret: process.env.KAKAO_SECRET || ``,
     }),
   ],
+  callbacks: {
+    async signIn(context) {
+      // signIn이 session보다 먼저 호출 됨
+      //console.log(context, 'context signin', context.user.id);
+      return true;
+    },
+    async session({ session, token, user: test }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      const user = session?.user;
+
+      if (user) {
+        console.log('user', test);
+        session.user = {
+          id: token.sub!,
+        };
+      }
+
+      return session;
+    },
+    async jwt(context) {
+      //console.log(context, 'console.log context');
+      //console.log(context.user, 'context user');
+      //console.log(context, 'token');
+      return context.token;
+    },
+  },
+  session: {
+    strategy: 'jwt',
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(nextOptions);

@@ -3,6 +3,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { sincerity } from '@/fonts';
+import { AuthContext } from '@/context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,10 +19,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={sincerity.className}>
-      <body className='flex flex-col-reverse bg-gray-500 sm:flex-row'>
-        <Sidebar />
-        <main className='w-full grow max-w-screen-xl mx-auto '>{children}</main>
-      </body>
+      <AuthContext>
+        <body className='flex flex-col-reverse bg-gray-500 sm:flex-row'>
+          <Sidebar />
+          <main className='w-full grow max-w-screen-xl mx-auto '>
+            {children}
+          </main>
+        </body>
+      </AuthContext>
     </html>
   );
 }

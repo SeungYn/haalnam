@@ -3,10 +3,15 @@
 import { Button } from '@/components/common';
 import Image from 'next/image';
 import kakaoImage from '@/assets/kakao/kakao_login_medium_wide.png';
+import { signIn, useSession } from 'next-auth/react';
 
 export function IntroLogin() {
+  const session = useSession();
+  console.log(session?.data?.user);
+
   const onClick = () => {
     console.log('click');
+    signIn();
   };
   return (
     <>

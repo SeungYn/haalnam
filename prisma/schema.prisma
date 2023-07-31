@@ -11,19 +11,20 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            String    @id @default(cuid())
   name          String    @db.VarChar(255)
   createdAt     DateTime  @default(now())
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  test          String?   @map("test_id")
   accounts      Account[]
   Time          Time[]
 }
 
 model Account {
   id                       Int     @id @default(autoincrement())
-  userId                   Int
+  userId                   String
   type                     String
   provider                 String
   providerAccountId        String
@@ -47,7 +48,7 @@ model Account {
 
 model Time {
   id      Int      @id @default(autoincrement())
-  userId  Int
+  userId  String
   subject String
   time    DateTime
   status  Status
