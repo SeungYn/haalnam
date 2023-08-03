@@ -8,7 +8,7 @@ export default function Sidebar() {
       <Link href={'/'}>
         <HomeIcon size='medium' />
       </Link>
-      <Link href={'#'}>
+      <Link href={'/time'}>
         <HistoryIcon size='medium' />
       </Link>
     </nav>

@@ -14,6 +14,9 @@ export default async function Home() {
       </h1>
       <ReduceTimer />
       {!user && <IntroLogin />}
+      {user && (
+        <h2 className='text-4xl text-white mt-4'>{`안녕하세요! ${user.name}님!`}</h2>
+      )}
     </div>
   );
 }
