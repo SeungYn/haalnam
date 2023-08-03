@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/common';
 import Image from 'next/image';
 import kakaoImage from '@/assets/kakao/kakao_login_medium_wide.png';
 import { signIn, useSession } from 'next-auth/react';
+import { Button } from '../common';
 
 export function IntroLogin() {
   const session = useSession();
