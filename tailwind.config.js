@@ -12,6 +12,7 @@ module.exports = {
       },
       colors: {
         accent: 'rgb(252 165 165)',
+        main: 'rgb(252 165 165)',
       },
     },
   },
