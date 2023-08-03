@@ -4,7 +4,8 @@ import { nextOptions } from './api/auth/[...nextauth]/route';
 
 export default async function Home() {
   const session = await getServerSession(nextOptions);
-  //console.log(session);
+  const user = session?.user;
+
   return (
     <div className='w-full h-full flex items-center flex-col'>
       <h1 className={`text-5xl text-neutral-100 mt-8 text-center font-bold `}>
@@ -12,7 +13,7 @@ export default async function Home() {
         사용하셨나요?
       </h1>
       <ReduceTimer />
-      <IntroLogin />
+      {!user && <IntroLogin />}
     </div>
   );
 }

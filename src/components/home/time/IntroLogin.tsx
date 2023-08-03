@@ -7,7 +7,7 @@ import { signIn, useSession } from 'next-auth/react';
 
 export function IntroLogin() {
   const session = useSession();
-  console.log(session?.data?.user);
+  //console.log(session?.data?.user);
 
   const onClick = () => {
     console.log('click');
