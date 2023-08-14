@@ -3,5 +3,9 @@ import { PropsWithChildren } from 'react';
 type Props = {};
 
 export default function layout({ children }: PropsWithChildren<Props>) {
-  return <section className='h-full'>{children}</section>;
+  return (
+    <section className='h-full flex flex-col items-center gap-4 overflow-auto'>
+      {children}
+    </section>
+  );
 }

@@ -13,7 +13,7 @@ export default function TimeForm() {
   };
 
   return (
-    <form className='flex flex-col items-center gap-4'>
+    <form className='flex flex-col items-center gap-4 w-full'>
       <input
         type='text'
         className='w-full max-w-2xl px-7 py-2 rounded-[100px] border-2 border-main text-2xl'
