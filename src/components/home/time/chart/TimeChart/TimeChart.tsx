@@ -4,7 +4,9 @@ import {
   getChartDegrees,
   type ChartSize,
   makeChartGradutionTimeInfo,
+  timeToDegree,
 } from '@/utils/chart';
+import { chartData } from '@/utils/mock/chart/data';
 import { ROTATE_DEG } from '@/utils/size';
 import { useLayoutEffect, useRef, useState } from 'react';
 
@@ -40,21 +42,41 @@ export default function TimeChart() {
     const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D;
     const startX = parseInt(String(chartWidth / 2));
 
-    ctx.beginPath();
-    ctx.moveTo(startX, startX);
-    ctx.arc(
-      startX,
-      startX,
-      chartWidth,
-      (Math.PI / 180) * 40,
-      (Math.PI / 180) * 90,
-      false
-    );
-    ctx.fillStyle = 'rgb(0, 255, 255)'; //채울 색상
-    ctx.strokeStyle = 'rgb(0, 255, 255)'; //채울 색상
-    ctx.closePath();
-    ctx.fill(); //채우기
-    ctx.stroke(); //테두리
+    for (let i = 0; i < chartData.length; i++) {
+      if (i % 2 !== 0) continue;
+      ctx.beginPath();
+      ctx.moveTo(startX, startX);
+      ctx.arc(
+        startX,
+        startX,
+        chartWidth,
+        (Math.PI / 180) * timeToDegree(chartData[i].time),
+        (Math.PI / 180) * timeToDegree(chartData[i + 1].time),
+        false
+      );
+      ctx.fillStyle = 'rgb(0, 255, 255)'; //채울 색상
+      ctx.strokeStyle = 'rgb(0, 255, 255)'; //채울 색상
+      ctx.closePath();
+      ctx.fill(); //채우기
+      ctx.stroke(); //테두리
+    }
+    // chartData.forEach((v, i) => {
+    //   ctx.beginPath();
+    // ctx.moveTo(startX, startX);
+    // ctx.arc(
+    //   startX,
+    //   startX,
+    //   chartWidth,
+    //   (Math.PI / 180) * 40,
+    //   (Math.PI / 180) * 90,
+    //   false
+    // );
+    // ctx.fillStyle = 'rgb(0, 255, 255)'; //채울 색상
+    // ctx.strokeStyle = 'rgb(0, 255, 255)'; //채울 색상
+    // ctx.closePath();
+    // ctx.fill(); //채우기
+    // ctx.stroke(); //테두리
+    // })
   }, [canvasRef, chartWidth]);
 
   return (
