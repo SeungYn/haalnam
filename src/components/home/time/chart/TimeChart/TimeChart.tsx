@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  getChartDegrees,
+  type ChartSize,
+  makeChartGradutionTimeInfo,
+} from '@/utils/chart';
 import { ROTATE_DEG } from '@/utils/size';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
@@ -7,7 +12,7 @@ type Props = {};
 
 export default function TimeChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [chartWidth, setChartWidth] = useState(300);
+  const [chartWidth, setChartWidth] = useState<ChartSize>(300);
 
   useLayoutEffect(() => {
     const mediaQuery = window.matchMedia('screen and (min-width:640px)');
@@ -50,11 +55,24 @@ export default function TimeChart() {
     ctx.closePath();
     ctx.fill(); //채우기
     ctx.stroke(); //테두리
-    console.log(123);
   }, [canvasRef, chartWidth]);
 
   return (
-    <div className='relative'>
+    <div className='relative p-10'>
+      {makeChartGradutionTimeInfo((chartWidth + 45) / 2).map((v) => {
+        return (
+          <div
+            className='absolute text-2xl'
+            style={{
+              transform: `translate(${v.x + chartWidth / 2}px, ${
+                v.y + chartWidth / 2
+              }px) translate(-50%, -50%)`,
+            }}
+          >
+            {v.time}
+          </div>
+        );
+      })}
       <div className='w-[300px] h-[300px] outline outline-2 outline-black rounded-full relative overflow-hidden  sm:w-[600px] sm:h-[600px]'>
         <canvas
           ref={canvasRef}
