@@ -6,7 +6,7 @@ import {
   makeChartGradutionTimeInfo,
 } from '@/utils/chart';
 import { ROTATE_DEG } from '@/utils/size';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 type Props = {};
 
@@ -59,9 +59,12 @@ export default function TimeChart() {
 
   return (
     <div className='relative p-10'>
+      {/* 눈금 별 시간 표시 */}
       {makeChartGradutionTimeInfo((chartWidth + 45) / 2).map((v) => {
         return (
           <div
+            suppressHydrationWarning
+            key={JSON.stringify(v)}
             className='absolute text-2xl'
             style={{
               transform: `translate(${v.x + chartWidth / 2}px, ${
@@ -80,10 +83,6 @@ export default function TimeChart() {
           height={chartWidth}
           className='absolute z-30 '
         ></canvas>
-        {/* <div className='text-3xl rotate text-pink-400 z-50 relative top-40 text-center'>
-          123
-        </div> */}
-
         {makeGradution(24)}
       </div>
     </div>
