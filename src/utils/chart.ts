@@ -4,6 +4,7 @@ export const getChartDegrees = (() => {
   return Array.from({ length: 24 }, (_, i) => i * 15);
 })();
 
+// 반지름과 각도로 x,y 좌표 반환하는 함수
 export const getRotatedPosition = (radius: number, degree: number) => {
   return {
     x: radius * Math.cos((degree * Math.PI) / 180),
