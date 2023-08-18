@@ -1,9 +1,13 @@
 'use client';
 
 import { Button } from '@/components/common';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEventHandler, useState } from 'react';
 
-export default function TimeForm() {
+type Props = {
+  onStart: (startTime: Date, subject: string) => void;
+};
+
+export default function TimeForm({ onStart }: Props) {
   const [timeTitle, setTimeTitle] = useState('');
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -12,8 +16,27 @@ export default function TimeForm() {
     setTimeTitle(value);
   };
 
+  const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    formData.append('subject', timeTitle);
+
+    fetch('/api/time', { method: 'POST', body: formData })
+      .then((res) => {
+        if (res.ok) onStart(new Date(), timeTitle);
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+      });
+  };
+
   return (
-    <form className='flex flex-col items-center gap-4 w-full'>
+    <form
+      onSubmit={onSubmit}
+      className='flex flex-col items-center gap-4 w-full'
+    >
       <input
         type='text'
         className='w-full max-w-2xl px-7 py-2 rounded-[100px] border-2 border-main text-2xl'
