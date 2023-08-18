@@ -10,21 +10,23 @@ import {
   useState,
 } from 'react';
 
-type TimeContextType = {
+export type TimeContextType = {
   startTime: Date | undefined;
   status: Status;
   subject: string;
 };
 
-type TimeActionContextType = {
+export type TimeActionContextType = {
   handleStatusToggle: () => void;
   startTime: (startTime: Date, subject: string) => void;
+  endTime: () => void;
 };
 
 type TimeContextAction =
   | { type: 'status'; payload: Status }
   | { type: 'startTime'; payload: Date | undefined }
   | { type: 'subject'; payload: string }
+  | { type: 'reset' }
   | { type: 'all'; payload: TimeContextType };
 
 const initialTimeContext: TimeContextType = {
@@ -38,6 +40,7 @@ const TimeContext = createContext<TimeContextType>(initialTimeContext);
 const TimeActionContext = createContext<TimeActionContextType>({
   handleStatusToggle: () => {},
   startTime: (startTime, subject) => {},
+  endTime: () => {},
 });
 
 function timeContextReducer(state: TimeContextType, action: TimeContextAction) {
@@ -48,6 +51,8 @@ function timeContextReducer(state: TimeContextType, action: TimeContextAction) {
       return { ...state, subject: action.payload };
     case 'startTime':
       return { ...state, startTime: action.payload };
+    case 'reset':
+      return { ...initialTimeContext };
     case 'all':
       return { ...action.payload };
     default:
@@ -67,9 +72,15 @@ export default function TimeContextProvider({ children }: PropsWithChildren) {
     dispatch({ type: 'all', payload: { subject, startTime, status: 'START' } });
   }, []);
 
+  const endTime = useCallback(() => {
+    dispatch({ type: 'reset' });
+  }, []);
+
   return (
     <TimeContext.Provider value={state}>
-      <TimeActionContext.Provider value={{ handleStatusToggle, startTime }}>
+      <TimeActionContext.Provider
+        value={{ handleStatusToggle, startTime, endTime }}
+      >
         {children}
       </TimeActionContext.Provider>
     </TimeContext.Provider>
