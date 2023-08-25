@@ -33,3 +33,7 @@ export function formatTime(milliseconds: number) {
     milliseconds: remainingMilliseconds,
   };
 }
+
+export function millsecondsToSeconds(time: number) {
+  return parseInt(String(time / 1000));
+}
