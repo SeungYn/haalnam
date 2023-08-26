@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/common';
+import { Status } from '@prisma/client';
 import { ChangeEvent, FormEventHandler, useState } from 'react';
 
 type Props = {
@@ -21,6 +22,7 @@ export default function TimeForm({ onStart }: Props) {
     const formData = new FormData();
 
     formData.append('subject', timeTitle);
+    formData.append('status', Status.START);
 
     fetch('/api/time', { method: 'POST', body: formData })
       .then((res) => {
