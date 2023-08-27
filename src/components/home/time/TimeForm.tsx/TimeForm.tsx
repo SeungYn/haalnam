@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/common';
+import service from '@/service/client';
 import { Status } from '@prisma/client';
 import { ChangeEvent, FormEventHandler, useState } from 'react';
 
@@ -19,19 +20,27 @@ export default function TimeForm({ onStart }: Props) {
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    formData.append('subject', timeTitle);
-    formData.append('status', Status.START);
+    // formData.append('subject', timeTitle);
+    // formData.append('status', Status.START);
 
-    fetch('/api/time', { method: 'POST', body: formData })
-      .then((res) => {
-        if (res.ok) onStart(new Date(), timeTitle);
-        return res.json();
+    // fetch('/api/time', { method: 'POST', body: formData })
+    //   .then((res) => {
+    //     if (res.ok) onStart(new Date(), timeTitle);
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     console.log(data);
+    //   });
+
+    service.time
+      .postTime({
+        time: new Date(),
+        subject: timeTitle,
+        status: Status.START,
       })
-      .then((data) => {
-        console.log(data);
-      });
+      .then((data) => console.log(data));
   };
 
   return (

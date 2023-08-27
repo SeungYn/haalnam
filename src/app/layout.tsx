@@ -4,6 +4,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { sincerity } from '@/fonts';
 import { AuthContext } from '@/context';
+import ReactQueryContext from '@/context/ReactQueryContext';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,14 +21,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className={sincerity.className}>
-      <AuthContext>
-        <body className='flex flex-col-reverse bg-gray-500 sm:flex-row'>
-          <Sidebar />
-          <main className='w-full grow max-w-screen-xl mx-auto '>
-            {children}
-          </main>
-        </body>
-      </AuthContext>
+      <ReactQueryContext>
+        <ReactQueryDevtools />
+        <AuthContext>
+          <body className='flex flex-col-reverse bg-gray-500 sm:flex-row'>
+            <Sidebar />
+            <main className='w-full grow max-w-screen-xl mx-auto '>
+              {children}
+            </main>
+          </body>
+        </AuthContext>
+      </ReactQueryContext>
     </html>
   );
 }
