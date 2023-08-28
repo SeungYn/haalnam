@@ -44,6 +44,8 @@ export default function TimeChart() {
 
     for (let i = 0; i < chartData.length; i++) {
       if (i % 2 !== 0) continue;
+      // 데이터가 홀수 이고 마지막이 시작으로 끝나는 경우 캔슬
+      if (chartData.length % 2 && i === chartData.length - 1) continue;
       ctx.beginPath();
       ctx.moveTo(startX, startX);
       ctx.arc(
