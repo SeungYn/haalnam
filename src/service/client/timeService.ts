@@ -1,5 +1,9 @@
 import { AxiosInstance } from 'axios';
-import { PostTimeRequest, PostTimeResponse } from '../types/time';
+import {
+  GetPersonalTodayTimeResponse,
+  PostTimeRequest,
+  PostTimeResponse,
+} from '../types/time';
 
 export default class TimeService {
   constructor(private axios: AxiosInstance) {}
@@ -15,6 +19,13 @@ export default class TimeService {
       formData
     );
 
+    return data;
+  }
+
+  async getPersonalTodayTime() {
+    const { data } = await this.axios.get<GetPersonalTodayTimeResponse>(
+      '/api/time'
+    );
     return data;
   }
 }

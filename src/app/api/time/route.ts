@@ -26,3 +26,35 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json(res, { status: 200 });
 }
+
+export async function GET(request: NextRequest) {
+  const session = await getServerSession(nextOptions);
+  if (!session)
+    return new NextResponse('Authentication Error', { status: 401 });
+  const { id } = session.user;
+
+  // UTC 기준 시간 설정
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
+  const tomorrow = new Date(today);
+  tomorrow.setUTCDate(tomorrow.getDate() + 1);
+
+  console.log(new Date(), today, tomorrow, id);
+  let times;
+  try {
+    times = await client.time.findMany({
+      where: {
+        time: {
+          gte: today,
+          lt: tomorrow,
+        },
+        userId: id,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+  }
+
+  return NextResponse.json(times, { status: 200 });
+}

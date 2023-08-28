@@ -22,7 +22,6 @@ export default function RootLayout({
   return (
     <html lang='ko' className={sincerity.className}>
       <ReactQueryContext>
-        <ReactQueryDevtools />
         <AuthContext>
           <body className='flex flex-col-reverse bg-gray-500 sm:flex-row'>
             <Sidebar />
@@ -31,6 +30,7 @@ export default function RootLayout({
             </main>
           </body>
         </AuthContext>
+        <ReactQueryDevtools />
       </ReactQueryContext>
     </html>
   );
