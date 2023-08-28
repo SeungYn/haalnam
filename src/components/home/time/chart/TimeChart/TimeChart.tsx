@@ -1,5 +1,6 @@
 'use client';
 
+import { useGetPersonalTodayTime } from '@/hooks/api/time';
 import {
   getChartDegrees,
   type ChartSize,
@@ -15,6 +16,8 @@ type Props = {};
 export default function TimeChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [chartWidth, setChartWidth] = useState<ChartSize>(300);
+  const { data } = useGetPersonalTodayTime();
+  console.log(data);
 
   useLayoutEffect(() => {
     const mediaQuery = window.matchMedia('screen and (min-width:640px)');
@@ -38,22 +41,23 @@ export default function TimeChart() {
   }, []);
 
   useLayoutEffect(() => {
+    if (!data) return;
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D;
     const startX = parseInt(String(chartWidth / 2));
 
-    for (let i = 0; i < chartData.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       if (i % 2 !== 0) continue;
       // 데이터가 홀수 이고 마지막이 시작으로 끝나는 경우 캔슬
-      if (chartData.length % 2 && i === chartData.length - 1) continue;
+      if (data.length % 2 && i === data.length - 1) continue;
       ctx.beginPath();
       ctx.moveTo(startX, startX);
       ctx.arc(
         startX,
         startX,
         chartWidth,
-        (Math.PI / 180) * timeToDegree(chartData[i].time),
-        (Math.PI / 180) * timeToDegree(chartData[i + 1].time),
+        (Math.PI / 180) * timeToDegree(data[i].time),
+        (Math.PI / 180) * timeToDegree(data[i + 1].time),
         false
       );
       ctx.fillStyle = 'rgb(0, 255, 255)'; //채울 색상
@@ -79,7 +83,7 @@ export default function TimeChart() {
     // ctx.fill(); //채우기
     // ctx.stroke(); //테두리
     // })
-  }, [canvasRef, chartWidth]);
+  }, [canvasRef, chartWidth, data]);
 
   return (
     <div className='relative p-10'>

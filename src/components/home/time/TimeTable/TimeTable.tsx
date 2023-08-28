@@ -61,7 +61,6 @@ export default function TimeTable() {
   //   }
   // }
 
-  console.log(filteredData);
   return (
     <div className='w-full bg-slate-50 border border-main rounded-2xl'>
       <div

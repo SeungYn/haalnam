@@ -21,9 +21,12 @@ export const makeChartGradutionTimeInfo = (radius: number) => {
 };
 
 // 시간을 각도로 변환해주는 함수
-export const timeToDegree = (time: string) => {
-  const date = new Date(time);
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
+export const timeToDegree = (time: Date) => {
+  console.log(typeof time);
+  //const date = new Date(time);
+  const date = String(time).split(/[T:]/);
+  const hours = parseInt(date[1]);
+  const minutes = parseInt(date[2]);
+
   return hours * 15 + minutes * 0.25;
 };
