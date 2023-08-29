@@ -2,11 +2,12 @@
 
 import { Button } from '@/components/common';
 import service from '@/service/client';
+import { PostTimeRequest } from '@/service/types/time';
 import { Status } from '@prisma/client';
 import { ChangeEvent, FormEventHandler, useState } from 'react';
 
 type Props = {
-  onStart: (startTime: Date, subject: string) => void;
+  onStart: ({ subject, time, status }: PostTimeRequest) => void;
 };
 
 export default function TimeForm({ onStart }: Props) {
@@ -33,14 +34,13 @@ export default function TimeForm({ onStart }: Props) {
     //   .then((data) => {
     //     console.log(data);
     //   });
-
-    service.time
-      .postTime({
-        time: new Date(),
-        subject: timeTitle,
-        status: Status.START,
-      })
-      .then((data) => console.log(data));
+    const date = new Date();
+    onStart({ time: date, subject: timeTitle, status: Status.START });
+    // service.time.postTime({
+    //   time: date,
+    //   subject: timeTitle,
+    //   status: Status.START,
+    // });
 
     // fetch('/api/time', { method: 'GET' })
     //   .then((r) => r.json())

@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const subject = formData.get('subject') as string;
   const status = formData.get('status') as Status;
+  const time = formData.get('time');
 
   const res = await client.time.create({
     data: {
@@ -24,7 +25,9 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  return NextResponse.json(res, { status: 200 });
+  // 클라에서 보낸 time은 그대로 보내야됨 UTC + 9 이기 때문
+  console.log(res);
+  return NextResponse.json({ ...res, time }, { status: 200 });
 }
 
 export async function GET(request: NextRequest) {

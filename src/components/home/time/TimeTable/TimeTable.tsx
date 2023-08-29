@@ -1,6 +1,5 @@
 'use client';
 
-import { chartData } from '@/utils/mock/chart/data';
 import styles from './TimeTable.module.css';
 import { Time } from '@prisma/client';
 
@@ -9,9 +8,11 @@ type Props = {
 };
 
 export default function TimeTable({ times }: Props) {
+  console.log(times);
   let filteredData = times.flatMap((currentItem, i) => {
     // 마지막이 start일 경우
-    if (i === chartData.length - 1 && chartData.length % 2) {
+
+    if (i === times.length - 1 && times.length % 2) {
       return [
         {
           ...currentItem,
@@ -25,7 +26,7 @@ export default function TimeTable({ times }: Props) {
     // 홀수 아이템
     if (i % 2) return [];
 
-    if (i < chartData.length - 2 && i % 2 === 0) {
+    if (i < times.length - 2 && i % 2 === 0) {
       return [
         {
           ...currentItem,
@@ -38,6 +39,7 @@ export default function TimeTable({ times }: Props) {
 
     return [];
   });
+  console.log(filteredData);
 
   return (
     <div className='w-full bg-slate-50 border border-main rounded-2xl flex-shrink-0 overflow-auto mb-4'>

@@ -13,6 +13,7 @@ export default class TimeService {
 
     formData.append('subject', subject);
     formData.append('status', status);
+    formData.append('time', String(time));
 
     const { data } = await this.axios.post<PostTimeResponse>(
       '/api/time',
