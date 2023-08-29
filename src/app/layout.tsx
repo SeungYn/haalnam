@@ -28,9 +28,9 @@ export default function RootLayout({
             <main className='w-full grow max-w-screen-xl mx-auto '>
               {children}
             </main>
+            <ReactQueryDevtools />
           </body>
         </AuthContext>
-        <ReactQueryDevtools />
       </ReactQueryContext>
     </html>
   );

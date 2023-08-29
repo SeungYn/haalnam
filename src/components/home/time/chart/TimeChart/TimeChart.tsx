@@ -9,15 +9,17 @@ import {
 } from '@/utils/chart';
 import { chartData } from '@/utils/mock/chart/data';
 import { ROTATE_DEG } from '@/utils/size';
+import { Time } from '@prisma/client';
 import { useLayoutEffect, useRef, useState } from 'react';
 
-type Props = {};
+type Props = {
+  times: Time[];
+};
 
-export default function TimeChart() {
+export default function TimeChart({ times }: Props) {
+  console.log(times);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [chartWidth, setChartWidth] = useState<ChartSize>(300);
-  const { data } = useGetPersonalTodayTime();
-  console.log(data);
 
   useLayoutEffect(() => {
     const mediaQuery = window.matchMedia('screen and (min-width:640px)');
@@ -41,23 +43,23 @@ export default function TimeChart() {
   }, []);
 
   useLayoutEffect(() => {
-    if (!data) return;
+    if (!times) return;
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D;
     const startX = parseInt(String(chartWidth / 2));
 
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < times.length; i++) {
       if (i % 2 !== 0) continue;
       // 데이터가 홀수 이고 마지막이 시작으로 끝나는 경우 캔슬
-      if (data.length % 2 && i === data.length - 1) continue;
+      if (times.length % 2 && i === times.length - 1) continue;
       ctx.beginPath();
       ctx.moveTo(startX, startX);
       ctx.arc(
         startX,
         startX,
         chartWidth,
-        (Math.PI / 180) * timeToDegree(data[i].time),
-        (Math.PI / 180) * timeToDegree(data[i + 1].time),
+        (Math.PI / 180) * timeToDegree(times[i].time),
+        (Math.PI / 180) * timeToDegree(times[i + 1].time),
         false
       );
       ctx.fillStyle = 'rgb(0, 255, 255)'; //채울 색상
@@ -83,7 +85,7 @@ export default function TimeChart() {
     // ctx.fill(); //채우기
     // ctx.stroke(); //테두리
     // })
-  }, [canvasRef, chartWidth, data]);
+  }, [canvasRef, chartWidth, times]);
 
   return (
     <div className='relative p-10'>

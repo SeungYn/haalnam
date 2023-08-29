@@ -42,9 +42,9 @@ export default function TimeForm({ onStart }: Props) {
       })
       .then((data) => console.log(data));
 
-    fetch('/api/time', { method: 'GET' })
-      .then((r) => r.json())
-      .then((d) => console.log(d));
+    // fetch('/api/time', { method: 'GET' })
+    //   .then((r) => r.json())
+    //   .then((d) => console.log(d));
   };
 
   return (

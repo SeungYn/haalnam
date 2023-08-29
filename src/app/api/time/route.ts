@@ -8,7 +8,7 @@ import { Status } from '@prisma/client';
 export async function POST(request: NextRequest) {
   const session = await getServerSession(nextOptions);
   if (!session)
-    return new NextResponse('Authentication Error', { status: 401 });
+    return new NextResponse('Authentication Error ee', { status: 401 });
   const { id } = session.user;
 
   const formData = await request.formData();
@@ -29,8 +29,9 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const session = await getServerSession(nextOptions);
+
   if (!session)
-    return new NextResponse('Authentication Error', { status: 401 });
+    return new NextResponse('Authentication Error ee', { status: 401 });
   const { id } = session.user;
 
   // UTC 기준 시간 설정
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
   const tomorrow = new Date(today);
   tomorrow.setUTCDate(tomorrow.getDate() + 1);
 
-  console.log(new Date(), today, tomorrow, id);
+  //console.log(new Date(), today, tomorrow, id);
   let times;
   try {
     times = await client.time.findMany({

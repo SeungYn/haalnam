@@ -15,6 +15,9 @@ Dockerfile
 /.next/
 /out/
 
+# git
+.gitmessage.txt
+
 # production
 /build
 

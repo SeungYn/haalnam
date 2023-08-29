@@ -13,15 +13,15 @@ export default function TimeSituationContainer() {
     formData.append('subject', timeState.subject);
     formData.append('status', Status.END);
 
-    fetch('/api/time', {
-      method: 'POST',
-      body: formData,
-    })
-      .then((res) => {
-        if (res.ok) handleEndTime();
-        return res.json();
-      })
-      .then((data) => console.log(data));
+    // fetch('/api/time', {
+    //   method: 'POST',
+    //   body: formData,
+    // })
+    //   .then((res) => {
+    //     if (res.ok) handleEndTime();
+    //     return res.json();
+    //   })
+    //   .then((data) => console.log(data));
   };
 
   if (timeState.status === 'END') return <></>;

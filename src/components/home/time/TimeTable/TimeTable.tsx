@@ -9,12 +9,12 @@ type Props = {
 };
 
 export default function TimeTable({ times }: Props) {
-  console.log(times, 'times');
   let filteredData = times.flatMap((currentItem, i) => {
     // 마지막이 start일 경우
     if (i === chartData.length - 1 && chartData.length % 2) {
       return [
         {
+          ...currentItem,
           time: `${currentItem.time} ~ `,
           subject: currentItem.subject,
           type: currentItem.status,
@@ -28,8 +28,9 @@ export default function TimeTable({ times }: Props) {
     if (i < chartData.length - 2 && i % 2 === 0) {
       return [
         {
+          ...currentItem,
           subject: currentItem.subject,
-          time: `${currentItem.time} ~ ${chartData[i + 1].time}`,
+          time: `${currentItem.time} ~ ${times[i + 1].time}`,
           type: 'END',
         },
       ];
@@ -38,39 +39,8 @@ export default function TimeTable({ times }: Props) {
     return [];
   });
 
-  // chartData.for((p, c, i, origin) => {
-  //   if (i === origin.length - 2 && origin.length % 2) {
-  //     return [...p, { time: `${c.time} ~ `, subject: c.subject, type: c.type }];
-  //   }
-
-  //   return [p];
-  // });
-  // for (let i = 0; i < chartData.length; i++) {
-  //   const currentItem = chartData[i];
-  //   // 마지막이 start일 경우
-  //   if (i === chartData.length - 2 && chartData.length % 2) {
-  //     filteredData.push({
-  //       time: `${chartData[i].time} ~ `,
-  //       subject: chartData[i].subject,
-  //       type: chartData[i].type,
-  //     });
-  //     continue;
-  //   }
-
-  //   // 홀수 아이템
-  //   if (chartData.length % 2) continue;
-
-  //   if (i <= chartData.length - 2) {
-  //     filteredData.push({
-  //       subject: currentItem.subject,
-  //       time: `${currentItem.time} ~ ${chartData[i + 1].time}`,
-  //       type: 'END',
-  //     });
-  //   }
-  // }
-
   return (
-    <div className='w-full bg-slate-50 border border-main rounded-2xl flex-shrink-0 overflow-auto'>
+    <div className='w-full bg-slate-50 border border-main rounded-2xl flex-shrink-0 overflow-auto mb-4'>
       <div
         className={`${styles.columnContainer} text-2xl font-bold text-main border-b border-main h-12`}
       >
@@ -81,6 +51,7 @@ export default function TimeTable({ times }: Props) {
       </div>
       {filteredData.map((item) => (
         <div
+          key={item.id}
           className={`${styles.columnContainer} text-xl border-b border-main bg-yellow-50`}
         >
           <span>{item.subject}</span>
