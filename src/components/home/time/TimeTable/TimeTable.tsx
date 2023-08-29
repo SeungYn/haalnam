@@ -1,15 +1,23 @@
+'use client';
+
 import { chartData } from '@/utils/mock/chart/data';
 import styles from './TimeTable.module.css';
+import { Time } from '@prisma/client';
 
-export default function TimeTable() {
-  let filteredData = chartData.flatMap((currentItem, i) => {
+type Props = {
+  times: Time[];
+};
+
+export default function TimeTable({ times }: Props) {
+  console.log(times, 'times');
+  let filteredData = times.flatMap((currentItem, i) => {
     // 마지막이 start일 경우
     if (i === chartData.length - 1 && chartData.length % 2) {
       return [
         {
           time: `${currentItem.time} ~ `,
           subject: currentItem.subject,
-          type: currentItem.type,
+          type: currentItem.status,
         },
       ];
     }
@@ -62,9 +70,9 @@ export default function TimeTable() {
   // }
 
   return (
-    <div className='w-full bg-slate-50 border border-main rounded-2xl'>
+    <div className='w-full bg-slate-50 border border-main rounded-2xl flex-shrink-0 overflow-auto'>
       <div
-        className={`${styles.columnContainer} text-2xl font-bold text-main border-b border-main`}
+        className={`${styles.columnContainer} text-2xl font-bold text-main border-b border-main h-12`}
       >
         <span>주제</span>
         <span>기간</span>
@@ -73,7 +81,7 @@ export default function TimeTable() {
       </div>
       {filteredData.map((item) => (
         <div
-          className={`${styles.columnContainer} text-xl border-b border-main`}
+          className={`${styles.columnContainer} text-xl border-b border-main bg-yellow-50`}
         >
           <span>{item.subject}</span>
           <span>{item.time}</span>
