@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -33,37 +30,31 @@ model Account {
   expires_at               Int?
   token_type               String?
   scope                    String?
-  profile_nickname         String? @db.Text
-  profile_image            String? @db.Text
-  account_email            String?
   id_token                 String? @db.Text
-  expires_in               Int?
-  refresh_token_expires_in Int?
   session_state            String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account_email            String?
+  expires_in               Int?
+  profile_image            String? @db.Text
+  profile_nickname         String? @db.Text
+  refresh_token_expires_in Int?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId], map: "Account_userId_fkey")
 }
 
 model Time {
   id      Int      @id @default(autoincrement())
   userId  String
   subject String
-  time    DateTime
+  time    DateTime @default(now())
   status  Status
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "Time_userId_fkey")
 }
 
 enum Status {
   START
   END
 }
-
-// model Session {
-//   id           String   @id @default(cuid())
-//   sessionToken String   @unique
-//   userId       Int
-//   expires      DateTime
-//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-// }

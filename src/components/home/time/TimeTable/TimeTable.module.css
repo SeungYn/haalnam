@@ -1,0 +1,9 @@
+.columnContainer {
+  display: grid;
+  grid-template-columns: 15% 55% 20% 10%;
+  text-align: center;
+}
+
+.columnContainer span:not(:last-child) {
+  border-right: 1px solid rgb(252 165 165);
+}

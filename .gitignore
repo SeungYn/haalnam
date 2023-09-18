@@ -5,12 +5,18 @@
 /.pnp
 .pnp.js
 
+# Doker
+Dockerfile
+
 # testing
 /coverage
 
 # next.js
 /.next/
 /out/
+
+# git
+.gitmessage.txt
 
 # production
 /build
