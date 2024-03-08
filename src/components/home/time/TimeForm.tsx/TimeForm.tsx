@@ -4,13 +4,14 @@ import { Button } from '@/components/common';
 import service from '@/service/client';
 import { PostTimeRequest } from '@/service/types/time';
 import { Status } from '@prisma/client';
-import { ChangeEvent, FormEventHandler, useState } from 'react';
+import { ChangeEvent, FormEventHandler, useEffect, useState } from 'react';
 
 type Props = {
   onStart: ({ subject, time, status }: PostTimeRequest) => void;
+  onEndTime: () => void;
 };
 
-export default function TimeForm({ onStart }: Props) {
+export default function TimeForm({ onStart, onEndTime }: Props) {
   const [timeTitle, setTimeTitle] = useState('');
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -21,31 +22,24 @@ export default function TimeForm({ onStart }: Props) {
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    // const formData = new FormData();
 
-    // formData.append('subject', timeTitle);
-    // formData.append('status', Status.START);
-
-    // fetch('/api/time', { method: 'POST', body: formData })
-    //   .then((res) => {
-    //     if (res.ok) onStart(new Date(), timeTitle);
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     console.log(data);
-    //   });
     const date = new Date();
     onStart({ time: date, subject: timeTitle, status: Status.START });
-    // service.time.postTime({
-    //   time: date,
-    //   subject: timeTitle,
-    //   status: Status.START,
-    // });
-
-    // fetch('/api/time', { method: 'GET' })
-    //   .then((r) => r.json())
-    //   .then((d) => console.log(d));
   };
+
+  useEffect(() => {
+    console.log('이혜진');
+    const handleBeforeUnload = () => {
+      onEndTime();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      console.log('바보');
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [timeTitle]);
 
   return (
     <form

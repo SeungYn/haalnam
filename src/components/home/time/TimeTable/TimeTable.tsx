@@ -26,7 +26,7 @@ export default function TimeTable({ times }: Props) {
     // 홀수 아이템
     if (i % 2) return [];
 
-    if (i < times.length - 2 && i % 2 === 0) {
+    if (i <= times.length - 2 && i % 2 === 0) {
       return [
         {
           ...currentItem,
@@ -56,7 +56,7 @@ export default function TimeTable({ times }: Props) {
           key={item.id}
           className={`${styles.columnContainer} text-xl border-b border-main bg-yellow-50`}
         >
-          <span>{item.subject}</span>
+          <span className='overflow-hidden '>{item.subject}</span>
           <span>{item.time}</span>
           <span>임시데이터</span>
           <span>{item.type}</span>
