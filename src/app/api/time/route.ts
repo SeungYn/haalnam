@@ -1,12 +1,13 @@
 import { getServerSession } from 'next-auth';
-import { nextOptions } from '../auth/[...nextauth]/route';
 import { NextRequest, NextResponse } from 'next/server';
 import client from '@/lib/db';
 import { getNowDate } from '@/utils/date';
 import { Status } from '@prisma/client';
+import { auth } from '@/lib/auth';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export async function POST(request: NextRequest) {
-  const session = await getServerSession(nextOptions);
+export async function POST(request: NextRequest, response: NextResponse) {
+  const session = await auth(request, response);
   if (!session)
     return new NextResponse('Authentication Error ee', { status: 401 });
   const { id } = session.user;
@@ -30,8 +31,8 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ ...res, time }, { status: 200 });
 }
 
-export async function GET(request: NextRequest) {
-  const session = await getServerSession(nextOptions);
+export async function GET(request: NextApiRequest, res: NextApiResponse) {
+  const session = await auth(request, res);
 
   if (!session)
     return new NextResponse('Authentication Error ee', { status: 401 });
