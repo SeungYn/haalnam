@@ -19,12 +19,14 @@ export const nextOptions: NextAuthConfig = {
     async signIn(context) {
       // signIn이 session보다 먼저 호출 됨
       //console.log(context, 'context signin', context.user.id);
+      //console.log('signin', context);
       return true;
     },
     async session({ session, token, user: test }) {
       // Send properties to the client, like an access_token and user id from a provider.
       const user = session?.user;
       //console.log(user, token, test, 'usesession');
+      //console.log('session', session, token, test);
       if (user) {
         session.user = {
           ...user,
@@ -35,6 +37,7 @@ export const nextOptions: NextAuthConfig = {
       return session;
     },
     async jwt(context) {
+      //console.log('jwt', context);
       //console.log(context, 'console.log context');
       //console.log(context.user, 'context user');
       //console.log(context, 'token');

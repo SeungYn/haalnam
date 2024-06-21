@@ -1,4 +1,3 @@
-import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import client from '@/lib/db';
 import { getNowDate } from '@/utils/date';
@@ -7,7 +6,8 @@ import { auth } from '@/lib/auth';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export async function POST(request: NextRequest, response: NextResponse) {
-  const session = await auth(request, response);
+  const session = await auth();
+
   if (!session)
     return new NextResponse('Authentication Error ee', { status: 401 });
   const { id } = session.user;
@@ -32,8 +32,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
 }
 
 export async function GET(request: NextApiRequest, res: NextApiResponse) {
-  const session = await auth(request, res);
-
+  const session = await auth();
+  console.log('postsession', session);
   if (!session)
     return new NextResponse('Authentication Error ee', { status: 401 });
   const { id } = session.user;
