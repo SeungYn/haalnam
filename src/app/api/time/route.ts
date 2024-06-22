@@ -27,13 +27,13 @@ export async function POST(request: NextRequest, response: NextResponse) {
   });
 
   // 클라에서 보낸 time은 그대로 보내야됨 UTC + 9 이기 때문
-  console.log(res);
+  //console.log(res);
   return NextResponse.json({ ...res, time }, { status: 200 });
 }
 
 export async function GET(request: NextApiRequest, res: NextApiResponse) {
   const session = await auth();
-  console.log('postsession', session);
+  //console.log('postsession', session);
   if (!session)
     return new NextResponse('Authentication Error ee', { status: 401 });
   const { id } = session.user;

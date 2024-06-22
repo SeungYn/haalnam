@@ -8,7 +8,6 @@ type Props = {
 };
 
 export default function TimeTable({ times }: Props) {
-  console.log(times);
   let filteredData = times.flatMap((currentItem, i) => {
     // 마지막이 start일 경우
 
@@ -39,7 +38,6 @@ export default function TimeTable({ times }: Props) {
 
     return [];
   });
-  console.log(filteredData);
 
   return (
     <div className='w-full bg-slate-50 border border-main rounded-2xl flex-shrink-0 overflow-auto mb-4'>

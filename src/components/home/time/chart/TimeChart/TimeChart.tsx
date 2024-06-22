@@ -17,7 +17,6 @@ type Props = {
 };
 
 export default function TimeChart({ times }: Props) {
-  console.log(times);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [chartWidth, setChartWidth] = useState<ChartSize>(300);
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/common';
+import { useTimeContext } from '@/context/TimeContext';
 import service from '@/service/client';
 import { PostTimeRequest } from '@/service/types/time';
 import { Status } from '@prisma/client';
@@ -13,6 +14,7 @@ type Props = {
 
 export default function TimeForm({ onStart, onEndTime }: Props) {
   const [timeTitle, setTimeTitle] = useState('');
+  const { status } = useTimeContext();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -30,6 +32,9 @@ export default function TimeForm({ onStart, onEndTime }: Props) {
   useEffect(() => {
     console.log('이혜진');
     const handleBeforeUnload = () => {
+      console.log('handleBeforeUnload');
+      // 현재 타이머가 시작된 상태라면 무시
+      if (status === Status.END) return;
       onEndTime();
     };
 
@@ -39,7 +44,7 @@ export default function TimeForm({ onStart, onEndTime }: Props) {
       console.log('바보');
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [timeTitle]);
+  }, []);
 
   return (
     <form
