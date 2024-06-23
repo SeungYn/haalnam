@@ -16,12 +16,17 @@ export default function TimerSituation({
   subject,
   onEndTime,
 }: Props) {
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(() => {
+    if (startTime)
+      return Math.floor((Date.now() - (startTime?.getTime() ?? 0)) / 1000);
+    return 0;
+  });
 
   // useRequestAnimationFrame(() => {
   //   setTimer(incrementTime);
   // });
-
+  // 현재 사용자의 타임 상태를 db에도 계속 동기화를 해줘야함.
+  console.log('timeSituation');
   useEffect(() => {
     const interID = setInterval(() => setTimer(incrementTime), 1000);
 
