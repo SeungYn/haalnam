@@ -26,6 +26,7 @@ export function timeToMilliseconds(time: Date) {
   );
 }
 
+// 밀리초를 받아 시간, 분, 초, 밀리초로 반환하는 함수
 export function formatTime(milliseconds: number) {
   const seconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -45,4 +46,13 @@ export function formatTime(milliseconds: number) {
 
 export function millsecondsToSeconds(time: number) {
   return parseInt(String(time / 1000));
+}
+
+//2024-06-25T22:22:13.874Z 이런 형태 시간을
+// 0시 0분 0초로 변환해주는 함수
+export function formatDisplayTime(time: string | Date) {
+  if (time instanceof Date) return '';
+  const rightTime = time.split('T')[1].split(':');
+
+  return `${rightTime[0]}시 ${rightTime[1]}분 ${parseInt(rightTime[2])}초`;
 }
