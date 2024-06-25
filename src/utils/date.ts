@@ -48,11 +48,50 @@ export function millsecondsToSeconds(time: number) {
   return parseInt(String(time / 1000));
 }
 
-//2024-06-25T22:22:13.874Z 이런 형태 시간을
-// 0시 0분 0초로 변환해주는 함수
+/**
+ * 2024-06-25T22:22:13.874Z 이런 형태 시간을
+ * 0시 0분 0초로 변환해주는 함수
+ * @param time
+ * @returns
+ */
 export function formatDisplayTime(time: string | Date) {
   if (time instanceof Date) return '';
   const rightTime = time.split('T')[1].split(':');
 
   return `${rightTime[0]}시 ${rightTime[1]}분 ${parseInt(rightTime[2])}초`;
+}
+
+// 시작시간 종료시간 차이를 밀리초로 바꿔주는 함수
+export function differenceTime(
+  startTime: Date | string,
+  endTime: Date | string
+) {
+  if (startTime instanceof Date || endTime instanceof Date) return;
+
+  return (
+    Date.parse(endTime as unknown as string) -
+    Date.parse(startTime as unknown as string)
+  );
+}
+
+/**
+ * 2024-06-25T22:22:13.874Z ~ 2024-06-25T22:22:13.874Z 로 돼있는 time 문자열을 받아와 차이를 반환해주는 함수
+ * @param time string 2024-06-25T22:22:13.874Z ~ 2024-06-25T22:22:13.874Z
+ * @returns
+ */
+export function differenceFullTime(time: string) {
+  const [startTime, endTime] = time.split('~');
+  if (endTime === ' ' || endTime === '') return;
+
+  return differenceTime(startTime.trim(), endTime.trim());
+}
+
+/**
+ * 밀리초를 초로 바꿔주는 대신 올림 처리
+ * @param milli
+ * @returns
+ */
+export function toSecondsByMilliseconds(milli: string | number | undefined) {
+  if (milli === undefined) return;
+  return Math.ceil(Number(milli) / 1000);
 }
