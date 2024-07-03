@@ -1,5 +1,11 @@
 'use client';
 
+import {
+  differenceFullTime,
+  formatDisplayTime,
+  formatTime,
+  toSecondsByMilliseconds,
+} from '@/utils/date';
 import styles from './TimeTable.module.css';
 import { Time } from '@prisma/client';
 
@@ -16,6 +22,7 @@ export default function TimeTable({ times }: Props) {
         {
           ...currentItem,
           time: `${currentItem.time} ~ `,
+          parseTime: `${formatDisplayTime(currentItem.time)} ~ `,
           subject: currentItem.subject,
           type: currentItem.status,
         },
@@ -25,12 +32,16 @@ export default function TimeTable({ times }: Props) {
     // 홀수 아이템
     if (i % 2) return [];
 
+    // 짝수 아이템
     if (i <= times.length - 2 && i % 2 === 0) {
       return [
         {
           ...currentItem,
           subject: currentItem.subject,
           time: `${currentItem.time} ~ ${times[i + 1].time}`,
+          parseTime: `${formatDisplayTime(
+            currentItem.time
+          )} ~ ${formatDisplayTime(times[i + 1].time)}`,
           type: 'END',
         },
       ];
@@ -55,8 +66,10 @@ export default function TimeTable({ times }: Props) {
           className={`${styles.columnContainer} text-xl border-b border-main bg-yellow-50`}
         >
           <span className='overflow-hidden '>{item.subject}</span>
-          <span>{item.time}</span>
-          <span>임시데이터</span>
+          <span>{item.parseTime}</span>
+          <span>
+            {toSecondsByMilliseconds(differenceFullTime(item.time)) ?? ''}
+          </span>
           <span>{item.type}</span>
         </div>
       ))}

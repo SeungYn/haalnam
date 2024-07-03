@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/common';
 import { useTimeContext } from '@/context/TimeContext';
-import service from '@/service/client';
 import { PostTimeRequest } from '@/service/types/time';
 import { Status } from '@prisma/client';
 import { ChangeEvent, FormEventHandler, useEffect, useState } from 'react';
@@ -24,27 +23,13 @@ export default function TimeForm({ onStart, onEndTime }: Props) {
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-
+    if (timeTitle === '') {
+      alert('주제를 입력해주세요');
+      return;
+    }
     const date = new Date();
     onStart({ time: date, subject: timeTitle, status: Status.START });
   };
-
-  useEffect(() => {
-    console.log('이혜진');
-    const handleBeforeUnload = () => {
-      console.log('handleBeforeUnload');
-      // 현재 타이머가 시작된 상태라면 무시
-      if (status === Status.END) return;
-      onEndTime();
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      console.log('바보');
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
 
   return (
     <form
