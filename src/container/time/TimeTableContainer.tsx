@@ -3,6 +3,7 @@
 import { useGetPersonalTodayTime } from '@/hooks/api/time';
 import TimeTable from '@/components/home/time/TimeTable/TimeTable';
 import SSRSuspense from '@/components/common/SSRSuspense';
+import { formatTime } from '@/utils/date';
 
 export default function TimeTableContainer() {
   return (
@@ -15,6 +16,5 @@ export default function TimeTableContainer() {
 function TimeTableSuspense() {
   const { data } = useGetPersonalTodayTime(true);
 
-  if (!data) return;
   return <TimeTable times={data!} />;
 }
