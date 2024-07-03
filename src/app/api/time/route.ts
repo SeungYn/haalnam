@@ -67,6 +67,9 @@ export async function GET(request: NextApiRequest, res: NextApiResponse) {
         },
         userId: id,
       },
+      orderBy: {
+        time: 'asc',
+      },
     });
   } catch (e) {
     console.error(e);
