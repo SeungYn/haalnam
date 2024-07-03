@@ -8,6 +8,21 @@ import {
 export default class TimeService {
   constructor(private axios: AxiosInstance) {}
 
+  // async postTime({ time, subject, status }: PostTimeRequest) {
+  //   const formData = new FormData();
+
+  //   formData.append('subject', subject);
+  //   formData.append('status', status);
+  //   formData.append('time', String(time));
+
+  //   const { data } = await this.axios.post<PostTimeResponse>(
+  //     '/api/time',
+  //     formData
+  //   );
+
+  //   return data;
+  // }
+
   async postTime({ time, subject, status }: PostTimeRequest) {
     const formData = new FormData();
 
@@ -15,10 +30,12 @@ export default class TimeService {
     formData.append('status', status);
     formData.append('time', String(time));
 
-    const { data } = await this.axios.post<PostTimeResponse>(
-      '/api/time',
-      formData
-    );
+    const res = await fetch('http://localhost:3000/api/time', {
+      method: 'POST',
+      body: formData,
+      keepalive: true,
+    });
+    const data = await res.json();
 
     return data;
   }
