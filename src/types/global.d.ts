@@ -1,9 +1,13 @@
+import { Time } from '@prisma/client';
+
 export {};
 declare global {
   type CustomPath2D = {
     path2D: Path2D;
     rgba: RGBA;
     colorPaletteIndex: number;
+    startTimeObj: Time;
+    endTimeObj: Time;
   };
 
   type RGBA = {
