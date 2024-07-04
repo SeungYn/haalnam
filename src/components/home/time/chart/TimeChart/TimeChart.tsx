@@ -7,13 +7,20 @@ import {
   makeChartGradutionTimeInfo,
   timeToDegree,
 } from '@/utils/chart';
+import {
+  differenceTime,
+  formatDisplayTime,
+  toSecondsByMilliseconds,
+} from '@/utils/date';
 import { chartData } from '@/utils/mock/chart/data';
 import { ROTATE_DEG } from '@/utils/size';
+import { deepCopy } from '@/utils/util';
 import { Time } from '@prisma/client';
 import {
   MouseEvent,
   MouseEventHandler,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -77,26 +84,38 @@ type Props = {
   a: CustomPath2D;
 };
 
+type HoverChartPiece = CustomPath2D & {
+  x: number;
+  y: number;
+};
+
+// 새로 적용할 color
+// rgb(161, 161, 161)
+// bg rgb(10, 10, 10)
 export default function TimeChart({ times }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [chartWidth, setChartWidth] = useState<ChartSize>(300);
   const [path2Ds, setPath2Ds] = useState<CustomPath2D[]>([]);
+  const [hoverCustomPath2D, setHoverCustomPath2D] =
+    useState<HoverChartPiece | null>(null);
 
   const onClickCanvas = (e: MouseEvent) => {
-    const { offsetY, offsetX } = e.nativeEvent;
+    const { offsetY, offsetX, pageX, pageY } = e.nativeEvent;
 
     const ctx = canvasRef.current?.getContext('2d');
 
     if (ctx) {
+      let hoveredObj: CustomPath2D | null = null;
       path2Ds.forEach((obj) => {
         const path2D = obj.path2D;
         const { r, g, b } = obj.rgba;
         if (ctx.isPointInPath(path2D, offsetX, offsetY)) {
-          const isInPath = ctx.isPointInPath(path2D, offsetX, offsetY);
+          //const isInPath = ctx.isPointInPath(path2D, offsetX, offsetY);
+          hoveredObj = obj;
 
           // 흰색 호를 그려서 투명색을 조정
           ctx.fillStyle = 'white';
-
+          ctx.strokeStyle = 'white';
           ctx.fill(path2D);
           ctx.stroke(path2D);
 
@@ -110,7 +129,19 @@ export default function TimeChart({ times }: Props) {
         }
       });
 
-      drawChartMiddleCycle(ctx);
+      if (hoveredObj !== null) {
+        setHoverCustomPath2D((state) => {
+          return {
+            ...deepCopy(hoveredObj as CustomPath2D),
+            x: offsetX,
+            y: offsetY,
+          };
+        });
+      } else {
+        setHoverCustomPath2D(null);
+      }
+
+      //drawChartMiddleCycle(ctx);
     }
   };
 
@@ -129,6 +160,9 @@ export default function TimeChart({ times }: Props) {
 
       drawChartMiddleCycle(ctx);
     }
+
+    // hover된 객체 제거
+    setHoverCustomPath2D(null);
   };
 
   const drawChartMiddleCycle = useCallback(
@@ -218,6 +252,8 @@ export default function TimeChart({ times }: Props) {
         path2D: path,
         rgba: colorPalette[paletteIndex],
         colorPaletteIndex: paletteIndex,
+        startTimeObj: times[i],
+        endTimeObj: times[i + 1],
       });
     }
     drawChartMiddleCycle(ctx);
@@ -243,6 +279,55 @@ export default function TimeChart({ times }: Props) {
           </div>
         );
       })}
+      {/* hover 팝업 */}
+      {hoverCustomPath2D && (
+        <div
+          className=' p-5 absolute z-[60] text-center bg-h_black border border-h_gray rounded-lg text-white'
+          style={{
+            left: '10px',
+            top: '10px',
+            transform: `translate3d(calc(${hoverCustomPath2D.x}px + 2.5rem), calc(${hoverCustomPath2D.y}px + 2.5rem), 0)`,
+          }}
+        >
+          <h2>{hoverCustomPath2D.startTimeObj.subject}</h2>
+          <p>
+            시작시간: {formatDisplayTime(hoverCustomPath2D.startTimeObj.time)}
+          </p>
+          <p>
+            종료시간: {formatDisplayTime(hoverCustomPath2D.endTimeObj.time)}
+          </p>
+          <p>
+            사용시간(분):{' '}
+            {Math.floor(
+              toSecondsByMilliseconds(
+                differenceTime(
+                  hoverCustomPath2D.startTimeObj.time,
+                  hoverCustomPath2D.endTimeObj.time
+                )
+              )! / 60
+            )}
+          </p>
+          <p>
+            사용시간(초):{' '}
+            {toSecondsByMilliseconds(
+              differenceTime(
+                hoverCustomPath2D.startTimeObj.time,
+                hoverCustomPath2D.endTimeObj.time
+              )
+            )}
+          </p>
+        </div>
+      )}
+      {/* <div
+        className='bg-white w-[40px] h-[40px] fixed z-[60] '
+        style={{
+          // transform: `translate(${hoverCustomPath2D.x}px, ${hoverCustomPath2D.y}px, 0px)`,
+          left: '40px',
+          top: '40px',
+          transform: `translate3d(20px,0, 0)`,
+          // transform: `translate3d(${hoverCustomPath2D.x}px, ${hoverCustomPath2D.y}px, 0)`,
+        }}
+      ></div> */}
       <div className='w-[300px] h-[300px] outline outline-2 outline-black rounded-full relative overflow-hidden  sm:w-[600px] sm:h-[600px]'>
         <canvas
           ref={canvasRef}
@@ -254,6 +339,7 @@ export default function TimeChart({ times }: Props) {
           onMouseLeave={onMouseLeaveCanvase}
         ></canvas>
         {makeGradution(24)}
+        {/* 중앙 동그라미 */}
         <div className='w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]  absolute z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-500 border border-black'></div>
       </div>
     </div>
