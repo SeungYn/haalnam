@@ -27,10 +27,12 @@ export default function RootLayout({
         <AuthContext>
           <TimeContextProvider>
             <CheckUnloadHOC>
-              <body className='flex flex-col-reverse bg-gray-500 sm:flex-row'>
+              <body className='flex flex-col-reverse bg-h_black sm:flex-row text-white '>
                 <Sidebar />
-                <main className='w-full grow max-w-screen-xl mx-auto '>
-                  {children}
+                <main className=' overflow-y-auto flex-1'>
+                  <div className='w-full grow max-w-screen-xl mx-auto'>
+                    {children}
+                  </div>
                 </main>
                 <ReactQueryDevtools />
               </body>

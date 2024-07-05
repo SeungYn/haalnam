@@ -38,7 +38,7 @@ export default function TimeForm({ onStart, onEndTime }: Props) {
     >
       <input
         type='text'
-        className='w-full max-w-2xl px-7 py-2 rounded-[100px] border-2 border-main text-2xl'
+        className='w-full max-w-2xl px-7 py-2 rounded-[100px] border-2 border-h_light_black text-2xl bg-h_black'
         onChange={onChange}
         value={timeTitle}
         placeholder='주제 ex: 운동하기'

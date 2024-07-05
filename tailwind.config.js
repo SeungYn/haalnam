@@ -19,6 +19,7 @@ module.exports = {
         main: 'rgb(252 165 165)',
         h_black: 'rgb(10, 10, 10)',
         h_gray: 'rgb(161, 161, 161)',
+        h_light_black: 'rgb(31, 31, 31)',
       },
       rotate: ROTATE_360,
     },

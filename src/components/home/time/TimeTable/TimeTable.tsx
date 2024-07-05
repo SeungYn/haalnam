@@ -51,9 +51,9 @@ export default function TimeTable({ times }: Props) {
   });
 
   return (
-    <div className='w-full bg-slate-50 border border-main rounded-2xl flex-shrink-0 overflow-auto mb-4'>
+    <div className='w-full bg-h_light_black border border-h_gray rounded-2xl flex-shrink-0 overflow-auto mb-4'>
       <div
-        className={`${styles.columnContainer} text-2xl font-bold text-main border-b border-main h-12`}
+        className={`${styles.columnContainer} text-2xl font-bold text-white border-b border-h_gray h-12`}
       >
         <span>주제</span>
         <span>기간</span>
@@ -63,7 +63,7 @@ export default function TimeTable({ times }: Props) {
       {filteredData.map((item) => (
         <div
           key={item.id}
-          className={`${styles.columnContainer} text-xl border-b border-main bg-yellow-50`}
+          className={`${styles.columnContainer} text-xl border-b border-h_gray bg-h_black`}
         >
           <span className='overflow-hidden '>{item.subject}</span>
           <span>{item.parseTime}</span>

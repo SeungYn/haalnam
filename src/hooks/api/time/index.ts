@@ -13,7 +13,7 @@ export function useGetPersonalTodayTime(isSuspense: boolean = false) {
   return useQuery({
     queryKey: [...QUERY_KEYS.getPersonalTodayTime],
     queryFn: () => service.time.getPersonalTodayTime(),
-    suspense: true,
+    suspense: isSuspense,
     enabled: !!session,
   });
 }

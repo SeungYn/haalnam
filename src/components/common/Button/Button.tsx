@@ -17,7 +17,7 @@ type Prop = ButtonHTMLAttributes<HTMLButtonElement> & {
 export function Button({ className = '', size = 'none', ...props }: Prop) {
   return (
     <button
-      className={`flex justify-center items-center bg-white text-main border border-main hover:text-white hover:bg-main ${className} ${sizeStyle[size]}`}
+      className={`flex justify-center items-center bg-h_black text-white border border-h_gray hover:bg-h_light_black transition-colors ${className} ${sizeStyle[size]}`}
       {...props}
     />
   );

@@ -328,7 +328,7 @@ export default function TimeChart({ times }: Props) {
           // transform: `translate3d(${hoverCustomPath2D.x}px, ${hoverCustomPath2D.y}px, 0)`,
         }}
       ></div> */}
-      <div className='w-[300px] h-[300px] outline outline-2 outline-black rounded-full relative overflow-hidden  sm:w-[600px] sm:h-[600px]'>
+      <div className='w-[300px] h-[300px] outline outline-2 outline-h_gray rounded-full relative overflow-hidden  sm:w-[600px] sm:h-[600px]'>
         <canvas
           ref={canvasRef}
           width={chartWidth}
@@ -340,7 +340,7 @@ export default function TimeChart({ times }: Props) {
         ></canvas>
         {makeGradution(24)}
         {/* 중앙 동그라미 */}
-        <div className='w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]  absolute z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-500 border border-black'></div>
+        <div className='w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]  absolute z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-h_black border border-white'></div>
       </div>
     </div>
   );
@@ -353,7 +353,7 @@ function makeGradution(count: number) {
     const element = (
       <div
         key={i}
-        className={`absolute w-full h-[2px] bg-black transform ${
+        className={`absolute w-full h-[2px] bg-h_gray transform ${
           ROTATE_DEG[i * 15]
         } top-[calc(50%-1px)]`}
       ></div>
