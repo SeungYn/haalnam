@@ -1,7 +1,14 @@
 .columnContainer {
   display: grid;
   grid-template-columns: 15% 55% 20% 10%;
+  grid-template-rows: minmax(3rem, auto);
   text-align: center;
+  align-items: center;
+}
+
+.columnContainer > span {
+  height: 100%;
+  line-height: 3rem;
 }
 
 .columnContainer span:not(:last-child) {

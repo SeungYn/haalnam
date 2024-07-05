@@ -51,9 +51,9 @@ export default function TimeTable({ times }: Props) {
   });
 
   return (
-    <div className='w-full bg-h_light_black border border-h_gray rounded-2xl flex-shrink-0 overflow-auto mb-4'>
+    <div className='w-full bg-h_light_black border  border-h_gray rounded-2xl flex-shrink-0 overflow-hidden mb-4'>
       <div
-        className={`${styles.columnContainer} text-2xl font-bold text-white border-b border-h_gray h-12`}
+        className={`${styles.columnContainer} text-2xl font-bold text-white border-b border-h_gray `}
       >
         <span>주제</span>
         <span>기간</span>

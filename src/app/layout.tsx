@@ -27,9 +27,9 @@ export default function RootLayout({
         <AuthContext>
           <TimeContextProvider>
             <CheckUnloadHOC>
-              <body className='flex flex-col-reverse bg-h_black sm:flex-row text-white '>
+              <body className='flex flex-col-reverse bg-h_black sm:flex-row text-white gap-4'>
                 <Sidebar />
-                <main className=' overflow-y-auto flex-1'>
+                <main className='overflow-y-auto flex-1 '>
                   <div className='w-full grow max-w-screen-xl mx-auto'>
                     {children}
                   </div>
