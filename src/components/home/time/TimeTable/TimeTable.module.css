@@ -8,8 +8,15 @@
 
 .columnContainer > span {
   height: 100%;
-  line-height: 3rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+/* .columnContainer > span::first-line {
+  line-height: 3rem;
+} */
 
 .columnContainer span:not(:last-child) {
   border-right: 1px solid;
