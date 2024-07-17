@@ -4,6 +4,7 @@ import { getNowDate, getNowYYYY_MM_DD } from '@/utils/date';
 import { Status } from '@prisma/client';
 import { auth } from '@/lib/auth';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getLatestTime } from '@/service/server/timeServerService';
 
 export async function POST(request: NextRequest, response: NextResponse) {
   const session = await auth();
@@ -19,6 +20,20 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
   // time를 하나 만들때 user 상태도 변경시켜 줘야함.
   const res = client.$transaction(async () => {
+    let date = getNowDate();
+
+    if (status === 'END') {
+      const recentTime = await getLatestTime(id);
+      const now = getNowDate();
+
+      // 만약 자정을 넘길경우 23:59:59 시간으로 처리
+      if (recentTime && recentTime?.time.getDate() < now.getDate()) {
+        date = new Date(
+          `${recentTime.time.toISOString().split('T')[0]}T23:59:59Z`
+        );
+      }
+    }
+
     const post = await client.time.create({
       data: {
         userId: id,
