@@ -1,6 +1,8 @@
 import { auth } from '@/lib/auth';
 import client from '@/lib/db';
-import { getNowYYYY_MM_DD } from '@/utils/date';
+import { getLatestTime } from '@/service/server/timeServerService';
+
+import { getNowDate, getNowYYYY_MM_DD } from '@/utils/date';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -10,14 +12,7 @@ export async function GET() {
     return new NextResponse('Authentication Error ee', { status: 401 });
   const { id } = session.user;
 
-  let time = await client.time.findMany({
-    where: {
-      time: {
-        equals: getNowYYYY_MM_DD(),
-      },
-      userId: id,
-    },
-  });
+  let time = await getLatestTime(id);
 
   return NextResponse.json(time, { status: 200 });
 }
