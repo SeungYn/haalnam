@@ -1,5 +1,6 @@
 'use client';
 
+import { useSelectedDateStore } from '@/store/dateStore';
 import { DownArrowIcon } from '../../icons';
 import './WeeklyCalendar.css';
 import { MouseEvent, useEffect, useState } from 'react';
@@ -18,7 +19,7 @@ export default function WeeklyCalendar() {
 	const [isMounting, setIsMounting] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const [weekDates, setWeekDates] = useState<Date[]>([]);
-	const [selectedDate, setSelectedDate] = useState(new Date());
+	const { selectedDate, setSelectedDate } = useSelectedDateStore();
 	const [calendar, setCalendar] = useState<Calendar[]>([]);
 	// 캘린더에서 관리하는 날짜
 	const [calendarDate, setCalendarDate] = useState(selectedDate);
