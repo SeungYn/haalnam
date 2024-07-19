@@ -35,12 +35,12 @@
 	}
 
 	.calendar__container {
-		padding: 1rem;
+		padding: 2rem;
 		display: flex;
 		flex-direction: column;
 
 		position: absolute;
-		background: red;
+		@apply bg-h_black;
 		width: 100vw;
 		height: 40%;
 		left: 50%;
@@ -73,6 +73,34 @@
 		align-items: center;
 	}
 
+	.calendar__day {
+		width: 3rem;
+		height: 3rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.calendar-current {
+		border: 1px white solid;
+		border-radius: 3rem;
+	}
+
+	.calendar-selected {
+		border: 1px white solid;
+		border-radius: 3rem;
+		background-color: white;
+		color: black !important;
+	}
+
+	.calendar-textAccent {
+		color: white;
+	}
+
+	.calendar-textMute {
+		@apply text-h_gray_semi_light;
+	}
+
 	.calendar__header {
 		display: flex;
 		justify-content: space-between;
@@ -94,7 +122,6 @@
 
 		.calendar__container {
 			position: absolute;
-			background-color: blue;
 			width: 600px;
 			height: 600px;
 			left: 50%;

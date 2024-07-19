@@ -1,10 +1,8 @@
 'use client';
 
-import { IoIosArrowDown } from 'react-icons/io';
-import { Button } from '../../common';
 import { DownArrowIcon } from '../../icons';
 import './WeeklyCalendar.css';
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 const DayToName: { [key: number | string]: string } = {
 	0: '일',
@@ -18,23 +16,41 @@ const DayToName: { [key: number | string]: string } = {
 
 export default function WeeklyCalendar() {
 	const [isMounting, setIsMounting] = useState(false);
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
 	const [weekDates, setWeekDates] = useState<Date[]>([]);
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [calendar, setCalendar] = useState<Calendar[]>([]);
+	// 캘린더에서 관리하는 날짜
+	const [calendarDate, setCalendarDate] = useState(selectedDate);
+
+	const onPrevMonth = (e: MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation();
+		setCalendarDate(
+			new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1)
+		);
+	};
+
+	const onNextMonth = (e: MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation();
+		setCalendarDate(
+			new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1)
+		);
+	};
 
 	useEffect(() => {
 		if (isOpen) {
 			setIsMounting(true);
 		} else {
 			setIsMounting(false);
+			// 팝업이 닫히면 달력 초기화
+			setCalendarDate(selectedDate);
 		}
 	}, [isOpen]);
 
 	// 이번주 날짜 세팅 "일 월 화 수 목 금 토"
 	useEffect(() => {
 		// 입력된 날짜를 기준으로 해당 날짜가 있는 주의 일요일과 토요일을 계산
-		const inputDate = new Date();
+		const inputDate = new Date(selectedDate);
 		const dayOfWeek = inputDate.getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
 
 		// 주의 일요일을 계산
@@ -53,15 +69,19 @@ export default function WeeklyCalendar() {
 			weekDates.push(weekDate);
 		}
 		setWeekDates([...weekDates]);
+	}, [selectedDate]);
 
-		setCalendar(makeCalendar(new Date()));
-	}, []);
+	// 달력 만드는 effect
+	useEffect(() => {
+		// 현재 달력이 만들어 있지 않으면 선택된 날을 기준으로 만듬
+		setCalendar(makeCalendar(calendarDate));
+	}, [calendarDate]);
 
 	return (
 		<div className="mt-2 w-full">
 			<div className="mb-4">
 				<button className="text-4xl" onClick={() => setIsOpen((s) => !s)}>
-					<span>2024년 7월</span>
+					<span>{`${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월`}</span>
 					<DownArrowIcon size="medium" className="ml-2 inline" />
 				</button>
 			</div>
@@ -84,20 +104,29 @@ export default function WeeklyCalendar() {
 			{isOpen && (
 				<div
 					className="calendar__popup__container"
-					onClick={() => setIsOpen(true)}
+					onClick={() => setIsOpen(false)}
 				>
 					<div
 						className={`${isMounting ? 'open' : 'close'} calendar__container`}
 					>
 						<nav className="calendar__header">
-							<button>{'<'}</button>
+							<button className="px-8" onClick={(e) => onPrevMonth(e)}>
+								{'<'}
+							</button>
 							<div>
-								<p>2222년 10월</p>
-								<button>오늘</button>
+								<p>{`${calendarDate.getFullYear()}년 ${calendarDate.getMonth() + 1}월`}</p>
+								<button
+									className="ml-4 rounded-lg border border-white px-2 text-base"
+									onClick={() => setSelectedDate(new Date())}
+								>
+									오늘
+								</button>
 							</div>
-							<button>{'>'}</button>
+							<button className="px-8" onClick={(e) => onNextMonth(e)}>
+								{'>'}
+							</button>
 						</nav>
-						<ul className='calendar__days'>
+						<ul className="calendar__days">
 							<li>일</li>
 							<li>월</li>
 							<li>화</li>
@@ -108,7 +137,16 @@ export default function WeeklyCalendar() {
 						</ul>
 						<ul className="calendar">
 							{calendar.map((c) => (
-								<li key={c.date.toDateString()}>{c.day}</li>
+								<li
+									role="button"
+									key={c.date.toDateString()}
+									className={`${c.accent ? 'calendar-textAccent' : 'calendar-textMute'} ${checkCurrentDate(c.date, new Date()) ? 'calendar-current' : ''} ${checkCurrentDate(c.date, selectedDate) ? 'calendar-selected' : ''}`}
+									onClick={() => {
+										setSelectedDate(c.date);
+									}}
+								>
+									<p className="calendar__day">{c.day}</p>
+								</li>
 							))}
 						</ul>
 					</div>
