@@ -8,49 +8,60 @@ import { PostTimeRequest } from '@/service/types/time';
 import { TimeActionContextType } from '@/context/TimeContext';
 
 export function useGetPersonalTodayTime(isSuspense: boolean = false) {
-  const { data: session } = useSession();
+	const { data: session } = useSession();
 
-  return useQuery({
-    queryKey: [...QUERY_KEYS.getPersonalTodayTime],
-    queryFn: () => service.time.getPersonalTodayTime(),
-    suspense: isSuspense,
-    enabled: !!session,
-  });
+	return useQuery({
+		queryKey: [...QUERY_KEYS.getPersonalTodayTime],
+		queryFn: () => service.time.getPersonalTodayTime(),
+		suspense: isSuspense,
+		enabled: !!session,
+	});
+}
+
+export function useGetTimesByDate(date: Date, isSuspense: boolean = false) {
+	const { data: session } = useSession();
+
+	return useQuery({
+		queryKey: [...QUERY_KEYS.getPersonalTimesByDate, date],
+		queryFn: () => service.time.getTimesByDate(date),
+		suspense: isSuspense,
+		enabled: !!session,
+	});
 }
 
 export function usePostStartTime({
-  handleStartTime,
+	handleStartTime,
 }: Pick<TimeActionContextType, 'handleStartTime'>) {
-  const queryClient = useQueryClient();
-  const mutate = useMutation({
-    mutationFn: ({ subject, time, status }: PostTimeRequest) =>
-      service.time.postTime({ subject, time, status }),
-    onMutate: ({ subject, time, status }) => {
-      handleStartTime(time, subject);
-    },
-    onSuccess: (data) => {
-      console.log('시작됨', data);
-      queryClient.invalidateQueries([...QUERY_KEYS.getPersonalTodayTime]);
-    },
-  });
+	const queryClient = useQueryClient();
+	const mutate = useMutation({
+		mutationFn: ({ subject, time, status }: PostTimeRequest) =>
+			service.time.postTime({ subject, time, status }),
+		onMutate: ({ subject, time, status }) => {
+			handleStartTime(time, subject);
+		},
+		onSuccess: (data) => {
+			console.log('시작됨', data);
+			queryClient.invalidateQueries([...QUERY_KEYS.getPersonalTodayTime]);
+		},
+	});
 
-  return mutate;
+	return mutate;
 }
 
 export function usePostEndTime({
-  handleEndTime,
+	handleEndTime,
 }: Pick<TimeActionContextType, 'handleEndTime'>) {
-  const queryClient = useQueryClient();
-  const mutate = useMutation({
-    mutationFn: ({ subject, time, status }: PostTimeRequest) =>
-      service.time.postTime({ subject, time, status }),
-    onMutate: ({ subject, time, status }) => {
-      handleEndTime();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries([...QUERY_KEYS.getPersonalTodayTime]);
-    },
-  });
+	const queryClient = useQueryClient();
+	const mutate = useMutation({
+		mutationFn: ({ subject, time, status }: PostTimeRequest) =>
+			service.time.postTime({ subject, time, status }),
+		onMutate: ({ subject, time, status }) => {
+			handleEndTime();
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries([...QUERY_KEYS.getPersonalTodayTime]);
+		},
+	});
 
-  return mutate;
+	return mutate;
 }
