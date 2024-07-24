@@ -13,6 +13,7 @@ export function useGetPersonalTodayTime(isSuspense: boolean = false) {
 	return useQuery({
 		queryKey: [...QUERY_KEYS.getPersonalTodayTime],
 		queryFn: () => service.time.getPersonalTodayTime(),
+		initialData: [],
 		suspense: isSuspense,
 		enabled: !!session,
 	});
@@ -25,6 +26,7 @@ export function useGetTimesByDate(date: Date, isSuspense: boolean = false) {
 		queryKey: [...QUERY_KEYS.getPersonalTimesByDate, date],
 		queryFn: () => service.time.getTimesByDate(date),
 		suspense: isSuspense,
+		initialData: [],
 		enabled: !!session,
 	});
 }
