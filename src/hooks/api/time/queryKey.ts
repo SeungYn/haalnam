@@ -1,3 +1,4 @@
 export const QUERY_KEYS = {
-  getPersonalTodayTime: ['getPersonalTodayTime'],
+	getPersonalTodayTime: ['getPersonalTodayTime'],
+	getPersonalTimesByDate: ['personal'],
 } as const;

@@ -2,26 +2,20 @@
 
 import TimerSituation from '@/components/home/time/TimerSituation/TimerSituation';
 import { useTimeActionContext, useTimeContext } from '@/context/TimeContext';
+import { usePostEndTime } from '@/hooks/api/time';
 import { Status } from '@prisma/client';
 
 export default function TimeSituationContainer() {
   const timeState = useTimeContext();
   const { handleEndTime } = useTimeActionContext();
+  const { mutate } = usePostEndTime({ handleEndTime });
 
   const onEndTime = () => {
-    const formData = new FormData();
-    formData.append('subject', timeState.subject);
-    formData.append('status', Status.END);
-
-    // fetch('/api/time', {
-    //   method: 'POST',
-    //   body: formData,
-    // })
-    //   .then((res) => {
-    //     if (res.ok) handleEndTime();
-    //     return res.json();
-    //   })
-    //   .then((data) => console.log(data));
+    mutate({
+      subject: timeState.subject,
+      status: Status.END,
+      time: new Date(),
+    });
   };
 
   if (timeState.status === 'END') return <></>;

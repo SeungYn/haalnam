@@ -1,9 +1,8 @@
 import { IntroLogin, ReduceTimer } from '@/components/home';
-import { getServerSession } from 'next-auth';
-import { nextOptions } from './api/auth/[...nextauth]/route';
+import { auth } from '@/lib/auth';
 
 export default async function Home() {
-  const session = await getServerSession(nextOptions);
+  const session = await auth();
   const user = session?.user;
 
   return (

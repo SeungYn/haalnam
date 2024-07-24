@@ -6,6 +6,8 @@ import { sincerity } from '@/fonts';
 import { AuthContext } from '@/context';
 import ReactQueryContext from '@/context/ReactQueryContext';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import TimeContextProvider from '@/context/TimeContext';
+import CheckUnloadHOC from '@/hoc/CheckUnloadHOC';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,13 +25,19 @@ export default function RootLayout({
     <html lang='ko' className={sincerity.className}>
       <ReactQueryContext>
         <AuthContext>
-          <body className='flex flex-col-reverse bg-gray-500 sm:flex-row'>
-            <Sidebar />
-            <main className='w-full grow max-w-screen-xl mx-auto '>
-              {children}
-            </main>
-            <ReactQueryDevtools />
-          </body>
+          <TimeContextProvider>
+            <CheckUnloadHOC>
+              <body className='flex flex-col-reverse bg-h_black sm:flex-row text-white gap-4'>
+                <Sidebar />
+                <main className='overflow-y-auto flex-1 '>
+                  <div className='w-full grow max-w-screen-xl mx-auto px-4 sm:px-0'>
+                    {children}
+                  </div>
+                </main>
+                <ReactQueryDevtools />
+              </body>
+            </CheckUnloadHOC>
+          </TimeContextProvider>
         </AuthContext>
       </ReactQueryContext>
     </html>

@@ -2,20 +2,23 @@
 
 import SSRSuspense from '@/components/common/SSRSuspense';
 import TimeChart from '@/components/home/time/chart/TimeChart/TimeChart';
-import { useGetPersonalTodayTime } from '@/hooks/api/time';
+import { useGetTimesByDate } from '@/hooks/api/time';
+import { useSelectedDateStore } from '@/store/dateStore';
 
 export default function TimeChartContainer() {
-  return (
-    <SSRSuspense fallback={<div>로딩중</div>}>
-      <TimeChartSuspense />
-    </SSRSuspense>
-  );
+	return (
+		<SSRSuspense fallback={<div>로딩중</div>}>
+			<TimeChartSuspense />
+		</SSRSuspense>
+	);
 }
 
 function TimeChartSuspense() {
-  const { data } = useGetPersonalTodayTime(true);
+	const { selectedDate } = useSelectedDateStore();
 
-  if (!data) return <></>;
+	const { data } = useGetTimesByDate(selectedDate, true); //useGetPersonalTodayTime(true);
 
-  return <TimeChart times={data} />;
+	if (!data) return <></>;
+
+	return <TimeChart times={data} />;
 }

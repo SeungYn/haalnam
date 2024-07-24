@@ -8,6 +8,7 @@ datasource db {
 }
 
 model User {
+  /// test
   id            String    @id @default(cuid())
   name          String    @db.VarChar(255)
   createdAt     DateTime  @default(now())
@@ -15,6 +16,7 @@ model User {
   emailVerified DateTime?
   image         String?
   test          String?   @map("test_id")
+  timer_status  Status    @default(END)
   accounts      Account[]
   Time          Time[]
 }
