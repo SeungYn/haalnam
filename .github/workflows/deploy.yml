@@ -9,13 +9,13 @@ jobs:
   build:
     runs-on: [self-hosted, Linux, X64, haalnam]
     steps:
+      - uses: actions/checkout@v4
+
       - name: env setting
         run: |
           echo "${{ secrets.ENV }}" >> .env
           echo "${{ secrets.ENVLOCAL }}" >> .env.local
           ls -la
-
-      - uses: actions/checkout@v4
 
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
