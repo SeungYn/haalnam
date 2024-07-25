@@ -24,5 +24,6 @@ jobs:
           cache: 'npm'
 
       - run: npm ci --legacy-peer-deps
-      - run: npm run build
-      - run: npm run start
+      # 일단 직접 접속해서 서버를 키는 걸로...
+      # - run: npm run build
+      # - run: npm run start
