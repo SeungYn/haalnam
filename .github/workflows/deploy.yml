@@ -11,9 +11,9 @@ jobs:
     steps:
       - name: env setting
         run: |
-          ls -la
           echo "${{ secrets.ENV }}" >> .env
           echo "${{ secrets.ENVLOCAL }}" >> .env.local
+          ls -la
 
       - uses: actions/checkout@v4
 
