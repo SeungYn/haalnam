@@ -3,7 +3,6 @@ import client from '@/lib/db';
 import { getNowDate, getNowYYYY_MM_DD } from '@/utils/date';
 import { Status } from '@prisma/client';
 import { auth } from '@/lib/auth';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { getLatestTime } from '@/service/server/timeServerService';
 
 export async function POST(request: NextRequest) {
@@ -57,7 +56,7 @@ export async function POST(request: NextRequest) {
 	return NextResponse.json({ ...res, time }, { status: 200 });
 }
 
-export async function GET(request: NextApiRequest, res: NextApiResponse) {
+export async function GET(request: NextRequest) {
 	const session = await auth();
 	//console.log('postsession', session);
 	if (!session)
