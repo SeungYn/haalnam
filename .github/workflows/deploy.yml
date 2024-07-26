@@ -25,5 +25,5 @@ jobs:
       - run: npm ci --legacy-peer-deps
       # 일단 직접 접속해서 서버를 키는 걸로...
       - run: npm run build
-      - run: mp2 restart haalnam
+      - run: pm2 restart haalnam
       # - run: npm run start
