@@ -17,5 +17,7 @@ function TimeTableSuspense() {
 	const { selectedDate } = useSelectedDateStore();
 	const { data } = useGetTimesByDate(selectedDate, true);
 
-	return <TimeTable times={data!} />;
+	if (!data) return <></>;
+
+	return <TimeTable times={data} />;
 }
