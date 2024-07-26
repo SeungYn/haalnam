@@ -13,7 +13,7 @@ export function useGetPersonalTodayTime(isSuspense: boolean = false) {
 	return useQuery({
 		queryKey: [...QUERY_KEYS.getPersonalTodayTime],
 		queryFn: () => service.time.getPersonalTodayTime(),
-		initialData: [],
+		// initialData: [],
 		suspense: isSuspense,
 		enabled: !!session,
 	});
@@ -23,10 +23,10 @@ export function useGetTimesByDate(date: Date, isSuspense: boolean = false) {
 	const { data: session } = useSession();
 
 	return useQuery({
-		queryKey: [...QUERY_KEYS.getPersonalTimesByDate, date],
+		queryKey: [...QUERY_KEYS.getPersonalTodayTime, date.toDateString()],
 		queryFn: () => service.time.getTimesByDate(date),
 		suspense: isSuspense,
-		initialData: [],
+		// initialData: [],
 		enabled: !!session,
 	});
 }
@@ -41,9 +41,11 @@ export function usePostStartTime({
 		onMutate: ({ subject, time, status }) => {
 			handleStartTime(time, subject);
 		},
-		onSuccess: (data) => {
-			console.log('시작됨', data);
-			queryClient.invalidateQueries([...QUERY_KEYS.getPersonalTodayTime]);
+		onSuccess: (data, params) => {
+			queryClient.invalidateQueries([
+				...QUERY_KEYS.getPersonalTimesByDate,
+				params.time.toDateString(),
+			]);
 		},
 	});
 
