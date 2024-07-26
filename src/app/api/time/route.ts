@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 	const time = formData.get('time');
 
 	// time를 하나 만들때 user 상태도 변경시켜 줘야함.
-	const res = client.$transaction(async () => {
+	const res = await client.$transaction(async () => {
 		let date = getNowDate();
 
 		if (status === 'END') {
@@ -50,9 +50,9 @@ export async function POST(request: NextRequest) {
 
 		return post;
 	});
-	console.log(time);
+
 	// 클라에서 보낸 time은 그대로 보내야됨 UTC + 9 이기 때문
-	//console.log(res);
+	// console.log('res', res);
 	return NextResponse.json({ ...res, time }, { status: 200 });
 }
 

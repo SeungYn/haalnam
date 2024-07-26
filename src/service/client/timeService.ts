@@ -4,6 +4,7 @@ import {
 	PostTimeRequest,
 	PostTimeResponse,
 } from '../types/time';
+import { whereHost } from '@/utils/util';
 
 export default class TimeService {
 	constructor(private axios: AxiosInstance) {}
@@ -30,7 +31,7 @@ export default class TimeService {
 		formData.append('status', status);
 		formData.append('time', String(time));
 
-		const res = await fetch('http://localhost:3000/api/time', {
+		const res = await fetch(whereHost() + '/api/time', {
 			method: 'POST',
 			body: formData,
 			keepalive: true,
