@@ -42,7 +42,7 @@
 		position: absolute;
 		@apply bg-h_black;
 		width: 100vw;
-		height: 40%;
+		height: 400px;
 		left: 50%;
 		transform: translate3d(-50%, 0, 0);
 		transition: 1s;
