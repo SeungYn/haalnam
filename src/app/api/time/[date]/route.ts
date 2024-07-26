@@ -21,8 +21,8 @@ export async function GET(
 	const day = getFullDate(y, m, d);
 
 	const tomorrow = getFullDate(y, m, d + 1);
-	console.log(y, m, d);
-	console.log(day, tomorrow);
+	// console.log(y, m, d);
+	// console.log(day, tomorrow);
 	//console.log( day, tomorrow, id);
 	let times;
 	try {
