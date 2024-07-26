@@ -23,7 +23,7 @@ export function useGetTimesByDate(date: Date, isSuspense: boolean = false) {
 	const { data: session } = useSession();
 
 	return useQuery({
-		queryKey: [...QUERY_KEYS.getPersonalTodayTime, date.toDateString()],
+		queryKey: [...QUERY_KEYS.getPersonalTimesByDate, date.toDateString()],
 		queryFn: () => service.time.getTimesByDate(date),
 		suspense: isSuspense,
 		// initialData: [],
@@ -62,8 +62,11 @@ export function usePostEndTime({
 		onMutate: ({ subject, time, status }) => {
 			handleEndTime();
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries([...QUERY_KEYS.getPersonalTodayTime]);
+		onSuccess: (data, params) => {
+			queryClient.invalidateQueries([
+				...QUERY_KEYS.getPersonalTimesByDate,
+				params.time.toDateString(),
+			]);
 		},
 	});
 
