@@ -1,6 +1,7 @@
+import { whereHost } from '@/utils/util';
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
-  withCredentials: true,
+	baseURL: whereHost(),
+	withCredentials: true,
 });
