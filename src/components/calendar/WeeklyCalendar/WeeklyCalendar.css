@@ -35,7 +35,7 @@
 	}
 
 	.calendar__container {
-		padding: 2rem;
+		padding: 2rem 2rem 6rem 2rem;
 		display: flex;
 		flex-direction: column;
 
@@ -122,6 +122,7 @@
 
 		.calendar__container {
 			position: absolute;
+			padding: 2rem;
 			width: 600px;
 			height: 600px;
 			left: 50%;

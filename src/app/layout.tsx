@@ -26,17 +26,15 @@ export default function RootLayout({
 				<AuthContext>
 					<TimeContextProvider>
 						<CheckUnloadHOC>
-							<HeightAdjustHOC>
-								<body className="flex flex-col-reverse gap-4 bg-h_black text-white md:flex-row">
-									<Sidebar />
-									<main className="flex-1 overflow-y-auto">
-										<div className="mx-auto w-full max-w-screen-xl grow px-4 sm:px-0">
-											{children}
-										</div>
-									</main>
-									<ReactQueryDevtools />
-								</body>
-							</HeightAdjustHOC>
+							<body className="flex flex-col-reverse gap-4 bg-h_black text-white md:flex-row">
+								<Sidebar />
+								<main className="flex-1 overflow-y-auto">
+									<div className="mx-auto w-full max-w-screen-xl grow px-4 sm:px-0">
+										{children}
+									</div>
+								</main>
+								<ReactQueryDevtools />
+							</body>
 						</CheckUnloadHOC>
 					</TimeContextProvider>
 				</AuthContext>
