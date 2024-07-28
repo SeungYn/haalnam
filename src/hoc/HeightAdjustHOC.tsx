@@ -4,7 +4,6 @@ import { PropsWithChildren, useEffect } from 'react';
 
 export default function HeightAdjustHOC({ children }: PropsWithChildren) {
 	useEffect(() => {
-		console.log(navigator.userAgent);
 		if (isMobile()) {
 			document.body.style.height = window.innerHeight + 'px';
 		}
