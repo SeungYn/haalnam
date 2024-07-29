@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import NextAuth, { NextAuthConfig } from 'next-auth';
 import { Adapter } from 'next-auth/adapters';
 import KakaoProvider from 'next-auth/providers/kakao';
+import dbClient from './db';
 
 const prisma = new PrismaClient();
 
@@ -15,6 +16,16 @@ export const nextOptions: NextAuthConfig = {
 			clientSecret: process.env.KAKAO_SECRET || ``,
 		}),
 	],
+	events: {
+		async linkAccount({ user }) {
+			await dbClient.user.update({
+				where: { id: user.id },
+				data: {
+					nickname: '여유로운햇님이',
+				},
+			});
+		},
+	},
 	callbacks: {
 		async signIn(context) {
 			// signIn이 session보다 먼저 호출 됨
