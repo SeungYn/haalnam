@@ -44,6 +44,16 @@ export async function findUserListByNidWithCursor(
 	return users;
 }
 
+export async function findUserBynid(nid: number) {
+	const user = dbClient.user.findFirst({
+		where: {
+			nid,
+		},
+	});
+
+	return user;
+}
+
 export async function findUsersCount() {
 	return await dbClient.user.count();
 }
