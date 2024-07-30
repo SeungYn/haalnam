@@ -26,7 +26,7 @@ export function UserListItem({ user }: UserListItemProps) {
 
 	return (
 		<Link
-			href={`/time/user/${nid}`}
+			href={`/time/user/${nid}?nickname=${nickname}`}
 			className="grow-0 basis-[49%] pb-8 leading-4 md:basis-[24%]"
 			role="button"
 		>
