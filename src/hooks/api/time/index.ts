@@ -14,18 +14,39 @@ export function useGetPersonalTodayTime(isSuspense: boolean = false) {
 		queryKey: [...QUERY_KEYS.getPersonalTodayTime],
 		queryFn: () => service.time.getPersonalTodayTime(),
 		// initialData: [],
-		suspense: isSuspense,
+		suspense: true,
 		enabled: !!session,
 	});
 }
 
+/**
+ * 날짜를 기반으로 사용자의 시간표들을 가져오는 hook
+ * @param date
+ * @param isSuspense
+ * @returns
+ */
 export function useGetTimesByDate(date: Date, isSuspense: boolean = false) {
 	const { data: session } = useSession();
 
 	return useQuery({
 		queryKey: [...QUERY_KEYS.getPersonalTimesByDate, date.toDateString()],
 		queryFn: () => service.time.getTimesByDate(date),
-		suspense: isSuspense,
+		suspense: true,
+		// initialData: [],
+		enabled: !!session,
+	});
+}
+
+export function useGetTimesByuserNidAndDate(
+	userNid: number,
+	date: Date,
+	isSuspense: boolean = false
+) {
+	const { data: session } = useSession();
+	return useQuery({
+		queryKey: [userNid, date.toDateString()],
+		queryFn: () => service.time.getTimesByUserNidAndDate(userNid, date),
+		suspense: true,
 		// initialData: [],
 		enabled: !!session,
 	});
