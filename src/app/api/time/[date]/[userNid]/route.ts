@@ -1,19 +1,24 @@
 import { auth } from '@/lib/auth';
 import client from '@/lib/db';
-import { getFullDate, getNowYYYY_MM_DD } from '@/utils/date';
-import { NextApiResponse } from 'next';
+import { findUserBynid } from '@/repository/userRepository';
+import { getFullDate } from '@/utils/date';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
 	request: NextRequest,
-	{ params: { date } }: { params: { date: any } }
+	{ params: { date, userNid } }: { params: { date: any; userNid: number } }
 ) {
 	const session = await auth();
-	
+
 	//console.log('postsession', session);
 	if (!session)
 		return new NextResponse('Authentication Error ee', { status: 401 });
-	const { id } = session.user;
+	const user = await findUserBynid(+userNid);
+	if (!user)
+		return NextResponse.json(
+			{ message: '해당 사용자가 존재하지 않습니다.' },
+			{ status: 404 }
+		);
 
 	const [y, m, d] = date.split('/').map(Number);
 
@@ -21,9 +26,7 @@ export async function GET(
 	const day = getFullDate(y, m, d);
 
 	const tomorrow = getFullDate(y, m, d + 1);
-	// console.log(y, m, d);
-	// console.log(day, tomorrow);
-	//console.log( day, tomorrow, id);
+
 	let times;
 	try {
 		times = await client.time.findMany({
@@ -32,7 +35,7 @@ export async function GET(
 					gte: day,
 					lte: tomorrow,
 				},
-				userId: id,
+				userId: user.id,
 			},
 			orderBy: {
 				time: 'asc',
