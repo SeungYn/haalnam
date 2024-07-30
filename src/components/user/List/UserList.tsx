@@ -22,11 +22,11 @@ type UserListItemProps = {
 };
 
 export function UserListItem({ user }: UserListItemProps) {
-	const { nickname, image, id, timer_status } = user;
+	const { nickname, image, id, timer_status, nid } = user;
 
 	return (
 		<Link
-			href={`/time/user/${id}`}
+			href={`/time/user/${nid}`}
 			className="grow-0 basis-[49%] pb-8 leading-4 md:basis-[24%]"
 			role="button"
 		>
