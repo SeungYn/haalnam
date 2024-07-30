@@ -8,6 +8,7 @@ import {
 import { IoSearch } from 'react-icons/io5';
 import { IconProp } from './types';
 import { LuDot } from 'react-icons/lu';
+import { TbFaceIdError } from 'react-icons/tb';
 
 type Prop = IconProp;
 
@@ -62,6 +63,15 @@ export function IoIosArrowBackIcon({ size, style, color, ...rest }: Prop) {
 export function IoIosArrowForwardIcon({ size, style, color, ...rest }: Prop) {
 	return (
 		<IoIosArrowForward
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+		/>
+	);
+}
+
+export function TbFaceIdErrorIcon({ size, style, color, ...rest }: Prop) {
+	return (
+		<TbFaceIdError
 			style={{ fontSize: getIconSize(size), ...style }}
 			{...rest}
 		/>
