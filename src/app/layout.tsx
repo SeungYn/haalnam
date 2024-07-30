@@ -29,12 +29,12 @@ export default function RootLayout({
 							<body className="flex flex-col-reverse gap-4 bg-h_black text-white md:flex-row">
 								<Sidebar />
 								<main className="flex-1 overflow-y-auto">
-									<div className="mx-auto w-full max-w-screen-xl grow px-4 sm:px-0">
+									<div className="mx-auto h-full min-h-full w-full max-w-screen-xl px-4 sm:px-0">
 										{children}
 									</div>
 								</main>
-								<ReactQueryDevtools />
 							</body>
+							<ReactQueryDevtools />
 						</CheckUnloadHOC>
 					</TimeContextProvider>
 				</AuthContext>
