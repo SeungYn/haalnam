@@ -4,8 +4,8 @@ import { ButtonHTMLAttributes } from 'react';
 
 const sizeStyle = {
 	small: 'rounded-2xl py-2 px-6 text-xl ',
-	medium: 'rounded-2xl py-5 px-10 text-2xl',
-	large: 'rounded-2xl py-7 px-16 text-4xl',
+	medium: 'rounded-2xl py-3 px-10 text-2xl',
+	large: 'rounded-2xl py-5 px-16 text-4xl',
 	none: '',
 };
 
