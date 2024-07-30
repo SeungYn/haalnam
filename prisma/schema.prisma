@@ -9,12 +9,13 @@ datasource db {
 
 model User {
   id            String    @id @default(cuid())
+  nid           Int       @unique @default(autoincrement())
   name          String    @db.VarChar(255)
   createdAt     DateTime  @default(now())
   email         String?   @unique
   emailVerified DateTime?
-  nickname      String?   @db.VarChar(255)
   image         String?
+  nickname      String?   @db.VarChar(255)
   timer_status  Status    @default(END)
   accounts      Account[]
   Time          Time[]
