@@ -15,14 +15,27 @@ const DayToName: { [key: number | string]: string } = {
 	6: '토',
 };
 
-export default function WeeklyCalendar() {
+type Props = {
+	selectedDate: Date;
+	setSelectedDate: (data: Date) => void;
+	nickname?: string;
+};
+
+export default function WeeklyCalendar({
+	selectedDate,
+	setSelectedDate,
+	nickname = '',
+}: Props) {
 	const [isMounting, setIsMounting] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const [weekDates, setWeekDates] = useState<Date[]>([]);
-	const { selectedDate, setSelectedDate } = useSelectedDateStore();
+	// const { selectedDate, setSelectedDate } = useSelectedDateStore();
 	const [calendar, setCalendar] = useState<Calendar[]>([]);
 	// 캘린더에서 관리하는 날짜
 	const [calendarDate, setCalendarDate] = useState(selectedDate);
+	// 닉네임 필터링
+	const filterNickname =
+		nickname.length > 20 ? nickname.slice(0, 18) + '...' : nickname;
 
 	const onPrevMonth = (e: MouseEvent<HTMLButtonElement>) => {
 		e.stopPropagation();
@@ -80,11 +93,15 @@ export default function WeeklyCalendar() {
 
 	return (
 		<div className="mt-2 w-full">
-			<div className="mb-4">
+			<div className="mb-4 flex gap-2">
 				<button className="text-4xl" onClick={() => setIsOpen((s) => !s)}>
 					<span>{`${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월`}</span>
 					<DownArrowIcon size="medium" className="ml-2 inline" />
 				</button>
+
+				<h2 className="flex grow items-center justify-center rounded-3xl border text-2xl">
+					{nickname ? `${filterNickname}님의 하루` : '나의 하루'}
+				</h2>
 			</div>
 
 			<div>
