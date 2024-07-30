@@ -13,10 +13,12 @@ import { useParams } from 'next/navigation';
 
 type Props = {
 	params: { userid: string };
+	searchParams: { nickname: string };
 };
 
-export default function UserTimePage({ params }: Props) {
+export default function UserTimePage({ params, searchParams }: Props) {
 	const { userid } = params;
+	const { nickname } = searchParams;
 
 	if (Number.isNaN(Number(userid))) {
 		throw new Error('사용자가 존재하지 않습니다');
@@ -30,6 +32,7 @@ export default function UserTimePage({ params }: Props) {
 				setSelectedDate={(d: Date) => {
 					setSelectedDate(d);
 				}}
+				nickname={nickname}
 			/>
 			<SSRSuspense fallback={<TimeChartSkeleton />}>
 				<OtherUserTimeChartContainer />
