@@ -58,4 +58,17 @@ export default class TimeService {
 
 		return data;
 	}
+
+	async getTimesByUserNidAndDate(userNid: number, date: Date) {
+		const y = date.getFullYear();
+		const m = date.getMonth();
+		const d = date.getDate();
+		const params = encodeURIComponent(`${y}/${m}/${d}`);
+		const encodeUserNid = encodeURIComponent(userNid);
+		const { data } = await this.axios.get<GetPersonalTodayTimeResponse>(
+			'/api/time/' + params + `/${encodeUserNid}`
+		);
+
+		return data;
+	}
 }
