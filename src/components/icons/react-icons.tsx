@@ -2,17 +2,28 @@ import { getIconSize } from '@/utils/size';
 import {
 	IoIosArrowDown,
 	IoIosList,
+	IoMdList,
 	IoIosArrowBack,
 	IoIosArrowForward,
 } from 'react-icons/io';
-import { IoSearch } from 'react-icons/io5';
+import {
+	IoSearch,
+	IoPersonOutline,
+	IoPerson,
+	IoListOutline,
+	IoList,
+	IoHomeOutline,
+	IoHome,
+	IoTimeOutline,
+	IoTime,
+} from 'react-icons/io5';
 import { IconProp } from './types';
 import { LuDot } from 'react-icons/lu';
 import { TbFaceIdError } from 'react-icons/tb';
 
 type Prop = IconProp;
 
-export function DownArrowIcon({ size, style, ...rest }: Prop) {
+export function DownArrowIcon({ size = '', style, ...rest }: Prop) {
 	return (
 		<IoIosArrowDown
 			style={{ fontSize: getIconSize(size), ...style }}
@@ -22,9 +33,22 @@ export function DownArrowIcon({ size, style, ...rest }: Prop) {
 	);
 }
 
-export function IoList({ size, style, ...rest }: Prop) {
+export function IoListIcon({
+	size = '',
+	style,
+	accent = false,
+	...rest
+}: Prop) {
+	if (accent)
+		return (
+			<IoList
+				style={{ fontSize: getIconSize(size), ...style }}
+				{...rest}
+				color="white"
+			/>
+		);
 	return (
-		<IoIosList
+		<IoListOutline
 			style={{ fontSize: getIconSize(size), ...style }}
 			{...rest}
 			color="white"
@@ -32,7 +56,76 @@ export function IoList({ size, style, ...rest }: Prop) {
 	);
 }
 
-export function IoSearchIcon({ size, style, ...rest }: Prop) {
+export function IoTimeIcon({
+	size = '',
+	style,
+	accent = false,
+	...rest
+}: Prop) {
+	if (accent)
+		return (
+			<IoTime
+				style={{ fontSize: getIconSize(size), ...style }}
+				{...rest}
+				color="white"
+			/>
+		);
+	return (
+		<IoTimeOutline
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+			color="white"
+		/>
+	);
+}
+
+export function IoPersonIcon({
+	size = '',
+	style,
+	accent = false,
+	...rest
+}: Prop) {
+	if (accent)
+		return (
+			<IoPerson
+				style={{ fontSize: getIconSize(size), ...style }}
+				{...rest}
+				color="white"
+			/>
+		);
+	return (
+		<IoPersonOutline
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+			color="white"
+		/>
+	);
+}
+
+export function IoHomeIcon({
+	size = '',
+	style,
+	accent = false,
+	...rest
+}: Prop) {
+	if (accent)
+		return (
+			<IoHome
+				style={{ fontSize: getIconSize(size), ...style }}
+				{...rest}
+				color="white"
+			/>
+		);
+	return (
+		<IoHomeOutline
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+			color="white"
+		/>
+	);
+}
+
+export function IoSearchIcon({ size = '', style, ...rest }: Prop) {
 	return (
 		<IoSearch
 			style={{ fontSize: getIconSize(size), ...style }}
@@ -42,7 +135,7 @@ export function IoSearchIcon({ size, style, ...rest }: Prop) {
 	);
 }
 
-export function LuDotIcon({ size, style, color, ...rest }: Prop) {
+export function LuDotIcon({ size = '', style, color, ...rest }: Prop) {
 	return (
 		<LuDot
 			style={{ fontSize: getIconSize(size), ...style }}
@@ -52,7 +145,7 @@ export function LuDotIcon({ size, style, color, ...rest }: Prop) {
 	);
 }
 
-export function IoIosArrowBackIcon({ size, style, color, ...rest }: Prop) {
+export function IoIosArrowBackIcon({ size = '', style, color, ...rest }: Prop) {
 	return (
 		<IoIosArrowBack
 			style={{ fontSize: getIconSize(size), ...style }}
@@ -60,7 +153,12 @@ export function IoIosArrowBackIcon({ size, style, color, ...rest }: Prop) {
 		/>
 	);
 }
-export function IoIosArrowForwardIcon({ size, style, color, ...rest }: Prop) {
+export function IoIosArrowForwardIcon({
+	size = '',
+	style,
+	color,
+	...rest
+}: Prop) {
 	return (
 		<IoIosArrowForward
 			style={{ fontSize: getIconSize(size), ...style }}
@@ -69,7 +167,7 @@ export function IoIosArrowForwardIcon({ size, style, color, ...rest }: Prop) {
 	);
 }
 
-export function TbFaceIdErrorIcon({ size, style, color, ...rest }: Prop) {
+export function TbFaceIdErrorIcon({ size = '', style, color, ...rest }: Prop) {
 	return (
 		<TbFaceIdError
 			style={{ fontSize: getIconSize(size), ...style }}
