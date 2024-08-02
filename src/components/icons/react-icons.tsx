@@ -1,8 +1,6 @@
 import { getIconSize } from '@/utils/size';
 import {
 	IoIosArrowDown,
-	IoIosList,
-	IoMdList,
 	IoIosArrowBack,
 	IoIosArrowForward,
 } from 'react-icons/io';
@@ -16,6 +14,8 @@ import {
 	IoHome,
 	IoTimeOutline,
 	IoTime,
+	IoCameraOutline,
+	IoLogoInstagram,
 } from 'react-icons/io5';
 import { IconProp } from './types';
 import { LuDot } from 'react-icons/lu';
@@ -135,6 +135,16 @@ export function IoSearchIcon({ size = '', style, ...rest }: Prop) {
 	);
 }
 
+export function IoLogoInstagramIcon({ size = '', style, ...rest }: Prop) {
+	return (
+		<IoLogoInstagram
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+			color="white"
+		/>
+	);
+}
+
 export function LuDotIcon({ size = '', style, color, ...rest }: Prop) {
 	return (
 		<LuDot
@@ -148,6 +158,20 @@ export function LuDotIcon({ size = '', style, color, ...rest }: Prop) {
 export function IoIosArrowBackIcon({ size = '', style, color, ...rest }: Prop) {
 	return (
 		<IoIosArrowBack
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+		/>
+	);
+}
+
+export function IoCameraOutlineIcon({
+	size = '',
+	style,
+	color,
+	...rest
+}: Prop) {
+	return (
+		<IoCameraOutline
 			style={{ fontSize: getIconSize(size), ...style }}
 			{...rest}
 		/>
