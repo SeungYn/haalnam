@@ -1,5 +1,5 @@
 .sidebar {
-	@apply flex justify-around gap-2 border-t border-h_gray bg-h_black px-2 py-3 md:flex-col md:justify-normal md:rounded-br-lg md:rounded-tr-lg md:border md:border-l-0 md:py-4;
+	@apply flex justify-around gap-2 border-t border-h_gray bg-h_black px-2 py-1 md:flex-col md:justify-normal md:rounded-br-lg md:rounded-tr-lg md:border md:border-l-0 md:py-4;
 	font-family: var(--font-inter) !important;
 }
 
