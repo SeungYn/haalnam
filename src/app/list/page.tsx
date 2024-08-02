@@ -2,7 +2,6 @@ import PagingButton from '@/components/common/PagingButton/PagingButton';
 import {
 	IoIosArrowBackIcon,
 	IoIosArrowForwardIcon,
-	IoList,
 	IoSearchIcon,
 } from '@/components/icons';
 import UserList from '@/components/user/List/UserList';
@@ -26,6 +25,8 @@ export default async function ListPage({ searchParams }: Props) {
 		+prev,
 		+page
 	);
+
+	if (users.length === 0) return;
 
 	const firstCursor = users[0].nid;
 	const nextCursor = users.at(-1)?.nid;
