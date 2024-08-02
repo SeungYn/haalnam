@@ -1,9 +1,18 @@
 import {
+	findTimesByUserId,
+	findTodayTimesByUserId,
+} from '@/repository/timeRepository';
+import {
+	findUserBynid,
 	findUserListByNidWithCursor,
+	findUserInfoById,
 	findUsersCount,
+	updateUserProfileById,
 	USER_ELEMENTS_PER_PAGE,
 	USER_PAGES_PER_BLOCK,
 } from '@/repository/userRepository';
+import { User } from '@prisma/client';
+import { LuInstagram } from 'react-icons/lu';
 
 export async function getUserList(
 	cursor?: number,
@@ -22,6 +31,7 @@ export async function getUserList(
 	);
 
 	const totalElements = await findUsersCount();
+
 	const totalPages = Math.ceil(totalElements / USER_ELEMENTS_PER_PAGE);
 	let startPage = 1,
 		lastPage =
@@ -49,4 +59,52 @@ export async function getUserList(
 			isPrevBlock,
 		},
 	};
+}
+
+export async function getUserByNid(nid: number) {
+	const user = await findUserBynid(nid);
+	return user;
+}
+
+export async function getUserInfoById(id: string) {
+	return await findUserInfoById(id);
+}
+
+export async function postUserProfileById(params: UserInfo) {
+	return await updateUserProfileById(params);
+}
+/**
+ * 현재까지 사용한 총 시간
+ * @param userId
+ * @returns
+ */
+export async function getUsedTotalTimes(userId: string) {
+	const times = await findTimesByUserId(userId);
+	const length = times.length % 2 === 0 ? times.length : times.length - 1;
+
+	let totalMs = 0;
+	for (let i = 0; i < length; i += 2) {
+		const ms = times[i + 1].time.getTime() - times[i].time.getTime();
+		totalMs += ms;
+	}
+
+	return (totalMs / (1000 * 60 * 60)).toFixed(1);
+}
+
+/**
+ * 오늘 사용한 총 시간
+ * @param userId
+ * @returns
+ */
+export async function getUsedTodayTotalTimesByUserId(userId: string) {
+	const times = await findTodayTimesByUserId(userId);
+	const length = times.length % 2 === 0 ? times.length : times.length - 1;
+
+	let totalMs = 0;
+	for (let i = 0; i < length; i += 2) {
+		const ms = times[i + 1].time.getTime() - times[i].time.getTime();
+		totalMs += ms;
+	}
+
+	return (totalMs / (1000 * 60 * 60)).toFixed(1);
 }
