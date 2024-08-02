@@ -4,6 +4,7 @@ import NextAuth, { NextAuthConfig } from 'next-auth';
 import { Adapter } from 'next-auth/adapters';
 import KakaoProvider from 'next-auth/providers/kakao';
 import dbClient from './db';
+import { findUserById } from '@/repository/userRepository';
 
 const prisma = new PrismaClient();
 
@@ -36,12 +37,19 @@ export const nextOptions: NextAuthConfig = {
 		async session({ session, token, user: test }) {
 			// Send properties to the client, like an access_token and user id from a provider.
 			const user = session?.user;
-			//console.log(user, token, test, 'usesession');
-			//console.log('session', session, token, test);
+			const existingUser = await findUserById(user.id);
+			if (!existingUser) return session;
+
 			if (user) {
 				session.user = {
 					...user,
 					id: token.sub!,
+				};
+			}
+			if (existingUser) {
+				session.user = {
+					...session.user,
+					nickname: existingUser.nickname,
 				};
 			}
 
