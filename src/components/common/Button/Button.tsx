@@ -12,9 +12,22 @@ const sizeStyle = {
 type Prop = ButtonHTMLAttributes<HTMLButtonElement> & {
 	className?: string;
 	size?: keyof typeof sizeStyle;
+	accent?: boolean;
 };
 
-export function Button({ className = '', size = 'none', ...props }: Prop) {
+export function Button({
+	className = '',
+	size = 'none',
+	accent = false,
+	...props
+}: Prop) {
+	if (accent)
+		return (
+			<button
+				className={`flex items-center justify-center border-0 bg-white py-3 text-h_black transition-colors hover:border hover:border-h_gray hover:bg-black hover:text-white ${className} ${sizeStyle[size]}`}
+				{...props}
+			/>
+		);
 	return (
 		<>
 			<button
