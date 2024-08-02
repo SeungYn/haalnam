@@ -24,6 +24,9 @@ export async function findUserListByNidWithCursor(
 
 		for (let i = start; i < last; i++) {
 			users = await dbClient.user.findMany({
+				where: {
+					is_public: true,
+				},
 				take: take,
 				skip: 1,
 				...(cursor && { cursor: { nid: nextCursor } }),
@@ -36,6 +39,7 @@ export async function findUserListByNidWithCursor(
 		}
 	} else {
 		users = await dbClient.user.findMany({
+			where: { is_public: true },
 			take: limit,
 			orderBy: { nid: 'asc' },
 		});
@@ -54,6 +58,70 @@ export async function findUserBynid(nid: number) {
 	return user;
 }
 
+export async function findUserById(id: string) {
+	const user = dbClient.user.findFirst({
+		where: {
+			id,
+		},
+	});
+
+	return user;
+}
+
 export async function findUsersCount() {
-	return await dbClient.user.count();
+	return await dbClient.user.count({
+		where: {
+			is_public: true,
+		},
+	});
+}
+
+export async function findUserInfoById(id: string) {
+	const profile = await dbClient.user.findFirst({
+		where: {
+			id: id,
+		},
+		select: {
+			nickname: true,
+			instagram: true,
+			introduce: true,
+			image: true,
+			is_public: true,
+		},
+	});
+
+	return profile;
+}
+
+/**
+ * 유저 정보 수정
+ * @param param0
+ * @returns
+ */
+export async function updateUserProfileById({
+	id,
+	image,
+	instagram,
+	introduce,
+	nickname,
+}: UserInfo) {
+	const filteredParams: { [key: string]: any } = {
+		id: id,
+		instagram: instagram,
+		introduce: introduce,
+		nickname: nickname,
+	};
+
+	if (image !== '' && image !== null) {
+		filteredParams.image = image;
+	}
+
+	const profile = await dbClient.user.update({
+		where: {
+			id: id,
+		},
+		data: filteredParams,
+	});
+
+	return profile;
 }
