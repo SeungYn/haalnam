@@ -8,15 +8,18 @@ datasource db {
 }
 
 model User {
-  /// test
   id            String    @id @default(cuid())
+  nid           Int       @unique @default(autoincrement())
   name          String    @db.VarChar(255)
   createdAt     DateTime  @default(now())
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  test          String?   @map("test_id")
+  is_public     Boolean   @default(true)
+  nickname      String    @default("") @db.VarChar(255)
   timer_status  Status    @default(END)
+  instagram     String    @default("")
+  introduce     String?   @db.Text
   accounts      Account[]
   Time          Time[]
 }

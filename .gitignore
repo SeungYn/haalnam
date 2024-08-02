@@ -40,3 +40,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# prisma
+prisma/migrations/** 
+
+# static files
+public/assets/user/personal/*

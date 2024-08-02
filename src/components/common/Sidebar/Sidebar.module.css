@@ -1,0 +1,41 @@
+.sidebar {
+	@apply flex justify-around gap-2 border-t border-h_gray bg-h_black px-2 py-1 md:flex-col md:justify-normal md:rounded-br-lg md:rounded-tr-lg md:border md:border-l-0 md:py-4;
+	font-family: var(--font-inter) !important;
+}
+
+.sidebar__item {
+	@apply flex flex-col items-center;
+
+	& > span {
+		font-size: 1rem;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.sidebar {
+		width: 50px;
+		transition: all 0.3s;
+	}
+
+	.sidebar:hover {
+		width: 150px;
+	}
+
+	.sidebar:hover .sidebar__item {
+		width: 150px;
+		& > span {
+			display: block;
+		}
+	}
+
+	.sidebar__item {
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+		flex-shrink: 0;
+
+		& > span {
+			display: none;
+		}
+	}
+}

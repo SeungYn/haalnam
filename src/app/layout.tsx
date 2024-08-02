@@ -8,7 +8,6 @@ import ReactQueryContext from '@/context/ReactQueryContext';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import TimeContextProvider from '@/context/TimeContext';
 import CheckUnloadHOC from '@/hoc/CheckUnloadHOC';
-import HeightAdjustHOC from '@/hoc/HeightAdjustHOC';
 
 export const metadata: Metadata = {
 	title: 'Create Next App',
@@ -29,7 +28,7 @@ export default function RootLayout({
 							<body className="flex flex-col-reverse gap-4 bg-h_black text-white md:flex-row">
 								<Sidebar />
 								<main className="flex-1 overflow-y-auto">
-									<div className="mx-auto w-full max-w-screen-xl grow px-4 sm:px-0">
+									<div className="mx-auto h-full min-h-full w-full max-w-screen-xl px-4 md:px-0">
 										{children}
 									</div>
 								</main>

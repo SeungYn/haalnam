@@ -1,4 +1,4 @@
-import { Time } from '@prisma/client';
+import { Time, User } from '@prisma/client';
 
 export {};
 declare global {
@@ -22,4 +22,20 @@ declare global {
 		date: Date;
 		accent: boolean;
 	};
+
+	/**
+	 * 유저 관련 타입들
+	 */
+	type UserInfo = Pick<
+		User,
+		'instagram' | 'nickname' | 'introduce' | 'id' | 'image' | 'is_public'
+	> & {
+		totalHours: number;
+		todayHours: number;
+	};
+
+	type UserProfile = Pick<
+		User,
+		'instagram' | 'nickname' | 'introduce' | 'id' | 'image'
+	>;
 }

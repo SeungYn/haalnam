@@ -10,7 +10,6 @@ import {
 	formatDisplayTime,
 	toSecondsByMilliseconds,
 } from '@/utils/date';
-import { chartData } from '@/utils/mock/chart/data';
 import { ROTATE_DEG } from '@/utils/size';
 import { deepCopy } from '@/utils/util';
 import { Time } from '@prisma/client';
@@ -245,12 +244,15 @@ export default function TimeChart({ times }: Props) {
 			ctx.beginPath();
 			// ctx.lineWidth = 30;
 			path.moveTo(startX, startX);
+			// 시작을 12시 방향부터 시작하기위해 -90를 회전시킴 그 코드는 - Math.PI / 2를 추가
 			path.arc(
 				startX,
 				startX,
 				chartWidth / 2,
-				+((Math.PI / 180) * timeToDegree(times[i].time)).toFixed(2),
-				+((Math.PI / 180) * timeToDegree(times[i + 1].time)).toFixed(2)
+				+((Math.PI / 180) * timeToDegree(times[i].time)).toFixed(2) -
+					Math.PI / 2,
+				+((Math.PI / 180) * timeToDegree(times[i + 1].time)).toFixed(2) -
+					Math.PI / 2
 			);
 
 			ctx.fillStyle = `rgb(${colorPalette[paletteIndex].r}, ${colorPalette[paletteIndex].g}, ${colorPalette[paletteIndex].b})`; //채울 색상
@@ -266,7 +268,7 @@ export default function TimeChart({ times }: Props) {
 				endTimeObj: times[i + 1],
 			});
 		}
-		//drawChartMiddleCycle(ctx);
+
 		setPath2Ds(customPath2dList);
 	}, [canvasRef, chartWidth, times]);
 
@@ -289,6 +291,23 @@ export default function TimeChart({ times }: Props) {
 					</div>
 				);
 			})}
+
+			<div className="relative h-[300px] w-[300px] overflow-hidden rounded-full outline outline-2 outline-h_gray sm:h-[600px] sm:w-[600px]">
+				<canvas
+					ref={canvasRef}
+					width={chartWidth}
+					height={chartWidth}
+					className="absolute z-30"
+					onClick={onClickCanvas}
+					onMouseMove={onClickCanvas}
+					onMouseLeave={onMouseLeaveCanvase}
+				></canvas>
+
+				{makeGradution(24)}
+				{/* 중앙 동그라미 */}
+				<div className="absolute left-1/2 top-1/2 z-50 h-[20px] w-[20px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white bg-h_black sm:h-[30px] sm:w-[30px]"></div>
+			</div>
+
 			{/* hover 팝업 */}
 			{hoverCustomPath2D && (
 				<div
@@ -328,21 +347,6 @@ export default function TimeChart({ times }: Props) {
 					</p>
 				</div>
 			)}
-
-			<div className="relative h-[300px] w-[300px] overflow-hidden rounded-full outline outline-2 outline-h_gray sm:h-[600px] sm:w-[600px]">
-				<canvas
-					ref={canvasRef}
-					width={chartWidth}
-					height={chartWidth}
-					className="absolute z-30 cursor-pointer"
-					onClick={onClickCanvas}
-					onMouseMove={onClickCanvas}
-					onMouseLeave={onMouseLeaveCanvase}
-				></canvas>
-				{makeGradution(24)}
-				{/* 중앙 동그라미 */}
-				<div className="absolute left-1/2 top-1/2 z-50 h-[20px] w-[20px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white bg-h_black sm:h-[30px] sm:w-[30px]"></div>
-			</div>
 		</div>
 	);
 }
