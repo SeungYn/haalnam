@@ -70,7 +70,9 @@ export async function getUserInfoById(id: string) {
 	return await findUserInfoById(id);
 }
 
-export async function postUserProfileById(params: UserInfo) {
+export async function postUserProfileById(
+	params: Exclude<UserProfile, 'is_public'>
+) {
 	return await updateUserProfileById(params);
 }
 /**

@@ -45,7 +45,7 @@ export default function UserTimePage({ params, searchParams }: Props) {
 	);
 }
 
-export function OtherUserTimeChartContainer() {
+function OtherUserTimeChartContainer() {
 	const params = useParams<{ userid: string }>();
 
 	const { selectedDate } = useOtherUserSelectedDateContext();
@@ -54,7 +54,7 @@ export function OtherUserTimeChartContainer() {
 	return <TimeChart times={data!} />;
 }
 
-export function OtherUserTimeTableContainer() {
+function OtherUserTimeTableContainer() {
 	const params = useParams<{ userid: string }>();
 
 	const { selectedDate } = useOtherUserSelectedDateContext();

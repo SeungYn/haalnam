@@ -104,7 +104,7 @@ export async function updateUserProfileById({
 	instagram,
 	introduce,
 	nickname,
-}: UserInfo) {
+}: Exclude<UserProfile, 'is_public'>) {
 	const filteredParams: { [key: string]: any } = {
 		id: id,
 		instagram: instagram,

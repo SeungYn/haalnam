@@ -6,6 +6,7 @@ import AutoHeightTextArea from '../../common/input/AutoHeightTextArea';
 import { FormEvent, useRef, useState } from 'react';
 import ProfileInput from './ProfileInput';
 import { Button } from '../../common';
+import { PostUserProfileRequest } from '@/service/types/user';
 
 type Props = {
 	image: string | null;
