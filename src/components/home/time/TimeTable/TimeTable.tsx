@@ -12,7 +12,7 @@ type Props = {
 	times: Time[];
 };
 
-export default function TimeTable({ times }: Props) {
+export default function TimeTable({ times = [] }: Props) {
 	let filteredData = times.flatMap((currentItem, i) => {
 		// 마지막이 start일 경우
 
