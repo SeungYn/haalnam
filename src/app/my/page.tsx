@@ -23,7 +23,8 @@ export default function MyPage() {
 			</SSRSuspense>
 			<Hr className="my-2" />
 			<Button
-				className="mx-auto w-3/4 bg-white py-3 text-h_black hover:bg-white hover:text-h_black md:py-2 md:text-xl"
+				className="mx-auto w-3/4 py-3 md:py-2 md:text-xl"
+				accent
 				onClick={() => {
 					signOut();
 					router.push('/	');
