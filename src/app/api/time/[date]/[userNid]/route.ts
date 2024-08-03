@@ -1,7 +1,9 @@
 import { auth } from '@/lib/auth';
 import client from '@/lib/db';
 import { findUserBynid } from '@/repository/userRepository';
+import { checkUser } from '@/service/server/userServerService';
 import { getFullDate } from '@/utils/date';
+import { User } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -11,8 +13,15 @@ export async function GET(
 	const session = await auth();
 
 	//console.log('postsession', session);
-	if (!session)
-		return new NextResponse('Authentication Error ee', { status: 401 });
+	let checkuser: User | null;
+	try {
+		checkuser = await checkUser(session?.user?.id, session);
+	} catch {
+		return NextResponse.json(
+			{ message: '유저 정보가 올바르지 않습니다.' },
+			{ status: 401 }
+		);
+	}
 	const user = await findUserBynid(+userNid);
 	if (!user)
 		return NextResponse.json(

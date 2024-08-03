@@ -127,3 +127,15 @@ export function isCurrentDay(selectedDate: Date) {
 
 	return cy === ty && cm === tm && cd === td;
 }
+
+/**
+ * 브라우저에서의 시간으로 변경시키는 함수
+ * -9시간을 해줌
+ * @param serverDate +9시간된 UTC 시간
+ * @returns
+ */
+export function formatBroswerTime(serverDate: Date) {
+	const date = new Date(serverDate);
+	date.setHours(date.getHours() - 9);
+	return date;
+}

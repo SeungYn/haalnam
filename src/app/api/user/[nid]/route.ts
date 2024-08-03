@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth';
 import { findUserBynid } from '@/repository/userRepository';
+import { checkUser } from '@/service/server/userServerService';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -8,9 +9,14 @@ export async function GET(
 ) {
 	const session = await auth();
 
-	//console.log('postsession', session);
-	if (!session)
-		return new NextResponse('Authentication Error ee', { status: 401 });
+	try {
+		const user = await checkUser(session?.user?.id, session);
+	} catch {
+		return NextResponse.json(
+			{ message: '유저 정보가 올바르지 않습니다.' },
+			{ status: 401 }
+		);
+	}
 
 	const user = await findUserBynid(nid);
 

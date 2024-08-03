@@ -1,5 +1,8 @@
 import { auth } from '@/lib/auth';
-import { postUserProfileById } from '@/service/server/userServerService';
+import {
+	checkUser,
+	postUserProfileById,
+} from '@/service/server/userServerService';
 import { escapeHTML } from '@/utils/security';
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
@@ -7,8 +10,15 @@ import { Readable } from 'stream';
 
 export async function POST(req: NextRequest) {
 	const session = await auth();
-	if (!session)
-		return new NextResponse('Authentication Error ee', { status: 401 });
+	let user;
+	try {
+		user = await checkUser(session?.user?.id, session);
+	} catch {
+		return NextResponse.json(
+			{ message: '유저 정보가 올바르지 않습니다.' },
+			{ status: 401 }
+		);
+	}
 
 	const formData = await req.formData();
 	const nickname = formData.get('nickname') as string;

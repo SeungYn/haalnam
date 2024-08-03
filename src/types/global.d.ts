@@ -38,4 +38,13 @@ declare global {
 		User,
 		'instagram' | 'nickname' | 'introduce' | 'id' | 'image'
 	>;
+
+	/**
+	 * 리액트 쿼리 관련 에러
+	 */
+
+	type ReactQueryError = {
+		message: string;
+		status: number;
+	};
 }

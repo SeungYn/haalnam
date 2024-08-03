@@ -38,6 +38,7 @@ export const nextOptions: NextAuthConfig = {
 			// Send properties to the client, like an access_token and user id from a provider.
 			const user = session?.user;
 			const existingUser = await findUserById(user.id);
+			//console.log(existingUser?.id, session);
 			if (!existingUser) return session;
 
 			if (user) {

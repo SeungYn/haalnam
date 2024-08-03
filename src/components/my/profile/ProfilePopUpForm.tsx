@@ -75,7 +75,7 @@ export default function ProfilePopUpForm({
 								alert('파일 사이즈를 5MB이하로 설정해주세요!');
 								return;
 							}
-							console.log(size);
+
 							const temporalImageUrl = URL.createObjectURL(e.target.files[0]);
 							console.log(temporalImageUrl);
 							setForm((f) => ({
