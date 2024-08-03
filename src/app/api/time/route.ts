@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import client from '@/lib/db';
 import { getNowDate, getNowYYYY_MM_DD } from '@/utils/date';
-import { Status } from '@prisma/client';
+import { Status, User } from '@prisma/client';
 import { auth } from '@/lib/auth';
 import { getLatestTime } from '@/service/server/timeServerService';
 import { checkUser } from '@/service/server/userServerService';
@@ -9,15 +9,17 @@ import { checkUser } from '@/service/server/userServerService';
 export async function POST(request: NextRequest) {
 	const session = await auth();
 
+	let user: User;
 	try {
-		const user = await checkUser(session?.user?.id, session);
+		user = await checkUser(session?.user?.id, session);
 	} catch {
 		return NextResponse.json(
 			{ message: '유저 정보가 올바르지 않습니다.' },
 			{ status: 401 }
 		);
 	}
-	const { id } = session!.user;
+	const { id, timer_status } = user;
+	const next_timer_status = timer_status === 'START' ? 'END' : 'START';
 
 	const formData = await request.formData();
 	const subject = formData.get('subject') as string;
@@ -28,7 +30,7 @@ export async function POST(request: NextRequest) {
 	const res = await client.$transaction(async () => {
 		let date = getNowDate();
 
-		if (status === 'END') {
+		if (timer_status === 'END') {
 			const recentTime = await getLatestTime(id);
 			const now = getNowDate();
 
@@ -43,7 +45,7 @@ export async function POST(request: NextRequest) {
 		const post = await client.time.create({
 			data: {
 				userId: id,
-				status: status,
+				status: next_timer_status,
 				subject: subject,
 				time: getNowDate(),
 			},
@@ -51,7 +53,7 @@ export async function POST(request: NextRequest) {
 		await client.user.update({
 			where: { id },
 			data: {
-				timer_status: status,
+				timer_status: next_timer_status,
 			},
 		});
 
