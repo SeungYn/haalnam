@@ -11,8 +11,8 @@ import CheckUnloadHOC from '@/hoc/CheckUnloadHOC';
 
 export const metadata: Metadata = {
 	title: {
-		template: 'haalnam | &s',
-		default: 'haalnam | Home',
+		template: 'haalnam | %s',
+		default: 'haalnam | 홈',
 	},
 	description: '간편하게 시간을 기록하세요',
 	keywords: '타이머, 시간관리, 시간측정, 남은시간',

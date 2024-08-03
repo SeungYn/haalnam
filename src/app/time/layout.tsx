@@ -1,5 +1,10 @@
 import AuthGuarder from '@/hoc/AuthGuarder';
+import { Metadata } from 'next';
 import { PropsWithChildren } from 'react';
+
+export const metadata: Metadata = {
+	title: '시간표',
+};
 
 type Props = {};
 
