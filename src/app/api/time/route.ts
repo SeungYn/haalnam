@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 		const res = await client.$transaction(async () => {
 			let date = getNowDate();
 
-			if (timer_status === 'END') {
+			if (next_timer_status === 'END') {
 				const recentTime = await getLatestTime(id);
 				const now = getNowDate();
 
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 					userId: id,
 					status: next_timer_status,
 					subject: subject,
-					time: getNowDate(),
+					time: date,
 				},
 			});
 			await client.user.update({
