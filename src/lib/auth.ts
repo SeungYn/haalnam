@@ -5,6 +5,7 @@ import { Adapter } from 'next-auth/adapters';
 import KakaoProvider from 'next-auth/providers/kakao';
 import dbClient from './db';
 import { findUserById } from '@/repository/userRepository';
+import { generateNickname } from './user';
 
 const prisma = new PrismaClient();
 
@@ -22,7 +23,7 @@ export const nextOptions: NextAuthConfig = {
 			await dbClient.user.update({
 				where: { id: user.id },
 				data: {
-					nickname: '여유로운햇님이',
+					nickname: generateNickname(),
 				},
 			});
 		},
