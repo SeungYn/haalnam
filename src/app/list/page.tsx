@@ -6,6 +6,11 @@ import {
 } from '@/components/icons';
 import UserList from '@/components/user/List/UserList';
 import { getUserList } from '@/service/server/userServerService';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: '유저 리스트',
+};
 
 type Props = {
 	searchParams: {
