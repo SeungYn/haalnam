@@ -74,8 +74,9 @@ export async function checkUser(
 ) {
 	if (!session) throw new Error('유저 정보가 없음');
 	if (id === undefined) throw new Error('유저 정보가 없음');
-	const user = getUserById(id);
+	const user = await getUserById(id);
 	if (user === null) throw new Error('유저 정보가 없음');
+
 	return user;
 }
 
