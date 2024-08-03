@@ -17,6 +17,7 @@ export default function ProfileIntroduce({
 }
 
 function displayIntroduce(introduce: string | null, isFold: boolean) {
+	console.log(introduce);
 	if (introduce === '' || introduce === null) return '아직 자기소개가 없어요';
 
 	if (!isFold && introduce.length <= 80) return `${introduce}`;
