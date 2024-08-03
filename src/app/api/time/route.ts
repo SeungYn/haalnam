@@ -4,13 +4,20 @@ import { getNowDate, getNowYYYY_MM_DD } from '@/utils/date';
 import { Status } from '@prisma/client';
 import { auth } from '@/lib/auth';
 import { getLatestTime } from '@/service/server/timeServerService';
+import { checkUser } from '@/service/server/userServerService';
 
 export async function POST(request: NextRequest) {
 	const session = await auth();
 
-	if (!session)
-		return new NextResponse('Authentication Error ee', { status: 401 });
-	const { id } = session.user;
+	try {
+		const user = await checkUser(session?.user?.id, session);
+	} catch {
+		return NextResponse.json(
+			{ message: '유저 정보가 올바르지 않습니다.' },
+			{ status: 401 }
+		);
+	}
+	const { id } = session!.user;
 
 	const formData = await request.formData();
 	const subject = formData.get('subject') as string;

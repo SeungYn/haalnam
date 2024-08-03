@@ -125,3 +125,7 @@ export async function updateUserProfileById({
 
 	return profile;
 }
+
+export async function getUserById(id: string) {
+	return await dbClient.user.findUnique({ where: { id } });
+}

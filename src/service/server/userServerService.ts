@@ -10,9 +10,9 @@ import {
 	updateUserProfileById,
 	USER_ELEMENTS_PER_PAGE,
 	USER_PAGES_PER_BLOCK,
+	findUserById,
 } from '@/repository/userRepository';
-import { User } from '@prisma/client';
-import { LuInstagram } from 'react-icons/lu';
+import { Session } from 'next-auth';
 
 export async function getUserList(
 	cursor?: number,
@@ -63,6 +63,24 @@ export async function getUserList(
 
 export async function getUserByNid(nid: number) {
 	const user = await findUserBynid(nid);
+	return user;
+}
+/**
+ * 유저정보가 있는지 확인
+ */
+export async function checkUser(
+	id: string | undefined,
+	session: Session | null
+) {
+	if (!session) throw new Error('유저 정보가 없음');
+	if (id === undefined) throw new Error('유저 정보가 없음');
+	const user = getUserById(id);
+	if (user === null) throw new Error('유저 정보가 없음');
+	return user;
+}
+
+export async function getUserById(id: string) {
+	const user = await findUserById(id);
 	return user;
 }
 

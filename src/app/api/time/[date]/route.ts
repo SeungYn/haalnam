@@ -1,6 +1,8 @@
 import { auth } from '@/lib/auth';
 import client from '@/lib/db';
+import { checkUser } from '@/service/server/userServerService';
 import { getFullDate, getNowYYYY_MM_DD } from '@/utils/date';
+import { User } from '@prisma/client';
 import { NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -9,11 +11,18 @@ export async function GET(
 	{ params: { date } }: { params: { date: any } }
 ) {
 	const session = await auth();
-	
+
 	//console.log('postsession', session);
-	if (!session)
-		return new NextResponse('Authentication Error ee', { status: 401 });
-	const { id } = session.user;
+	let user: User | null;
+	try {
+		user = await checkUser(session?.user?.id, session);
+	} catch {
+		return NextResponse.json(
+			{ message: '유저 정보가 올바르지 않습니다.' },
+			{ status: 401 }
+		);
+	}
+	const { id } = user!;
 
 	const [y, m, d] = date.split('/').map(Number);
 
