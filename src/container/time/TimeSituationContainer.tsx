@@ -9,8 +9,8 @@ import { Status } from '@prisma/client';
 
 export default function TimeSituationContainer() {
 	const timeState = useTimeContext();
-	const { handleEndTime } = useTimeActionContext();
-	const { mutate } = usePostEndTime({ handleEndTime });
+	const { handleEndTime, handleStartTime } = useTimeActionContext();
+	const { mutate } = usePostEndTime({ handleEndTime, handleStartTime });
 	const [id, forceUpdate] = useForceUpdate();
 
 	const onEndTime = () => {
