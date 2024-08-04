@@ -22,7 +22,6 @@ export default class UserService {
 
 		formData.append('nickname', nickname);
 		formData.append('id', id);
-		console.log('file', imageFile);
 		if (imageFile) formData.append('imageFile', imageFile);
 		formData.append('instagram', instagram);
 		formData.append('introduce', introduce);

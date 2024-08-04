@@ -13,6 +13,14 @@ body {
 	/* min-height: 100vh; */
 }
 
+main::-webkit-scrollbar {
+	@apply w-3 bg-h_black;
+}
+
+main::-webkit-scrollbar-thumb {
+	@apply rounded-lg bg-h_gray_semi_dark;
+}
+
 input {
 	outline: none;
 }

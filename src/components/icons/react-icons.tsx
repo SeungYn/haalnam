@@ -16,6 +16,7 @@ import {
 	IoTime,
 	IoCameraOutline,
 	IoLogoInstagram,
+	IoHappyOutline,
 } from 'react-icons/io5';
 import { IconProp } from './types';
 import { LuDot } from 'react-icons/lu';
@@ -194,6 +195,15 @@ export function IoIosArrowForwardIcon({
 export function TbFaceIdErrorIcon({ size = '', style, color, ...rest }: Prop) {
 	return (
 		<TbFaceIdError
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+		/>
+	);
+}
+
+export function IoHappyOutlineIcon({ size = '', style, color, ...rest }: Prop) {
+	return (
+		<IoHappyOutline
 			style={{ fontSize: getIconSize(size), ...style }}
 			{...rest}
 		/>
