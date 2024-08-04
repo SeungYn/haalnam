@@ -12,8 +12,11 @@ import { Status } from '@prisma/client';
 export default function TimeFormContainer() {
 	const { status, subject } = useTimeContext();
 	const { handleStartTime, handleEndTime } = useTimeActionContext();
-	const { mutate } = usePostStartTime({ handleStartTime });
-	const { mutate: mutateTimeEnd } = usePostEndTime({ handleEndTime });
+	const { mutate } = usePostStartTime({ handleStartTime, handleEndTime });
+	const { mutate: mutateTimeEnd } = usePostEndTime({
+		handleStartTime,
+		handleEndTime,
+	});
 	const { selectedDate } = useSelectedDateStore();
 
 	const onStart = ({ subject, time, status }: PostTimeRequest) => {

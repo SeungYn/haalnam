@@ -6,6 +6,9 @@ import service from '@/service/client';
 import { useSession } from 'next-auth/react';
 import { PostTimeRequest } from '@/service/types/time';
 import { TimeActionContextType } from '@/context/TimeContext';
+import { toast } from 'react-toastify';
+import { useInfoToast } from '@/hooks/toast';
+import { Time } from '@prisma/client';
 
 export function useGetPersonalTodayTime(isSuspense: boolean = false) {
 	const { data: session } = useSession();
@@ -54,15 +57,22 @@ export function useGetTimesByuserNidAndDate(
 
 export function usePostStartTime({
 	handleStartTime,
-}: Pick<TimeActionContextType, 'handleStartTime'>) {
+	handleEndTime,
+}: Pick<TimeActionContextType, 'handleStartTime' | 'handleEndTime'>) {
 	const queryClient = useQueryClient();
 	const mutate = useMutation({
 		mutationFn: ({ subject, time, status }: PostTimeRequest) =>
 			service.time.postTime({ subject, time, status }),
 		onMutate: ({ subject, time, status }) => {
 			handleStartTime(time, subject);
+			useInfoToast('타이머가 시작됐습니다!');
 		},
-		onSuccess: (data, params) => {
+		onSuccess: (data, params) => {},
+		onError: () => {
+			toast.error(`에러가 발생했습니다. 다시 시도해주세요`);
+			handleEndTime();
+		},
+		onSettled: (data, err, params) => {
 			queryClient.invalidateQueries([
 				...QUERY_KEYS.getPersonalTimesByDate,
 				params.time.toDateString(),
@@ -75,15 +85,30 @@ export function usePostStartTime({
 
 export function usePostEndTime({
 	handleEndTime,
-}: Pick<TimeActionContextType, 'handleEndTime'>) {
+	handleStartTime,
+}: Pick<TimeActionContextType, 'handleEndTime' | 'handleStartTime'>) {
 	const queryClient = useQueryClient();
 	const mutate = useMutation({
 		mutationFn: ({ subject, time, status }: PostTimeRequest) =>
 			service.time.postTime({ subject, time, status }),
 		onMutate: ({ subject, time, status }) => {
 			handleEndTime();
+			useInfoToast('타이머가 종료됐습니다!');
 		},
-		onSuccess: (data, params) => {
+		onSuccess: (data, params) => {},
+		onError: (error, params) => {
+			toast.error(`에러가 발생했습니다. 다시 시도해주세요`);
+			// 에러가 나면 기존의 start 했던 타이머를 불러와야함.
+			const times = queryClient.getQueryData<Time[]>([
+				...QUERY_KEYS.getPersonalTimesByDate,
+				params.time.toDateString(),
+			]);
+			if (times && times.length > 0) {
+				const { time, subject } = times.at(-1)!;
+				handleStartTime(time, subject);
+			}
+		},
+		onSettled: (data, err, params) => {
 			queryClient.invalidateQueries([
 				...QUERY_KEYS.getPersonalTimesByDate,
 				params.time.toDateString(),

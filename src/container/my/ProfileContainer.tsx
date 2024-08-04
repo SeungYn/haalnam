@@ -13,8 +13,9 @@ type Props = {
 export default function ProfileContainer({ id }: Props) {
 	const { isMounting, isOpen, setIsOpen, setIsMounting } = usePopUpStatus();
 	const { data } = useGetUserInfoSuspense(id);
-	const { mutate: onUserProfileModify } = usePostUserProfile(() =>
-		setIsMounting(false)
+	const { mutate: onUserProfileModify } = usePostUserProfile(
+		() => setIsMounting(false),
+		() => setIsMounting(false)
 	);
 
 	if (data === undefined) return '유저정보가 없음';
