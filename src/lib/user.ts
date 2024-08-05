@@ -408,7 +408,7 @@ export function generateNickname() {
 	const adjindex = Math.floor(Math.random() * (maxAdj - minAdj) + minAdj);
 
 	const minNon = 0;
-	const maxNon = adjectives.length;
+	const maxNon = nicknameNouns.length;
 	const nonindex = Math.floor(Math.random() * (maxNon - minNon) + minNon);
 
 	return `${adjectives[adjindex] + ' ' + nicknameNouns[nonindex]}`;
