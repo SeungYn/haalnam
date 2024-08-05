@@ -5,7 +5,7 @@ import { Status, Time, User } from '@prisma/client';
 import { auth } from '@/lib/auth';
 import { getLatestTime } from '@/service/server/timeServerService';
 import { checkUser } from '@/service/server/userServerService';
-import { ExceptionRes } from '@/utils/exception';
+import { ExceptionCode, ExceptionRes } from '@/utils/exception';
 
 export async function POST(request: NextRequest) {
 	const session = await auth();
@@ -78,7 +78,10 @@ export async function POST(request: NextRequest) {
 		} catch (error) {
 			console.error(error);
 			return NextResponse.json(
-				new ExceptionRes('에러가 발생했습니다. 다시 시도해주세요'),
+				new ExceptionRes(
+					'에러가 발생했습니다. 다시 시도해주세요',
+					ExceptionCode.TimeContinue
+				),
 				{ status: 500 }
 			);
 		}
@@ -86,7 +89,7 @@ export async function POST(request: NextRequest) {
 	// 타이머 종료 요청을 받았을 때 현재 서버 상태가 종료인 경우
 	else if (status === 'END' && timer_status === 'END') {
 		return NextResponse.json(
-			new ExceptionRes('현재 진행된 타이머가 없습니다.'),
+			new ExceptionRes('현재 진행 중인 타이머가 없습니다.'),
 			{ status: 400 }
 		);
 	}
@@ -131,7 +134,10 @@ export async function POST(request: NextRequest) {
 	} catch (error) {
 		console.error(error);
 		return NextResponse.json(
-			new ExceptionRes('에러가 발생했습니다. 다시 시도해주세요'),
+			new ExceptionRes(
+				'에러가 발생했습니다. 다시 시도해주세요',
+				ExceptionCode.TimeContinue
+			),
 			{ status: 500 }
 		);
 	}

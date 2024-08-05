@@ -9,6 +9,8 @@ import { TimeActionContextType } from '@/context/TimeContext';
 import { toast } from 'react-toastify';
 import { useInfoToast } from '@/hooks/toast';
 import { Time } from '@prisma/client';
+import { isAxiosError } from 'axios';
+import { ExceptionCode, ExceptionRes } from '@/utils/exception';
 
 export function useGetPersonalTodayTime(isSuspense: boolean = false) {
 	const { data: session } = useSession();
@@ -68,7 +70,7 @@ export function usePostStartTime({
 			useInfoToast('타이머가 시작됐습니다!');
 		},
 		onSuccess: (data, params) => {},
-		onError: () => {
+		onError: (error) => {
 			toast.error(`에러가 발생했습니다. 다시 시도해주세요`);
 			handleEndTime();
 		},
@@ -97,15 +99,26 @@ export function usePostEndTime({
 		},
 		onSuccess: (data, params) => {},
 		onError: (error, params) => {
-			toast.error(`에러가 발생했습니다. 다시 시도해주세요`);
-			// 에러가 나면 기존의 start 했던 타이머를 불러와야함.
-			const times = queryClient.getQueryData<Time[]>([
-				...QUERY_KEYS.getPersonalTimesByDate,
-				params.time.toDateString(),
-			]);
-			if (times && times.length > 0) {
-				const { time, subject } = times.at(-1)!;
-				handleStartTime(time, subject);
+			if (isAxiosError(error)) {
+				const { response } = error;
+				const { message, code } = response!.data as ExceptionRes;
+
+				if (code) {
+					if (code === ExceptionCode.TimeReset) {
+						toast.error(`에러가 발생했습니다. 다시 시도해주세요`);
+						handleEndTime();
+					} else if (code === ExceptionCode.TimeContinue) {
+						toast.error(`에러가 발생했습니다. 다시 시도해주세요`);
+						const times = queryClient.getQueryData<Time[]>([
+							...QUERY_KEYS.getPersonalTimesByDate,
+							params.time.toDateString(),
+						]);
+						if (times && times.length > 0) {
+							const { time, subject } = times.at(-1)!;
+							handleStartTime(time, subject);
+						}
+					}
+				}
 			}
 		},
 		onSettled: (data, err, params) => {
