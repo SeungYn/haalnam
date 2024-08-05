@@ -25,7 +25,7 @@ export async function POST() {
 
 	const { id, timer_status } = user;
 
-	if (timer_status === 'END') return new NextResponse(null, { status: 200 });
+	if (timer_status === 'END') return new NextResponse('굿', { status: 200 });
 
 	try {
 		const res = await client.$transaction(async () => {

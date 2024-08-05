@@ -13,11 +13,11 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 export const metadata: Metadata = {
 	title: {
-		template: 'haalnam | %s',
-		default: 'haalnam | 홈',
+		template: '하얼남 | %s',
+		default: '하얼남 | 홈',
 	},
 	description: '간편하게 시간을 기록하세요',
-	keywords: '타이머, 시간관리, 시간측정, 남은시간',
+	keywords: '타이머, 시간관리, 시간측정, 남은시간, 하얼남',
 };
 
 export default function RootLayout({
