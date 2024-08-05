@@ -60,4 +60,11 @@ export default class TimeService {
 
 		return data;
 	}
+
+	async postCheckRestTimer() {
+		const url = `/api/time`;
+		const { data } = await this.axios.put<Time>(url);
+
+		return data;
+	}
 }
