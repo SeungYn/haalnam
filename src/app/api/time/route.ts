@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import client from '@/lib/db';
 import { getNowDate, getNowYYYY_MM_DD } from '@/utils/date';
-import { Status, User } from '@prisma/client';
+import { Status, Time, User } from '@prisma/client';
 import { auth } from '@/lib/auth';
 import { getLatestTime } from '@/service/server/timeServerService';
 import { checkUser } from '@/service/server/userServerService';
@@ -20,18 +20,83 @@ export async function POST(request: NextRequest) {
 		);
 	}
 	const { id, timer_status } = user;
-	const next_timer_status = timer_status === 'START' ? 'END' : 'START';
+	let next_timer_status: Status = timer_status === 'START' ? 'END' : 'START';
 
 	const formData = await request.formData();
 	const subject = formData.get('subject') as string;
 	const status = formData.get('status') as Status;
 	const time = formData.get('time');
 
-	// time를 하나 만들때 user 상태도 변경시켜 줘야함.
+	// 타이머 시작 요청을 받았을 때 현재 서버상 타이머가 진행중인 경우
+	if (status === 'START' && timer_status === 'START') {
+		try {
+			const res = await client.$transaction(async () => {
+				let date = getNowDate();
+
+				// 타이머 종료시간 설정
+				if (next_timer_status === 'END') {
+					const recentTime = await getLatestTime(id);
+					const now = getNowDate();
+
+					// 만약 자정을 넘길경우 23:59:59 시간으로 처리
+					if (recentTime && recentTime?.time.getDate() < now.getDate()) {
+						date = new Date(
+							`${recentTime.time.toISOString().split('T')[0]}T23:59:59Z`
+						);
+					}
+				}
+				// 기존 타이머 종료
+				await client.time.create({
+					data: {
+						userId: id,
+						status: 'END',
+						subject: subject,
+						time: date,
+					},
+				});
+				next_timer_status = 'START';
+
+				const post = await client.time.create({
+					data: {
+						userId: id,
+						status: next_timer_status,
+						subject: subject,
+						time: date,
+					},
+				});
+				await client.user.update({
+					where: { id },
+					data: {
+						timer_status: next_timer_status,
+					},
+				});
+
+				return post;
+			});
+
+			return NextResponse.json({ ...res, time }, { status: 200 });
+		} catch (error) {
+			console.error(error);
+			return NextResponse.json(
+				new ExceptionRes('에러가 발생했습니다. 다시 시도해주세요'),
+				{ status: 500 }
+			);
+		}
+	}
+	// 타이머 종료 요청을 받았을 때 현재 서버 상태가 종료인 경우
+	else if (status === 'END' && timer_status === 'END') {
+		return NextResponse.json(
+			new ExceptionRes('현재 진행된 타이머가 없습니다.'),
+			{ status: 400 }
+		);
+	}
+
+	// 에외가 아닌경우
 	try {
 		const res = await client.$transaction(async () => {
 			let date = getNowDate();
 
+			// 타이머 종료시간 설정
 			if (next_timer_status === 'END') {
 				const recentTime = await getLatestTime(id);
 				const now = getNowDate();
