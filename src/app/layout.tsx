@@ -10,14 +10,22 @@ import TimeContextProvider from '@/context/TimeContext';
 import CheckUnloadHOC from '@/hoc/CheckUnloadHOC';
 import ReactToastContainer from '@/components/common/toast/ReactToastContainer';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { whereHost } from '@/utils/util';
 
 export const metadata: Metadata = {
+	metadataBase: new URL(whereHost() || ''),
 	title: {
 		template: '하얼남 | %s',
 		default: '하얼남 | 홈',
 	},
 	description: '간편하게 시간을 기록하세요',
 	keywords: '타이머, 시간관리, 시간측정, 남은시간, 하얼남',
+	openGraph: {
+		title: '하얼남 - 하루를 기록하다.',
+		description: '간편하게 시간을 기록하세요',
+		siteName: '하얼남',
+		images: '/og/thumbnail.jpg',
+	},
 };
 
 export default function RootLayout({
