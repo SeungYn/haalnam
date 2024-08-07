@@ -62,8 +62,9 @@ export default class TimeService {
 	}
 
 	async postCheckRestTimer() {
-		const url = `/api/time`;
-		const { data } = await this.axios.put<Time>(url);
+		console.log('나 호출');
+		const url = `/api/time/check`;
+		const { data } = await this.axios.post<Time>(url);
 
 		return data;
 	}

@@ -59,7 +59,7 @@ export async function POST() {
 			return post;
 		});
 
-		return NextResponse.json(null, { status: 204 });
+		return new NextResponse(null, { status: 204 });
 	} catch (error) {
 		console.error(error);
 		return NextResponse.json(
