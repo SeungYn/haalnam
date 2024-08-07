@@ -16,13 +16,12 @@ export function getNowYYYY_MM_DD() {
 }
 
 /**
- * 년, 월, 날짜를 받아 Date객체를 만들어줌
+ * 년, 월, 날짜를 받아 Date객체를 만들어줌 9시간을 설정한 이유는 utc 기준 9시간을 뺴줘서 출력되기 때문
  * @param
  * @returns
  */
 export function getFullDate(y: number, m: number, d: number) {
 	const date = new Date(y, m, d, 9);
-
 	return date;
 }
 
