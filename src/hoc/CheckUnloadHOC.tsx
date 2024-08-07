@@ -4,9 +4,11 @@ import { useTimeActionContext, useTimeContext } from '@/context/TimeContext';
 import { usePostEndTime } from '@/hooks/api/time';
 import service from '@/service/client';
 import { Status } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 import { PropsWithChildren, useEffect } from 'react';
 
 export default function CheckUnloadHOC({ children }: PropsWithChildren) {
+	const { data: session } = useSession();
 	const { status, subject } = useTimeContext();
 	const { handleEndTime, handleStartTime } = useTimeActionContext();
 	const { mutate: mutateTimeEnd } = usePostEndTime({
@@ -22,11 +24,13 @@ export default function CheckUnloadHOC({ children }: PropsWithChildren) {
 	};
 
 	useEffect(() => {
+		if (!session) return;
+		// 새로고침 했을 때 타이머가 시작되고 있는지 확인
+		// 만약 타이머가 진행중이면 종료시킴
 		const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-			// 현재 타이머가 끝난 상태라면 무시
 			service.time.postCheckRestTimer();
-			if (status === Status.END) return;
-			onEndTime();
+			// if (status === Status.END) return;
+			// onEndTime();
 			return;
 		};
 
@@ -35,7 +39,7 @@ export default function CheckUnloadHOC({ children }: PropsWithChildren) {
 		return () => {
 			window.removeEventListener('beforeunload', handleBeforeUnload);
 		};
-	}, [status]);
+	}, [status, session]);
 
 	return children;
 }
