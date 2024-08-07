@@ -58,7 +58,6 @@ export default function IntroducePage() {
 					/>
 				</div>
 			</header>
-
 			<section className="relative flex h-screen flex-col justify-center">
 				<div className="mx-auto w-full max-w-7xl px-4">
 					<div className="">
@@ -84,7 +83,6 @@ export default function IntroducePage() {
 					className="down_arrow"
 				/>
 			</section>
-
 			<section
 				id="description"
 				className="relative flex min-h-screen flex-col py-20 pt-40"
@@ -153,13 +151,66 @@ export default function IntroducePage() {
 									src={'/event/introduce/iphone-sample.png'}
 								/>
 							</div>
-							<Link
-								href={'/'}
-								className="inline-block rounded-lg border border-white px-4 py-2 text-4xl font-bold md:text-3xl"
-							>
-								지금 시작하기
-							</Link>
 						</div>
+					</div>
+				</div>
+			</section>
+			{/* 기능 소개 색션 */}
+			<section className="py-20">
+				<div className="mx-auto w-full max-w-7xl px-4">
+					<ul className="feature">
+						<li>
+							<h3>깔끔한 시간표 확인</h3>
+							<p>사용한 시간을 한눈에 확인해보세요!</p>
+						</li>
+						<li>
+							<Image
+								width={400}
+								height={300}
+								src={'/event/introduce/feature1.png'}
+								className="rounded-2xl"
+								alt="이미지"
+							/>
+						</li>
+					</ul>
+					<ul className="feature">
+						<li>
+							<h3>지나간 날들을 확인</h3>
+							<p>간편하게 지난 날들을 돌이켜봐요!</p>
+						</li>
+						<li>
+							<Image
+								width={400}
+								height={400}
+								src={'/event/introduce/feature2.png'}
+								className="rounded-2xl"
+								alt="이미지"
+							/>
+						</li>
+					</ul>
+					<ul className="feature">
+						<li>
+							<h3>다른 사용자 시간표 확인</h3>
+							<p>사람들은 시간을 어떻게 활용하는지 확인해보세요!</p>
+						</li>
+						<li>
+							<Image
+								width={400}
+								height={400}
+								src={'/event/introduce/feature3.png'}
+								className="rounded-2xl"
+								alt="이미지"
+							/>
+						</li>
+					</ul>
+
+					<div className="text-center">
+						<Link
+							href={'/'}
+							className="inline-block rounded-lg border border-white px-4 py-2 text-4xl font-bold md:text-3xl"
+						>
+							지금 시작하기
+						</Link>
 					</div>
 				</div>
 			</section>

@@ -129,6 +129,38 @@ html {
 		}
 	}
 
+	/* 기능 설명 부분 */
+	.feature {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		@apply mb-40;
+
+		& > li {
+			flex-basis: 50%;
+			display: flex;
+			align-items: center;
+		}
+
+		& > li:nth-child(1) {
+			justify-content: center;
+			flex-direction: column;
+		}
+
+		& > li > h3 {
+			@apply mb-2 text-4xl font-semibold;
+		}
+
+		& > li > p {
+			@apply text-3xl font-semibold text-h_gray;
+		}
+
+		& > li:nth-child(2) {
+			justify-content: center;
+			@apply rounded-3xl bg-h_light_black px-2 py-6;
+		}
+	}
+
 	@media screen and (min-width: 550px) {
 		.sample_mockup {
 			grid-template-rows: repeat(10, 50px);
@@ -138,6 +170,16 @@ html {
 	@media screen and (min-width: 750px) {
 		.sample_mockup {
 			grid-template-rows: repeat(11, 50px);
+		}
+	}
+
+	@media screen and (min-width: 840px) {
+		.feature {
+			flex-direction: row;
+		}
+
+		.feature:nth-child(even) {
+			flex-direction: row-reverse;
 		}
 	}
 
