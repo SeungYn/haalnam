@@ -87,7 +87,7 @@ export default function IntroducePage() {
 
 			<section
 				id="description"
-				className="relative flex h-screen flex-col py-20 pt-40"
+				className="relative flex min-h-screen flex-col py-20 pt-40"
 			>
 				<div className="mx-auto w-full max-w-7xl px-4">
 					<div className="text-center">
