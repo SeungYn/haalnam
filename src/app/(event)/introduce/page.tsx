@@ -24,11 +24,9 @@ export default function IntroducePage() {
 						setParagraph2(true);
 					} else if (intersectionRatio >= 0.69 && intersectionRatio < 0.75) {
 						setParagraph3(true);
-					}
-					//else if (intersectionRatio >= 0.75 && intersectionRatio < 1) {
-					// 	setParagraph4(true);
-					// }
-					else {
+					} else if (intersectionRatio >= 0.75 && intersectionRatio < 0.82) {
+						setParagraph4(true);
+					} else {
 						setParagraph1(true);
 						setParagraph2(true);
 						setParagraph3(true);
@@ -47,7 +45,7 @@ export default function IntroducePage() {
 	}, []);
 
 	return (
-		<div className="relative">
+		<div className="relative overflow-x-hidden">
 			<header className="fixed z-10 w-full bg-h_black py-2">
 				<div className="mx-auto max-w-7xl px-4">
 					<Image
@@ -59,9 +57,13 @@ export default function IntroducePage() {
 				</div>
 			</header>
 			<section className="relative flex h-screen flex-col justify-center">
-				<div className="mx-auto w-full max-w-7xl px-4">
-					<div className="">
-						<h1 className="mb-4 text-6xl font-bold">하얼남</h1>
+				<div className="relative z-20 mx-auto flex w-full max-w-7xl flex-col-reverse items-center justify-start px-4 md:flex-row">
+					<div className="z-20 self-start md:self-center">
+						<h1 className="mb-4 text-6xl font-bold">
+							하<span className="text-base text-h_gray">루가</span>얼
+							<span className="text-base text-h_gray">마나</span>남
+							<span className="text-base text-h_gray">았는가</span>
+						</h1>
 						<h2 className="text-4xl font-bold">
 							하루를 더 가치있게, 시간을 더 현명하게
 						</h2>
@@ -74,6 +76,16 @@ export default function IntroducePage() {
 						>
 							시작하기
 						</Link>
+					</div>
+					<div className="absolute bottom-20 right-4 md:relative md:bottom-0 md:left-0 md:top-0 md:flex md:grow md:justify-center">
+						<div className="main_picture z-0 aspect-[1/1.2] w-[200px] sm:w-[300px] md:relative md:w-[400px] lg:w-[600px]">
+							<Image
+								src="/event/introduce/main-picture.png"
+								className="z-0"
+								fill
+								alt="이미지"
+							/>
+						</div>
 					</div>
 				</div>
 

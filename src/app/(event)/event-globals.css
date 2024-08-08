@@ -56,6 +56,19 @@ html {
 		animation: down_arrow_bounce 1s ease-in Infinite Alternate;
 	}
 
+	.main_picture {
+		animation: main_pirture_bounce 3s linear infinite Alternate;
+	}
+
+	@keyframes main_pirture_bounce {
+		0% {
+			transform: translateY(-1%);
+		}
+		50% {
+			transform: translateY(1%);
+		}
+	}
+
 	.sample_mockup_container {
 		transition: all 0.3s linear;
 	}
