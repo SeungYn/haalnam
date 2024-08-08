@@ -18,7 +18,6 @@ export default function IntroducePage() {
 			(entries) => {
 				for (let entry of entries) {
 					if (entry.isIntersecting) {
-						console.log(entry.target.getAttribute('id'));
 						switch (entry.target.getAttribute('id')) {
 							case 'description1':
 								setParagraph1(true);
@@ -109,9 +108,13 @@ export default function IntroducePage() {
 					<div className="absolute bottom-20 right-0 sm:right-4 md:relative md:bottom-0 md:left-0 md:right-0 md:top-0 md:flex md:grow md:justify-center">
 						<div className="main_picture z-0 aspect-[1/1.2] w-[200px] sm:w-[300px] md:relative md:w-[400px] lg:w-[600px]">
 							<Image
+								priority
 								src="/event/introduce/main-picture.png"
 								className="z-0"
+								sizes="(min-width: 1200px) 20vw, (min-width: 600px) 30vw, 100vw"
 								fill
+								// width={1900}
+								// height={1900}
 								alt="이미지"
 							/>
 						</div>
