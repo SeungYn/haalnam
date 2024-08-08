@@ -59,9 +59,13 @@ export default function IntroducePage() {
 				</div>
 			</header>
 			<section className="relative flex h-screen flex-col justify-center">
-				<div className="mx-auto w-full max-w-7xl px-4">
-					<div className="">
-						<h1 className="mb-4 text-6xl font-bold">하얼남</h1>
+				<div className="relative z-20 mx-auto flex w-full max-w-7xl flex-col-reverse items-center px-4 md:flex-row">
+					<div className="z-20">
+						<h1 className="mb-4 text-6xl font-bold">
+							하<span className="text-base text-h_gray">루가</span>얼
+							<span className="text-base text-h_gray">마나</span>남
+							<span className="text-base text-h_gray">았는가</span>
+						</h1>
 						<h2 className="text-4xl font-bold">
 							하루를 더 가치있게, 시간을 더 현명하게
 						</h2>
@@ -74,6 +78,16 @@ export default function IntroducePage() {
 						>
 							시작하기
 						</Link>
+					</div>
+					<div className="relative left-20 top-40 flex grow self-end md:left-0 md:top-0 md:justify-center">
+						<div className="main_picture z-0 aspect-[1/1.2] w-[300px] md:relative md:w-[600px]">
+							<Image
+								src="/event/introduce/main-picture.png"
+								className="z-0"
+								fill
+								alt="이미지"
+							/>
+						</div>
 					</div>
 				</div>
 
