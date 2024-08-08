@@ -16,31 +16,60 @@ export default function IntroducePage() {
 	useEffect(() => {
 		const intersectionObserver = new IntersectionObserver(
 			(entries) => {
-				if (entries[0].isIntersecting) {
-					const { intersectionRatio } = entries[0];
-					if (intersectionRatio >= 0.49 && intersectionRatio < 0.55) {
-						setParagraph1(true);
-					} else if (intersectionRatio >= 0.59 && intersectionRatio < 0.65) {
-						setParagraph2(true);
-					} else if (intersectionRatio >= 0.69 && intersectionRatio < 0.75) {
-						setParagraph3(true);
-					} else if (intersectionRatio >= 0.75 && intersectionRatio < 0.82) {
-						setParagraph4(true);
-					} else {
-						setParagraph1(true);
-						setParagraph2(true);
-						setParagraph3(true);
-						setParagraph4(true);
+				for (let entry of entries) {
+					if (entry.isIntersecting) {
+						console.log(entry.target.getAttribute('id'));
+						switch (entry.target.getAttribute('id')) {
+							case 'description1':
+								setParagraph1(true);
+								break;
+							case 'description2':
+								setParagraph2(true);
+								break;
+							case 'description3':
+								setParagraph3(true);
+								break;
+							case 'description4':
+								setParagraph4(true);
+								break;
+							default:
+								setParagraph1(true);
+								setParagraph2(true);
+								setParagraph3(true);
+								setParagraph4(true);
+						}
 					}
 				}
+				// if (entries[0].isIntersecting) {
+				// 	const { intersectionRatio } = entries[0];
+				// 	if (intersectionRatio >= 0.49 && intersectionRatio < 0.55) {
+				// 		setParagraph1(true);
+				// 	} else if (intersectionRatio >= 0.59 && intersectionRatio < 0.65) {
+				// 		setParagraph2(true);
+				// 	} else if (intersectionRatio >= 0.69 && intersectionRatio < 0.75) {
+				// 		setParagraph3(true);
+				// 	} else if (intersectionRatio >= 0.75 && intersectionRatio < 0.82) {
+				// 		setParagraph4(true);
+				// 	} else {
+				// 		setParagraph1(true);
+				// 		setParagraph2(true);
+				// 		setParagraph3(true);
+				// 		setParagraph4(true);
+				// 	}
+				// }
 			},
-			{ threshold: [0.5, 0.6, 0.7, 0.75] }
+			{ threshold: [1] }
 		);
 
-		intersectionObserver.observe(document.querySelector('#description')!);
-
+		intersectionObserver.observe(document.querySelector('#description1')!);
+		intersectionObserver.observe(document.querySelector('#description2')!);
+		intersectionObserver.observe(document.querySelector('#description3')!);
+		intersectionObserver.observe(document.querySelector('#description4')!);
 		return () => {
-			intersectionObserver.disconnect();
+			intersectionObserver.unobserve(document.querySelector('#description1')!);
+			intersectionObserver.unobserve(document.querySelector('#description2')!);
+			intersectionObserver.unobserve(document.querySelector('#description3')!);
+			intersectionObserver.unobserve(document.querySelector('#description4')!);
 		};
 	}, []);
 
@@ -77,7 +106,7 @@ export default function IntroducePage() {
 							시작하기
 						</Link>
 					</div>
-					<div className="absolute bottom-20 right-4 md:relative md:bottom-0 md:left-0 md:top-0 md:flex md:grow md:justify-center">
+					<div className="absolute bottom-20 right-0 sm:right-4 md:relative md:bottom-0 md:left-0 md:right-0 md:top-0 md:flex md:grow md:justify-center">
 						<div className="main_picture z-0 aspect-[1/1.2] w-[200px] sm:w-[300px] md:relative md:w-[400px] lg:w-[600px]">
 							<Image
 								src="/event/introduce/main-picture.png"
@@ -105,6 +134,7 @@ export default function IntroducePage() {
 							하루를 어떻게 사용하셨나요?
 						</p>
 						<div
+							id="description1"
 							className={`${paragraph1 ? 'paragraph-in' : 'paragraph-out'} mb-2 text-4xl transition-all duration-300 ease-linear`}
 						>
 							만약 1초가 1원이라면, 하루는{' '}
@@ -120,12 +150,14 @@ export default function IntroducePage() {
 							원이 지급됩니다.
 						</div>
 						<p
+							id="description2"
 							className={`${paragraph2 ? 'paragraph-in' : 'paragraph-out'} mb-20 text-4xl transition-all duration-300 ease-linear`}
 						>
 							지금도 페이지에 접속한지 <FlowingTIme />
 							초가 지나가고 있죠.
 						</p>
 						<p
+							id="description3"
 							className={`${paragraph3 ? 'paragraph-in' : 'paragraph-out'} mb-20 text-3xl transition-all duration-300 ease-linear`}
 						>
 							이렇게 지나가는 시간을 확인하며, 하루의 빈 곳을 채워보는건
@@ -135,7 +167,7 @@ export default function IntroducePage() {
 						<div
 							className={`sample_mockup_container ${paragraph4 ? 'sample_mockup_container-fade_in' : 'sample_mockup_container-fade_out'}`}
 						>
-							<p className="mb-10 text-2xl">
+							<p id="description4" className="mb-10 text-2xl">
 								시간을 기록하는 하얼남과 함께, <br /> 매일매일 더 나은 하루를
 								만들어 보세요.
 							</p>
