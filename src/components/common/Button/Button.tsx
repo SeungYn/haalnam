@@ -31,7 +31,7 @@ export function Button({
 	return (
 		<>
 			<button
-				className={`flex items-center justify-center border border-h_gray bg-h_black text-white transition-colors hover:bg-h_light_black ${className} ${sizeStyle[size]}`}
+				className={`flex items-center justify-center border border-h_gray bg-h_black text-white transition-colors hover:bg-h_light_black disabled:text-h_gray ${className} ${sizeStyle[size]}`}
 				{...props}
 			/>
 		</>
