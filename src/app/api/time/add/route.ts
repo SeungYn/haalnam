@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 	try {
 		reqData = await request.json();
 	} catch (e) {
-		return Response.json(new ExceptionRes('유효하지 않은 값입니다.'), {
+		return NextResponse.json(new ExceptionRes('유효하지 않은 값입니다.'), {
 			status: 400,
 		});
 	}
@@ -65,11 +65,11 @@ export async function POST(request: NextRequest) {
 		});
 	} catch (e) {
 		console.error(e);
-		return Response.json(
+		return NextResponse.json(
 			new ExceptionRes('오류가 발생했습니다. 다시 시도해주세요'),
 			{ status: 500 }
 		);
 	}
 
-	return Response.json({ dd: '굿' }, { status: 201 });
+	return NextResponse.json({ dd: '굿' }, { status: 201 });
 }
