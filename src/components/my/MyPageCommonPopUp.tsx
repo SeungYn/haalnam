@@ -35,7 +35,7 @@ export default function MyPageCommonPopUp({
 
 	return (
 		<section
-			className={`absolute top-0 z-30 h-screen w-full bg-h_black px-4 transition-all md:absolute md:px-0 ${isMounting ? 'left-0' : 'left-full'}`}
+			className={`absolute top-0 z-30 w-full grow bg-h_black px-4 transition-all md:absolute md:px-0 ${isMounting ? 'left-0' : 'left-full'}`}
 		>
 			{children}
 		</section>
