@@ -1,5 +1,9 @@
 import { AxiosInstance } from 'axios';
-import { GetPersonalTodayTimeResponse, PostTimeRequest } from '../types/time';
+import {
+	GetPersonalTodayTimeResponse,
+	PostAddTimerRequest,
+	PostTimeRequest,
+} from '../types/time';
 import { whereHost } from '@/utils/util';
 import { Time } from '@prisma/client';
 
@@ -65,6 +69,50 @@ export default class TimeService {
 		console.log('나 호출');
 		const url = `/api/time/check`;
 		const { data } = await this.axios.post<Time>(url);
+
+		return data;
+	}
+
+	async postAddTimer({
+		startTime,
+		subject,
+		endTime,
+		date,
+	}: {
+		subject: string;
+		startTime: {
+			h: number;
+			m: number;
+			s: number;
+		};
+		endTime: {
+			h: number;
+			m: number;
+			s: number;
+		};
+		date: Date;
+	}) {
+		const [y, m, d] = [date.getFullYear(), date.getMonth(), date.getDate()];
+		const reqData = {
+			subject,
+			date: {
+				y,
+				m,
+				d,
+			},
+			startTime: {
+				hours: startTime.h,
+				minutes: startTime.m,
+				seconds: startTime.s,
+			},
+			endTime: {
+				hours: endTime.h,
+				minutes: endTime.m,
+				seconds: endTime.s,
+			},
+		};
+		const url = '/api/time/add';
+		const { data } = await this.axios.post<Time>(url, { ...reqData });
 
 		return data;
 	}
