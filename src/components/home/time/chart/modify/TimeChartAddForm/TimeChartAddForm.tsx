@@ -1,21 +1,19 @@
 import { Time } from '@prisma/client';
-import TimeChartAdd, { TimeAddChartFoward } from '../TimeChartAdd/TimeChartAdd';
+import TimeChartAdd from '../TimeChartAdd/TimeChartAdd';
 import {
 	MouseEvent,
-	useEffect,
 	useLayoutEffect,
 	useRef,
 	useState,
 	TouchEvent,
+	FormEvent,
 } from 'react';
 import { useSelectedDateStore } from '@/store/dateStore';
-import { useGetTimesByDate } from '@/hooks/api/time';
+import { useGetTimesByDate, usePostAddTimer } from '@/hooks/api/time';
 import {
 	radianToTime,
-	ChartSize,
 	makeChartGradutionTimeInfo,
 	stringTimeToRadian,
-	timeToDegree,
 	radianToAngle,
 } from '@/utils/chart';
 import { TIME_MOCK_DATA } from '@/utils/mock/chart/data';
@@ -24,7 +22,7 @@ import { IoReloadCircleOutlineIcon } from '@/components/icons';
 import useIsMobile from '@/hooks/common/useIsMobile';
 
 type Props = {
-	times: Time[];
+	closePopUp: () => void;
 };
 
 // 1. 시작시간 선택
@@ -33,13 +31,15 @@ type Props = {
 // 4. 종료시간 선택
 // 5. 만약 타이머가 있다면 최대 겹치는 타이머 전까지 시간을 채워줌
 
-export default function TimeChartAddForm() {
+export default function TimeChartAddForm({ closePopUp }: Props) {
 	const { selectedDate } = useSelectedDateStore();
 
-	const { data: times } = useGetTimesByDate(selectedDate, true); //useGetPersonalTodayTime(true);
+	const { data: times = [] } = useGetTimesByDate(selectedDate, false); //useGetPersonalTodayTime(true);
 	const timeChartAddRef = useRef<HTMLDivElement>(null);
 	const [addChartWidth, setAddChartWidth] = useState<number>(250);
 	const timeChartAddModifyCanvas = useRef<HTMLCanvasElement>(null);
+	const [subject, setSubject] = useState('');
+	const addMutateTimer = usePostAddTimer(closePopUp);
 	const isMobile = useIsMobile();
 	const [error, setError] = useState('');
 	const [angles, setAngles] = useState<{
@@ -74,6 +74,10 @@ export default function TimeChartAddForm() {
 
 	const onSetCurrentAngle = (x: number, y: number) => {
 		if (x < 0 || y < 0) return;
+		if (angles.start && angles.end) {
+			setCurrentAngles(null);
+			return;
+		}
 		const ctx = timeChartAddModifyCanvas.current?.getContext('2d');
 
 		if (!ctx) return;
@@ -87,12 +91,10 @@ export default function TimeChartAddForm() {
 			addChartWidth / 2,
 			addChartWidth / 2
 		);
+		console.log(angleData);
 		const originX = addChartWidth / 2;
 
-		let overlappingTime = checkStartOverlappingTime(
-			TIME_MOCK_DATA,
-			angleData[1]
-		);
+		let overlappingTime = checkStartOverlappingTime(times, angleData[1]);
 
 		setError(
 			overlappingTime
@@ -121,7 +123,7 @@ export default function TimeChartAddForm() {
 			clearCanvas();
 			const angleDifferenceStartEnd = angleData[0] - angles.start[0];
 			if (angleDifferenceStartEnd <= 0) return;
-			overlappingTime = checkEndOverlappingTime(TIME_MOCK_DATA, angleData[1]);
+			overlappingTime = checkEndOverlappingTime(times, angleData[1]);
 			if (overlappingTime) {
 				// 라디안에서 1분 빼줌
 				const filterdOverlappingTime = overlappingTime - Math.PI / (12 * 60);
@@ -308,6 +310,30 @@ export default function TimeChartAddForm() {
 		return [angle, radians];
 	}
 
+	const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (angles.start === null || angles.end === null) {
+			alert('시작시간 및 종료시간을 정해주세요');
+			return;
+		}
+		if (subject === '') {
+			alert('주제를 적어주세요');
+			return;
+		}
+		const startTime = radianToTime(angles.start[1]);
+		const endTime = radianToTime(angles.end[1]);
+		addMutateTimer.mutate({
+			subject,
+			startTime: {
+				h: startTime.hours,
+				m: startTime.minutes,
+				s: startTime.seconds,
+			},
+			endTime: { h: endTime.hours, m: endTime.minutes, s: endTime.seconds },
+			date: selectedDate,
+		});
+	};
+
 	useLayoutEffect(() => {
 		const mediaQuery = window.matchMedia('screen and (min-width:640px)');
 		const mbileMediaQuery = window.matchMedia('screen and (min-width:390px)');
@@ -342,11 +368,11 @@ export default function TimeChartAddForm() {
 
 			<div className="relative flex items-center justify-center py-14">
 				<div className="absolute left-1/2 top-1/2 z-40 -translate-x-1/2 -translate-y-1/2">
-					<TimeChartAdd times={TIME_MOCK_DATA} ref={timeChartAddRef} />
+					<TimeChartAdd times={times} ref={timeChartAddRef} />
 				</div>
 
 				<div
-					className={`z-40 ${isMobile ? '' : 'cursor-pointer'} touch-none border`}
+					className={`z-40 ${isMobile ? '' : 'cursor-pointer'} touch-none`}
 					onTouchMove={isMobile ? onTouchMoveEvent : undefined}
 					onTouchEnd={isMobile ? onSetTime : undefined}
 					onMouseMove={!isMobile ? onMouseMoveEvent : undefined}
@@ -378,50 +404,62 @@ export default function TimeChartAddForm() {
 				{/* 중앙 동그라미 */}
 				<div className="absolute left-1/2 top-1/2 z-50 h-[20px] w-[20px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white bg-h_black sm:h-[30px] sm:w-[30px]"></div>
 			</div>
-			<div>
-				<div className="mb-10 flex items-center gap-4">
-					<div>
-						<p className="mb-4 min-w-[2rem] text-4xl tabular-nums">
-							시작시간:{' '}
-							{angles.start ? (
-								radianToTime(angles.start[1]).str
-							) : (
-								<span className="invisible">99시 99분</span>
-							)}
-						</p>
-						<p className="min-w-[2rem] text-4xl tabular-nums">
-							종료시간:{' '}
-							{angles.end ? (
-								radianToTime(angles.end[1]).str
-							) : (
-								<span className="invisible">99시 99분</span>
-							)}
-						</p>
+			<form onSubmit={onSubmit}>
+				<div className="mb-10 flex flex-col items-center gap-4">
+					<input
+						type="text"
+						className="w-full max-w-2xl rounded-[100px] border-2 border-h_light_black bg-h_black px-7 py-2 text-2xl focus:border-white"
+						onChange={(e) => setSubject(e.target.value)}
+						value={subject}
+						placeholder="주제 ex: 운동하기"
+					/>
+					<div className="flex items-center gap-10">
+						<div>
+							<p className="mb-4 min-w-[2rem] text-4xl tabular-nums">
+								시작시간:{' '}
+								{angles.start ? (
+									radianToTime(angles.start[1]).str
+								) : (
+									<span className="invisible">99시 99분</span>
+								)}
+							</p>
+							<p className="min-w-[2rem] text-4xl tabular-nums">
+								종료시간:{' '}
+								{angles.end ? (
+									radianToTime(angles.end[1]).str
+								) : (
+									<span className="invisible">99시 99분</span>
+								)}
+							</p>
+						</div>
+						<Button
+							className="rounded-full border-none"
+							type="button"
+							onClick={() => {
+								if (angles.end) {
+									setAngles((s) => ({ ...s, end: null }));
+									return;
+								} else if (angles.start && angles.end === null) {
+									setAngles((s) => ({ ...s, start: null }));
+								}
+							}}
+						>
+							<IoReloadCircleOutlineIcon size="large" />
+						</Button>
 					</div>
-					<Button
-						className="rounded-full border-none"
-						type="button"
-						onClick={() => {
-							if (angles.end) {
-								setAngles((s) => ({ ...s, end: null }));
-								return;
-							} else if (angles.start && angles.end === null) {
-								setAngles((s) => ({ ...s, start: null }));
-							}
-						}}
-					>
-						<IoReloadCircleOutlineIcon size="large" />
-					</Button>
 				</div>
 
-				<Button
-					size="medium"
-					className="mx-auto"
-					disabled={angles.start === null || angles.end === null}
-				>
-					시간 추가하기
-				</Button>
-			</div>
+				<div className="relative">
+					<Button
+						size="medium"
+						className="w-full"
+						isLoading={addMutateTimer.isLoading}
+						disabled={angles.start === null || angles.end === null}
+					>
+						시간 추가하기
+					</Button>
+				</div>
+			</form>
 		</div>
 	);
 }
