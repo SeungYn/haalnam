@@ -1,6 +1,13 @@
 import { Time } from '@prisma/client';
 import TimeChartAdd, { TimeAddChartFoward } from '../TimeChartAdd/TimeChartAdd';
-import { MouseEvent, useLayoutEffect, useRef, useState } from 'react';
+import {
+	MouseEvent,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+	TouchEvent,
+} from 'react';
 import { useSelectedDateStore } from '@/store/dateStore';
 import { useGetTimesByDate } from '@/hooks/api/time';
 import {
@@ -14,6 +21,7 @@ import {
 import { TIME_MOCK_DATA } from '@/utils/mock/chart/data';
 import { Button } from '@/components/common';
 import { IoReloadCircleOutlineIcon } from '@/components/icons';
+import useIsMobile from '@/hooks/common/useIsMobile';
 
 type Props = {
 	times: Time[];
@@ -32,6 +40,7 @@ export default function TimeChartAddForm() {
 	const timeChartAddRef = useRef<HTMLDivElement>(null);
 	const [addChartWidth, setAddChartWidth] = useState<number>(250);
 	const timeChartAddModifyCanvas = useRef<HTMLCanvasElement>(null);
+	const isMobile = useIsMobile();
 	const [error, setError] = useState('');
 	const [angles, setAngles] = useState<{
 		start: ReturnType<typeof getAngleFromCoordinates> | null;
@@ -41,21 +50,42 @@ export default function TimeChartAddForm() {
 		typeof getAngleFromCoordinates
 	> | null>(null);
 
-	const onMouseMove = (e: MouseEvent) => {
+	const onTouchMoveEvent = (e: TouchEvent<HTMLDivElement>) =>
+		onMoveEvent(
+			e.touches[0].clientX,
+			e.touches[0].clientY,
+			e.currentTarget as HTMLElement
+		);
+
+	const onMouseMoveEvent = (e: MouseEvent) =>
+		onMoveEvent(e.clientX, e.clientY, e.currentTarget as HTMLElement);
+
+	const onMoveEvent = (
+		clientX: number,
+		clientY: number,
+		currentTarget: HTMLElement
+	) => {
+		const rect = currentTarget.getBoundingClientRect();
+		const x = clientX - rect.left;
+		const y = clientY - rect.top;
+		if (x < 0 || y < 0) return;
+		onSetCurrentAngle(x, y);
+	};
+
+	const onSetCurrentAngle = (x: number, y: number) => {
+		if (x < 0 || y < 0) return;
 		const ctx = timeChartAddModifyCanvas.current?.getContext('2d');
 
-		const { offsetY, offsetX } = e.nativeEvent;
-		// console.log(offsetX, offsetY);
-		//console.log(offsetY, offsetX);
 		if (!ctx) return;
+		// 모바일일 경우 진동
+		window.navigator.vibrate(1);
 		ctx.fillStyle = 'white';
 
-		const currentTarget = e.currentTarget as HTMLElement;
 		let angleData = getAngleFromCoordinates(
-			offsetX,
-			offsetY,
-			currentTarget.offsetWidth / 2,
-			currentTarget.offsetWidth / 2
+			x,
+			y,
+			addChartWidth / 2,
+			addChartWidth / 2
 		);
 		const originX = addChartWidth / 2;
 
@@ -63,13 +93,14 @@ export default function TimeChartAddForm() {
 			TIME_MOCK_DATA,
 			angleData[1]
 		);
-		if (overlappingTime) {
-			setError('이미 타이머가 진행된 시간대입니다. 다른 시간대를 선택해주세요');
-			ctx.fillStyle = 'rgb(252 165 165)';
-		} else {
-			setError('');
-			ctx.fillStyle = 'white';
-		}
+
+		setError(
+			overlappingTime
+				? '이미 타이머가 진행된 시간대입니다., 다른 시간대를 선택해주세요'
+				: ''
+		);
+		ctx.fillStyle = overlappingTime ? 'rgb(252 165 165)' : 'white';
+		ctx.strokeStyle = overlappingTime ? 'rgb(252 165 165)' : 'white';
 
 		// 추가 조건
 		/**
@@ -80,7 +111,11 @@ export default function TimeChartAddForm() {
 		if (!angles.start) {
 			clearCanvas();
 			setCurrentAngles([...angleData]);
-			drawArcCanvasByAngle(originX, angleData[0], angleData[0] + 1);
+			drawArcCanvasByRadian(
+				originX,
+				angleData[1],
+				angleData[1] + Math.PI / (12 * 60)
+			);
 		} // 종료 시간 설정
 		else if (angles.start !== null && !angles.end) {
 			clearCanvas();
@@ -95,16 +130,18 @@ export default function TimeChartAddForm() {
 					filterdOverlappingTime,
 				];
 				setError(
-					'이미 타이머가 진행된 시간대입니다. 다른 시간대를 선택해주세요'
+					'이미 타이머가 진행된 시간대입니다., 다른 시간대를 선택해주세요'
 				);
 				ctx.fillStyle = 'rgb(252 165 165)';
+				ctx.strokeStyle = 'rgb(252 165 165)';
 			} else {
 				setError('');
 				ctx.fillStyle = 'white';
+				ctx.strokeStyle = 'white';
 			}
 
 			setCurrentAngles([...angleData]);
-			drawArcCanvasByAngle(originX, angles.start[0], angleData[0]);
+			drawArcCanvasByRadian(originX, angles.start[1], angleData[1]);
 		}
 	};
 
@@ -168,6 +205,7 @@ export default function TimeChartAddForm() {
 	const onSetTime = () => {
 		const originX = addChartWidth / 2;
 		if (error !== '') return;
+		if (currentAngles === null) return;
 
 		if (!angles.start) {
 			clearCanvas();
@@ -226,6 +264,7 @@ export default function TimeChartAddForm() {
 			endRadian - Math.PI / 2
 		);
 		ctx.fill();
+		ctx.stroke();
 		ctx.closePath();
 	};
 
@@ -301,27 +340,17 @@ export default function TimeChartAddForm() {
 				error={error}
 			/>
 
-			<div
-				className="relative flex items-center justify-center py-20"
-				// onTouchMove={(e) => e.preventDefault()}
-				// onMouseMove={onMouseMove}
-				// onClick={onSetTime}
-			>
+			<div className="relative flex items-center justify-center py-14">
 				<div className="absolute left-1/2 top-1/2 z-40 -translate-x-1/2 -translate-y-1/2">
 					<TimeChartAdd times={TIME_MOCK_DATA} ref={timeChartAddRef} />
 				</div>
 
 				<div
-					className="z-40 border border-blue-900"
-					role="button"
-					onMouseMove={onMouseMove}
-					onClick={onSetTime}
-					onMouseLeave={() => {
-						setError('');
-						setCurrentAngles(null);
-					}}
-					onTouchStart={() => console.log('touchStart')}
-					onTouchMove={() => console.log('touchMove')}
+					className={`z-40 ${isMobile ? '' : 'cursor-pointer'} touch-none border`}
+					onTouchMove={isMobile ? onTouchMoveEvent : undefined}
+					onTouchEnd={isMobile ? onSetTime : undefined}
+					onMouseMove={!isMobile ? onMouseMoveEvent : undefined}
+					onClick={!isMobile ? onSetTime : undefined}
 				>
 					<canvas
 						ref={timeChartAddModifyCanvas}
@@ -426,12 +455,25 @@ function TimeChartAddHeader({
 			<div className="text-3xl">
 				{currentAngles !== null ? (
 					error !== '' ? (
-						<p className="text-main">{error}</p>
+						<>
+							<p className="break-keep text-center text-main">
+								{error.split(',')[0]}
+							</p>
+							<p className="break-keep text-center text-main">
+								{error.split(',')[1] === '' ? ' ' : error.split(',')[1]}
+							</p>
+						</>
 					) : (
-						<p>{radianToTime(currentAngles![1]).str}</p>
+						<p>
+							{radianToTime(currentAngles![1]).str}
+							<span className="invisible block">' '</span>
+						</p>
 					)
 				) : (
-					<p className="invisible">' '</p>
+					<>
+						<span className="invisible block">' '</span>
+						<span className="invisible block">' '</span>
+					</>
 				)}
 			</div>
 		</>
