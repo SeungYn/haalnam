@@ -34,9 +34,10 @@ export default function TimePopUp({
 
 	if (!isOpen) return null;
 
+	// 부모는 main 태그임
 	return createPortal(
 		<section
-			className={`absolute top-0 z-[100] w-full grow bg-h_black px-4 transition-all md:absolute md:px-0 ${isMounting ? 'top-0' : 'top-full'}`}
+			className={`absolute top-0 z-[100] h-full w-full bg-h_black px-4 transition-all md:absolute md:px-0 ${isMounting ? 'top-0' : 'top-full'}`}
 		>
 			{children}
 		</section>,
