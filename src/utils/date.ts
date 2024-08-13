@@ -133,7 +133,7 @@ export function isCurrentDay(selectedDate: Date) {
  * @param serverDate +9시간된 UTC 시간
  * @returns
  */
-export function formatBroswerTime(serverDate: Date) {
+export function formatBroswerTime(serverDate: Date | string) {
 	const date = new Date(serverDate);
 	date.setHours(date.getHours() - 9);
 	return date;
