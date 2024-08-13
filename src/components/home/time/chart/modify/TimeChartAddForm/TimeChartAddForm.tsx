@@ -91,7 +91,7 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 			addChartWidth / 2,
 			addChartWidth / 2
 		);
-		console.log(angleData);
+
 		const originX = addChartWidth / 2;
 
 		let overlappingTime = checkStartOverlappingTime(times, angleData[1]);
