@@ -192,22 +192,25 @@ export default function TimeChart({ times }: Props) {
 
 	useLayoutEffect(() => {
 		const mediaQuery = window.matchMedia('screen and (min-width:640px)');
+		const mbileMediaQuery = window.matchMedia('screen and (min-width:390px)');
 		const changeCB = () => {
 			if (mediaQuery.matches) {
 				setChartWidth(600);
 			} else {
-				setChartWidth(300);
+				if (mbileMediaQuery.matches) {
+					setChartWidth(300);
+				} else {
+					setChartWidth(250);
+				}
 			}
 		};
-		if (mediaQuery.matches) {
-			setChartWidth(600);
-		} else {
-			setChartWidth(300);
-		}
+		changeCB();
 		mediaQuery.addEventListener('change', changeCB);
+		mbileMediaQuery.addEventListener('change', changeCB);
 
 		return () => {
 			mediaQuery.removeEventListener('change', changeCB);
+			mbileMediaQuery.removeEventListener('change', changeCB);
 		};
 	}, []);
 
@@ -292,7 +295,10 @@ export default function TimeChart({ times }: Props) {
 				);
 			})}
 
-			<div className="relative h-[300px] w-[300px] overflow-hidden rounded-full outline outline-2 outline-h_gray sm:h-[600px] sm:w-[600px]">
+			<div
+				className="relative h-[250px] w-[250px] overflow-hidden rounded-full outline outline-2 outline-h_gray"
+				style={{ width: chartWidth, height: chartWidth }}
+			>
 				<canvas
 					ref={canvasRef}
 					width={chartWidth}
