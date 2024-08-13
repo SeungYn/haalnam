@@ -14,7 +14,7 @@ export default function CommonPopUpHeader({
 				onClick={() => onEvent()}
 				className="cursor-pointer"
 			/>
-			<span className="text-3l">{title}</span>
+			<span className="text-3xl font-bold">{title}</span>
 		</nav>
 	);
 }
