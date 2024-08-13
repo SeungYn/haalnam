@@ -13,12 +13,14 @@ type Prop = ButtonHTMLAttributes<HTMLButtonElement> & {
 	className?: string;
 	size?: keyof typeof sizeStyle;
 	accent?: boolean;
+	isLoading?: boolean;
 };
 
 export function Button({
 	className = '',
 	size = 'none',
 	accent = false,
+	isLoading = false,
 	...props
 }: Prop) {
 	if (accent)
@@ -30,8 +32,13 @@ export function Button({
 		);
 	return (
 		<>
+			{isLoading && (
+				<div className="absolute inset-0 flex items-center justify-center bg-h_light_black bg-opacity-50">
+					<div className="h-10 w-10 animate-spin rounded-full border-4 border-h_light_black border-t-white"></div>
+				</div>
+			)}
 			<button
-				className={`flex items-center justify-center border border-h_gray bg-h_black text-white transition-colors hover:bg-h_light_black ${className} ${sizeStyle[size]}`}
+				className={`flex items-center justify-center border border-h_gray bg-h_black text-white transition-colors hover:bg-h_light_black disabled:text-h_gray ${className} ${sizeStyle[size]}`}
 				{...props}
 			/>
 		</>

@@ -131,3 +131,32 @@ export function usePostEndTime({
 
 	return mutate;
 }
+
+/**
+ * 시간 추가하는 hooks
+ * @param closePopUp 팝업 닫는 함수
+ * @returns
+ */
+export function usePostAddTimer(closePopUp: () => void) {
+	const queryClient = useQueryClient();
+	const mutate = useMutation({
+		mutationFn: (req: Parameters<typeof service.time.postAddTimer>[0]) => {
+			return service.time.postAddTimer(req);
+		},
+		onSuccess: (data, params) => {
+			queryClient.invalidateQueries([
+				...QUERY_KEYS.getPersonalTimesByDate,
+				params.date.toDateString(),
+			]);
+			useInfoToast('시간이 추가됐습니다!');
+		},
+		onError: () => {
+			toast.error('에러가 발생했습니다. 다시 시도해주세요');
+		},
+		onSettled: () => {
+			closePopUp();
+		},
+	});
+
+	return mutate;
+}

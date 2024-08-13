@@ -42,14 +42,15 @@ export default function RootLayout({
 							<body>
 								<div className="flex h-full w-full flex-col-reverse gap-4 bg-h_black text-white md:flex-row">
 									<Sidebar />
-									<main className="flex-1 overflow-y-auto">
+									<main className="relative flex-1 overflow-y-auto">
 										<div className="mx-auto h-full min-h-full w-full max-w-screen-xl px-4 md:px-0">
 											{children}
 										</div>
+										<div id="time-portal"></div>
 									</main>
 								</div>
 								<ReactToastContainer />
-								<ReactQueryDevtools />
+								{/* <ReactQueryDevtools /> */}
 							</body>
 						</CheckUnloadHOC>
 					</TimeContextProvider>

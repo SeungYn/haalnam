@@ -25,6 +25,27 @@ export function getFullDate(y: number, m: number, d: number) {
 	return date;
 }
 
+/**
+ * 각 파라미터를 받아 UTC 기준인데 한국날짜를 생성시켜줌
+ * @param y
+ * @param month
+ * @param d
+ * @param h
+ * @param minutes
+ * @returns
+ */
+export function makeUTCStringDate(
+	y: number,
+	month: number,
+	d: number,
+	h: number,
+	minutes: number
+) {
+	const date = new Date(y, month, d, 9);
+	date.setHours(h + 9, minutes);
+	return date;
+}
+
 export function timeToMilliseconds(time: Date) {
 	const hours = time.getHours();
 	const minutes = time.getMinutes();
@@ -133,7 +154,7 @@ export function isCurrentDay(selectedDate: Date) {
  * @param serverDate +9시간된 UTC 시간
  * @returns
  */
-export function formatBroswerTime(serverDate: Date) {
+export function formatBroswerTime(serverDate: Date | string) {
 	const date = new Date(serverDate);
 	date.setHours(date.getHours() - 9);
 	return date;

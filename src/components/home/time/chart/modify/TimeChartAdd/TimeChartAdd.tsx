@@ -14,8 +14,11 @@ import { ROTATE_DEG } from '@/utils/size';
 import { deepCopy } from '@/utils/util';
 import { Time } from '@prisma/client';
 import {
+	ForwardedRef,
+	forwardRef,
 	MouseEvent,
 	useCallback,
+	useEffect,
 	useLayoutEffect,
 	useRef,
 	useState,
@@ -29,51 +32,6 @@ const colorPalette = [
 	{ r: 33, g: 151, b: 255, a: 100 },
 ];
 
-function randomIndexInclusive(min: number, max: number) {
-	return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function paletteRandomIndex(colorPalette: RGBA[]) {
-	return randomIndexInclusive(0, colorPalette.length - 1);
-}
-
-/**
- * 이전 Path2D 색상과 겹치면 다시 랜덤 색상 뽑음
- */
-function filterDuplicatePrevIndex(
-	currentIndex: number,
-	customPath2Ds: CustomPath2D[],
-	colorPalette: RGBA[]
-) {
-	if (currentIndex === 0) return paletteRandomIndex(colorPalette);
-
-	const currentColorPaletteIndex = paletteRandomIndex(colorPalette);
-	const prevIndex = currentIndex - 1;
-
-	// 현재 인덱스가 배열의 마지막 인덱스인경우
-	// 0 번째 인덱스와 이전 인덱스에서 중복을 걸러내야함.
-	if (currentIndex === customPath2Ds.length - 1) {
-		const colorPaletteIndexOfZeroIndex = customPath2Ds[0].colorPaletteIndex;
-		if (colorPaletteIndexOfZeroIndex === currentColorPaletteIndex)
-			return filterDuplicatePrevIndex(
-				currentIndex,
-				customPath2Ds,
-				colorPalette
-			);
-		if (customPath2Ds[prevIndex].colorPaletteIndex === currentColorPaletteIndex)
-			return filterDuplicatePrevIndex(
-				currentIndex,
-				customPath2Ds,
-				colorPalette
-			);
-	}
-	///debugger;
-	if (customPath2Ds[prevIndex].colorPaletteIndex !== currentColorPaletteIndex)
-		return currentColorPaletteIndex;
-
-	return filterDuplicatePrevIndex(currentIndex, customPath2Ds, colorPalette);
-}
-
 type Props = {
 	times: Time[];
 };
@@ -86,7 +44,10 @@ type HoverChartPiece = CustomPath2D & {
 // 새로 적용할 color
 // rgb(161, 161, 161)
 // bg rgb(10, 10, 10)
-export default function TimeChart({ times }: Props) {
+export function TimeAddChartFoward(
+	{ times }: Props,
+	ref?: ForwardedRef<HTMLDivElement>
+) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [chartWidth, setChartWidth] = useState<ChartSize>(300);
 	const [path2Ds, setPath2Ds] = useState<CustomPath2D[]>([]);
@@ -158,38 +119,6 @@ export default function TimeChart({ times }: Props) {
 		setHoverCustomPath2D(null);
 	};
 
-	const drawChartMiddleCycle = useCallback(
-		(ctx: CanvasRenderingContext2D) => {
-			// 차트 가운데 동그라미 그리기
-			const startPoint = parseInt(String(chartWidth / 2));
-			ctx.save();
-			ctx.fillStyle = '#6b7280';
-			ctx.arc(
-				startPoint,
-				startPoint,
-				startPoint / 30,
-				0,
-				(Math.PI / 180) * 360
-			);
-			ctx.strokeStyle = 'black';
-			ctx.lineWidth = 2;
-			ctx.stroke();
-			ctx.fill();
-			ctx.restore();
-		},
-		[chartWidth]
-	);
-
-	// 프롭이 바뀔 때마다 캔버스 초기화
-	// useLayoutEffect(() => {
-	// 	if (canvasRef.current) {
-	// 		console.log('canvas clear');
-	// 		canvasRef.current
-	// 			.getContext('2d')
-	// 			?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-	// 	}
-	// }, [times]);
-
 	useLayoutEffect(() => {
 		const mediaQuery = window.matchMedia('screen and (min-width:640px)');
 		const mbileMediaQuery = window.matchMedia('screen and (min-width:390px)');
@@ -214,7 +143,7 @@ export default function TimeChart({ times }: Props) {
 		};
 	}, []);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (!times) return;
 		if (!canvasRef.current) return;
 
@@ -228,18 +157,12 @@ export default function TimeChart({ times }: Props) {
 		const customPath2dList: CustomPath2D[] = [];
 
 		for (let i = 0, index = 0; i < times.length; i++) {
+			// 데이터가 홀수 이고 마지막이 시작으로 끝나는 경우 캔슬
+			// 마지막으로 타이머가 시작일 경우
+			if (times.length % 2 && i === times.length - 1) continue;
 			if (i % 2 !== 0) continue;
 
-			// 데이터가 홀수 이고 마지막이 시작으로 끝나는 경우 캔슬
-			if (times.length % 2 && i === times.length - 1) continue;
 			const path = new Path2D();
-			// 랜덤으로 색상을 뽑아주는 인덱스
-			// const paletteIndex = filterDuplicatePrevIndex(
-			//   customPath2dList.length,
-			//   customPath2dList,
-			//   colorPalette
-			// );
-
 			// 색상을 규칙적을 뽑는 인덱스
 			const paletteIndex = index % colorPalette.length;
 
@@ -263,6 +186,7 @@ export default function TimeChart({ times }: Props) {
 			ctx.fill(path); //채우기
 			ctx.stroke(path); //테두리
 			path.closePath();
+
 			customPath2dList.push({
 				path2D: path,
 				rgba: colorPalette[paletteIndex],
@@ -276,25 +200,7 @@ export default function TimeChart({ times }: Props) {
 	}, [canvasRef, chartWidth, times]);
 
 	return (
-		<div className="relative p-10">
-			{/* 눈금 별 시간 표시 */}
-			{makeChartGradutionTimeInfo((chartWidth + 45) / 2).map((v) => {
-				return (
-					<div
-						suppressHydrationWarning
-						key={JSON.stringify(v)}
-						className="absolute text-2xl"
-						style={{
-							transform: `translate(${v.x + chartWidth / 2}px, ${
-								v.y + chartWidth / 2
-							}px) translate(-50%, -50%)`,
-						}}
-					>
-						{v.time}
-					</div>
-				);
-			})}
-
+		<div ref={ref} className="relative inline-block p-10">
 			<div
 				className="relative h-[250px] w-[250px] overflow-hidden rounded-full outline outline-2 outline-h_gray"
 				style={{ width: chartWidth, height: chartWidth }}
@@ -356,6 +262,9 @@ export default function TimeChart({ times }: Props) {
 		</div>
 	);
 }
+
+const TimeChartAdd = forwardRef<HTMLDivElement, Props>(TimeAddChartFoward);
+export default TimeChartAdd;
 
 function makeGradution(count: number) {
 	const list: JSX.Element[] = [];
