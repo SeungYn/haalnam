@@ -18,6 +18,7 @@ import {
 	IoLogoInstagram,
 	IoHappyOutline,
 	IoReloadCircleOutline,
+	IoAddCircle,
 } from 'react-icons/io5';
 import { IconProp } from './types';
 import { LuDot } from 'react-icons/lu';
@@ -222,5 +223,11 @@ export function IoReloadCircleOutlineIcon({
 			style={{ fontSize: getIconSize(size), ...style }}
 			{...rest}
 		/>
+	);
+}
+
+export function IoAddCircleIcon({ size = '', style, color, ...rest }: Prop) {
+	return (
+		<IoAddCircle style={{ fontSize: getIconSize(size), ...style }} {...rest} />
 	);
 }
