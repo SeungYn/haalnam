@@ -1,37 +1,46 @@
-export const chartData = [
-  {
-    time: '2023-08-13 00:22:13',
-    subject: '게임',
-    status: 'START',
-  },
-  {
-    time: '2023-08-13 00:50:13',
-    subject: '게임',
-    status: 'END',
-  },
-  {
-    time: '2023-08-13 03:00:13',
-    subject: '게임',
-    status: 'START',
-  },
-  {
-    time: '2023-08-13 05:50:13',
-    subject: '게임',
-    status: 'END',
-  },
-  {
-    time: '2023-08-13 17:00:13',
-    subject: '게임',
-    status: 'start',
-  },
-  {
-    time: '2023-08-13 18:50:13',
-    subject: '게임',
-    status: 'end',
-  },
-  {
-    time: '2023-08-13 23:00:13',
-    subject: '던파',
-    status: 'start',
-  },
+import { Time } from '@prisma/client';
+
+export const TIME_MOCK_DATA: Time[] = [
+	{
+		id: 1,
+		status: 'START',
+		subject: '123',
+		time: '2024-08-12T02:12:48.958Z' as unknown as Date,
+		userId: 'clzgncc1l0000dhcrubvplrmn',
+	},
+	{
+		id: 2,
+		status: 'END',
+		subject: '123',
+		time: '2024-08-12T03:13:48.958Z' as unknown as Date,
+		userId: 'clzgncc1l0000dhcrubvplrmn',
+	},
+	{
+		id: 3,
+		status: 'START',
+		subject: '123',
+		time: '2024-08-12T12:12:48.958Z' as unknown as Date,
+		userId: 'clzgncc1l0000dhcrubvplrmn',
+	},
+	{
+		id: 4,
+		status: 'END',
+		subject: '123',
+		time: '2024-08-12T14:13:48.958Z' as unknown as Date,
+		userId: 'clzgncc1l0000dhcrubvplrmn',
+	},
+	{
+		id: 5,
+		status: 'START',
+		subject: '123',
+		time: '2024-08-12T17:12:48.958Z' as unknown as Date,
+		userId: 'clzgncc1l0000dhcrubvplrmn',
+	},
+	{
+		id: 6,
+		status: 'END',
+		subject: '123',
+		time: '2024-08-12T21:13:48.958Z' as unknown as Date,
+		userId: 'clzgncc1l0000dhcrubvplrmn',
+	},
 ];
