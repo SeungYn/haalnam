@@ -22,10 +22,23 @@ export default function PopupStandard() {
 			}, 10);
 		};
 		resizeCB();
+		const resizeObserver = new ResizeObserver((entries) => {
+			for (let entry of entries) {
+				const { width } = entry.contentRect;
+				const { left } = entry.target.getBoundingClientRect();
+
+				if (ref.current) {
+					ref.current.style.left = `${left}px`;
+					ref.current.style.width = `${width}px`;
+				}
+			}
+		});
+		resizeObserver.observe(main);
 		window.addEventListener('resize', resizeCB);
 
 		return () => {
 			window.removeEventListener('resize', resizeCB);
+			resizeObserver.unobserve(main);
 		};
 	}, []);
 	return (
