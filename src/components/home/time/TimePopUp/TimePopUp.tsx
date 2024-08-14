@@ -16,31 +16,45 @@ export default function TimePopUp({
 	setIsMounting,
 	children,
 }: PropsWithChildren<Props>) {
-	// useEffect(() => {
-	// 	if (!isOpen) return;
+	/**
+	 * 팝업이 닫히는 상황
+	 * 1. 뒤로가기
+	 * 2. 네비게이션
+	 * 3. 백 스페이스
+	 */
+	useEffect(() => {
+		if (!isOpen) return;
 
-	// 	let isFire = false;
-	// 	history.pushState(null, '', location.href);
-	// 	const backEvent = () => {
-	// 		isFire = true;
-	// 		setIsMounting(false);
-	// 	};
-	// 	window.addEventListener('popstate', backEvent);
-	// 	return () => {
-	// 		if (isOpen && !isFire) history.back();
-	// 		window.removeEventListener('popstate', backEvent);
-	// 	};
-	// }, [isOpen]);
+		let isFire = false;
+		history.pushState(null, '', location.href);
+		const backEvent = () => {
+			isFire = true;
+			setIsMounting(false);
+		};
+		window.addEventListener('popstate', backEvent);
+		return () => {
+			if (!isFire) {
+				// 마이 페이지에서만 back 호출
+				const pathname = location.pathname;
+				if (pathname === '/my') history.back();
+			}
+			window.removeEventListener('popstate', backEvent);
+		};
+	}, [isOpen]);
 
+	// 부모는
 	if (!isOpen) return null;
 
-	// 부모는 main 태그임
 	return createPortal(
 		<section
-			className={`absolute top-0 z-[100] h-full w-full bg-h_black px-4 transition-all md:absolute md:px-0 ${isMounting ? 'top-0' : 'top-full'}`}
+			className={`fixed top-0 z-[999] h-screen w-full overflow-auto bg-h_black px-4 transition-all duration-300 md:absolute md:px-0 ${isMounting ? 'translate-y-0' : 'translate-y-full'}`}
 		>
 			{children}
 		</section>,
 		document.querySelector('#time-portal')!
 	);
 }
+
+/**
+ * 앱솔루트일 때 main 태그에 맞춰서 팝업을 열 수는 없을까...
+ */

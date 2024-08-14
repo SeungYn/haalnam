@@ -1,6 +1,7 @@
 'use client';
 
 import { Dispatch, PropsWithChildren, SetStateAction, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 type Props = {
 	isMounting: boolean;
@@ -15,6 +16,12 @@ export default function MyPageCommonPopUp({
 	setIsMounting,
 	children,
 }: PropsWithChildren<Props>) {
+	/**
+	 * 팝업이 닫히는 상황
+	 * 1. 뒤로가기
+	 * 2. 네비게이션
+	 * 3. 백 스페이스
+	 */
 	useEffect(() => {
 		if (!isOpen) return;
 
@@ -26,18 +33,24 @@ export default function MyPageCommonPopUp({
 		};
 		window.addEventListener('popstate', backEvent);
 		return () => {
-			if (isOpen && !isFire) history.back();
+			if (!isFire) {
+				// 마이 페이지에서만 back 호출
+				const pathname = location.pathname;
+				if (pathname === '/my') history.back();
+			}
 			window.removeEventListener('popstate', backEvent);
 		};
 	}, [isOpen]);
 
 	if (!isOpen) return null;
 
-	return (
+	return createPortal(
 		<section
-			className={`absolute top-0 z-30 w-full grow bg-h_black px-4 transition-all md:absolute md:px-0 ${isMounting ? 'left-0' : 'left-full'}`}
+			className={`fixed left-0 top-0 z-[999] h-screen w-full overflow-auto bg-h_black px-4 transition-all duration-300 md:absolute md:px-0 ${isMounting ? 'translate-x-0' : 'translate-x-full'}`}
+			//className={`absolute top-0 z-30 w-full grow bg-h_black px-4 !transition-all md:absolute md:px-0 ${isMounting ? 'left-0' : 'left-full'}`}
 		>
 			{children}
-		</section>
+		</section>,
+		document.querySelector('#time-portal')!
 	);
 }

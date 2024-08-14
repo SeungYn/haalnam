@@ -6,12 +6,20 @@ import TimeChartAddForm from '@/components/home/time/chart/modify/TimeChartAddFo
 import TimeForm from '@/components/home/time/TimeForm.tsx/TimeForm';
 import TimePopUp from '@/components/home/time/TimePopUp/TimePopUp';
 import { useTimeActionContext, useTimeContext } from '@/context/TimeContext';
-import { usePostEndTime, usePostStartTime } from '@/hooks/api/time';
+import {
+	useGetImmediateTimes,
+	useGetTimesByDate,
+	useGetTimesByDateNotSuspense,
+	usePostEndTime,
+	usePostStartTime,
+} from '@/hooks/api/time';
 import usePopUpStatus from '@/hooks/common/usePopUpStatus';
 import { PostTimeRequest } from '@/service/types/time';
 import { useSelectedDateStore } from '@/store/dateStore';
+import { hoursMinutesSecondsToRadian, stringTimeToRadian } from '@/utils/chart';
 import { isCurrentDay } from '@/utils/date';
-import { Status } from '@prisma/client';
+import { Status, Time } from '@prisma/client';
+import { toast } from 'react-toastify';
 
 export default function TimeFormContainer() {
 	const { status, subject } = useTimeContext();
@@ -22,9 +30,25 @@ export default function TimeFormContainer() {
 		handleEndTime,
 	});
 	const { selectedDate } = useSelectedDateStore();
-	const { isMounting, isOpen, setIsOpen, setIsMounting } = usePopUpStatus();
-
+	const { isMounting, isOpen, setIsOpen, setIsMounting } = usePopUpStatus(300);
+	const { data: times = [] } = useGetTimesByDateNotSuspense(selectedDate);
 	const onStart = ({ subject, time, status }: PostTimeRequest) => {
+		const currentTime = new Date();
+
+		const res = checkStartOverlappingTime(
+			times,
+			hoursMinutesSecondsToRadian(
+				currentTime.getHours(),
+				currentTime.getMinutes(),
+				currentTime.getSeconds()
+			)
+		);
+
+		if (res) {
+			toast.error('현재 시간에 진행된 타이머가 존재합니다.');
+			return;
+		}
+
 		mutate({ subject, time, status });
 	};
 
@@ -34,6 +58,27 @@ export default function TimeFormContainer() {
 			status: Status.END,
 			time: new Date(),
 		});
+	};
+
+	/**
+	 * 선택된 시간에 타이머가 진행했는지 확인해주는 함수
+	 * @param times
+	 * @returns
+	 */
+	const checkStartOverlappingTime = (times: Time[], currentRadian: number) => {
+		for (let i = 0; i < times.length; i += 2) {
+			const startTime = times[i].time;
+			const endTime = times[i + 1].time;
+
+			const startTimeRaian = stringTimeToRadian(String(startTime));
+			const endTimeRaian = stringTimeToRadian(String(endTime));
+
+			if (startTimeRaian <= currentRadian && currentRadian <= endTimeRaian) {
+				return startTimeRaian;
+			}
+		}
+
+		return null;
 	};
 
 	if (status === 'START') return <></>;

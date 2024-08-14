@@ -21,6 +21,14 @@ main::-webkit-scrollbar-thumb {
 	@apply rounded-lg bg-h_gray_semi_dark;
 }
 
+*::-webkit-scrollbar {
+	@apply w-3 bg-h_black;
+}
+
+*::-webkit-scrollbar-thumb {
+	@apply rounded-lg bg-h_gray_semi_dark;
+}
+
 input {
 	outline: none;
 }

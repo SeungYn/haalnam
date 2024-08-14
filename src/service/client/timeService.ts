@@ -60,17 +60,18 @@ export default class TimeService {
 
 	async getLatestTime() {
 		const url = `/api/time/latest`;
-		const { data } = await this.axios.get<Time>(url);
-
-		return data;
+		return await this.axios.get<Time>(url);
 	}
 
 	async postCheckRestTimer() {
-		console.log('나 호출');
 		const url = `/api/time/check`;
-		const { data } = await this.axios.post<Time>(url);
+		// const { data } = await this.axios.post<Time>(url);
+		const res = await fetch(whereHost() + url, {
+			method: 'POST',
+			keepalive: true,
+		});
 
-		return data;
+		return res;
 	}
 
 	async postAddTimer({
