@@ -1,6 +1,7 @@
 'use client';
 
 import { Dispatch, PropsWithChildren, SetStateAction, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 type Props = {
 	isMounting: boolean;
@@ -43,11 +44,13 @@ export default function MyPageCommonPopUp({
 
 	if (!isOpen) return null;
 
-	return (
+	return createPortal(
 		<section
-			className={`absolute top-0 z-30 w-full grow bg-h_black px-4 !transition-all md:absolute md:px-0 ${isMounting ? 'left-0' : 'left-full'}`}
+			className={`fixed left-0 top-0 z-[999] h-screen w-full overflow-auto bg-h_black px-4 transition-all duration-300 md:absolute md:px-0 ${isMounting ? 'translate-x-0' : 'translate-x-full'}`}
+			//className={`absolute top-0 z-30 w-full grow bg-h_black px-4 !transition-all md:absolute md:px-0 ${isMounting ? 'left-0' : 'left-full'}`}
 		>
 			{children}
-		</section>
+		</section>,
+		document.querySelector('#time-portal')!
 	);
 }
