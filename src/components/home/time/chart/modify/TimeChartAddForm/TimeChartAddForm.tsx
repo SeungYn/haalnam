@@ -449,7 +449,7 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 					</div>
 				</div>
 
-				<div className="relative">
+				<div className="relative mb-20">
 					<Button
 						size="medium"
 						className="w-full"
