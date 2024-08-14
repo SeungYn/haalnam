@@ -52,7 +52,7 @@ export default function RootLayout({
 									</main>
 								</div>
 								<ReactToastContainer />
-								{/* <ReactQueryDevtools /> */}
+								<ReactQueryDevtools />
 							</body>
 						</CheckUnloadHOC>
 					</TimeContextProvider>

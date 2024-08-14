@@ -11,7 +11,6 @@ export async function GET(
 	{ params: { date } }: { params: { date: any } }
 ) {
 	const session = await auth();
-
 	//console.log('postsession', session);
 	let user: User | null;
 	try {

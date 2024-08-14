@@ -25,7 +25,7 @@ export function useGetPersonalTodayTime(isSuspense: boolean = false) {
 }
 
 /**
- * 날짜를 기반으로 사용자의 시간표들을 가져오는 hook
+ * 날짜를 기반으로 사용자 개인의 시간표들을 가져오는 hook
  * @param date
  * @param isSuspense
  * @returns
@@ -38,6 +38,22 @@ export function useGetTimesByDate(date: Date, isSuspense: boolean = false) {
 		queryFn: () => service.time.getTimesByDate(date),
 		suspense: true,
 		// initialData: [],
+		enabled: !!session,
+	});
+}
+
+/**
+ * 날짜를 기반으로 사용자 개인의 시간표들을 가져오는 hook
+ * @param date
+ * @param isSuspense
+ * @returns
+ */
+export function useGetTimesByDateNotSuspense(date: Date) {
+	const { data: session } = useSession();
+
+	return useQuery({
+		queryKey: [...QUERY_KEYS.getPersonalTimesByDate, date.toDateString()],
+		queryFn: () => service.time.getTimesByDate(date),
 		enabled: !!session,
 	});
 }
@@ -159,4 +175,15 @@ export function usePostAddTimer(closePopUp: () => void) {
 	});
 
 	return mutate;
+}
+
+export function useGetImmediateTimes(date: Date) {
+	const queryClient = useQueryClient();
+
+	const times = queryClient.getQueryData<Time[]>([
+		...QUERY_KEYS.getPersonalTimesByDate,
+		date.toDateString(),
+	]);
+	console.log(times);
+	return times;
 }

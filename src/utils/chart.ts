@@ -41,7 +41,6 @@ export const timeToDegree = (time: Date) => {
  * @param angle
  */
 export const angleToTime = (angle: number) => {
-	console.log(angle);
 	const hours = Math.floor(angle / 15);
 	const minutes = Math.floor((angle % 15) / 0.25);
 	return `${hours}시 ${minutes}분`;
@@ -83,6 +82,18 @@ export const stringTimeToRadian = (time: string) => {
 	const hoursRadian = hours * (Math.PI / 12);
 	const minutesRadian = (minutes * Math.PI) / (12 * 60);
 	const secondsRadian = (seconds * Math.PI) / (12 * 60 * 60);
+
+	return hoursRadian + minutesRadian + secondsRadian;
+};
+
+export const hoursMinutesSecondsToRadian = (
+	h: number,
+	m: number,
+	s: number
+) => {
+	const hoursRadian = h * (Math.PI / 12);
+	const minutesRadian = (m * Math.PI) / (12 * 60);
+	const secondsRadian = (s * Math.PI) / (12 * 60 * 60);
 
 	return hoursRadian + minutesRadian + secondsRadian;
 };
