@@ -30,7 +30,7 @@ export default function PopupStandard() {
 	}, []);
 	return (
 		<div ref={ref} className="fixed z-[999]" style={{ top: '0px' }}>
-			<div id="time-portal" className="mx-auth max-w-screen-xl"></div>
+			<div id="time-portal" className="relative mx-auto max-w-screen-xl"></div>
 		</div>
 	);
 }
