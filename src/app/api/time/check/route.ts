@@ -12,7 +12,6 @@ import { NextResponse } from 'next/server';
  */
 export async function POST() {
 	const session = await auth();
-
 	let user: User;
 	try {
 		user = await checkUser(session?.user?.id, session);
@@ -25,7 +24,7 @@ export async function POST() {
 
 	const { id, timer_status } = user;
 
-	if (timer_status === 'END') return new NextResponse('굿', { status: 200 });
+	if (timer_status === 'END') return NextResponse.json('굿', { status: 200 });
 
 	try {
 		const res = await client.$transaction(async () => {
@@ -59,7 +58,7 @@ export async function POST() {
 			return post;
 		});
 
-		return new NextResponse(null, { status: 204 });
+		return NextResponse.json({}, { status: 200 });
 	} catch (error) {
 		console.error(error);
 		return NextResponse.json(
