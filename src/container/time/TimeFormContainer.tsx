@@ -22,7 +22,7 @@ export default function TimeFormContainer() {
 		handleEndTime,
 	});
 	const { selectedDate } = useSelectedDateStore();
-	const { isMounting, isOpen, setIsOpen, setIsMounting } = usePopUpStatus();
+	const { isMounting, isOpen, setIsOpen, setIsMounting } = usePopUpStatus(300);
 
 	const onStart = ({ subject, time, status }: PostTimeRequest) => {
 		mutate({ subject, time, status });
