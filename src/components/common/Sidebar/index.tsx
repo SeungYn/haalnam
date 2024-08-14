@@ -5,7 +5,7 @@ import style from './Sidebar.module.css';
 
 export default function Sidebar() {
 	return (
-		<nav className={`${interFont.variable} ${style.sidebar} z-[1000]`}>
+		<nav className={`${interFont.variable} ${style.sidebar} `}>
 			<Link href={'/'} className={`${style.sidebar__item} `}>
 				<IoHomeIcon className="text-[24px] md:text-[28px]" />
 				<span>홈</span>

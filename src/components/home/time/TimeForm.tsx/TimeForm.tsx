@@ -9,7 +9,6 @@ import {
 	Dispatch,
 	FormEventHandler,
 	SetStateAction,
-	useEffect,
 	useState,
 } from 'react';
 
@@ -56,12 +55,12 @@ export default function TimeForm({
 					value={timeTitle}
 					placeholder="주제 ex: 운동하기"
 				/>
-				<div className="flex gap-2">
+				<div className="relative">
 					<Button size="medium">타이머 시작하기</Button>
 					<Button
 						type="button"
 						size="medium"
-						className="rounded-full border-none !p-0"
+						className="absolute left-[calc(100%+1rem)] top-1/2 -translate-y-1/2 rounded-full border-none !p-0"
 						onClick={() => onAddPopUpOpen(true)}
 						title="시간 추가하기"
 					>
