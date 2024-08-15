@@ -74,7 +74,7 @@ export default function TimeTable({ times = [] }: Props) {
 			body: (
 				<>
 					<p className="text-h_gray_semi_light">
-						<span>주제: {item!.status}</span>
+						<span>주제: {item!.start.subject}</span>
 					</p>
 					<p className="text-h_gray_semi_light">
 						<span>시간: {item!.parseTime}</span>
