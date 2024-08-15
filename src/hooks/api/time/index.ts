@@ -184,6 +184,27 @@ export function useGetImmediateTimes(date: Date) {
 		...QUERY_KEYS.getPersonalTimesByDate,
 		date.toDateString(),
 	]);
-	console.log(times);
 	return times;
+}
+
+export function useDeleteTimes(cb: () => void) {
+	const queryClient = useQueryClient();
+
+	const mutate = useMutation({
+		mutationFn: (req: Parameters<typeof service.time.deleteTimer>[0]) => {
+			return service.time.deleteTimer(req);
+		},
+		onSuccess: (data, params) => {
+			queryClient.invalidateQueries([...QUERY_KEYS.getPersonalTimesByDate]);
+			useInfoToast('성공적으로 삭제됐습니다!');
+		},
+		onError: () => {
+			toast.error('에러가 발생했습니다. 다시 시도해주세요');
+		},
+		onSettled: () => {
+			cb();
+		},
+	});
+
+	return mutate;
 }

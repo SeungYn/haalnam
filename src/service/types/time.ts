@@ -15,3 +15,8 @@ export type PostAddTimerRequest = {
 	startTime: { hours: number; minutes: number; seconds: number };
 	endTime: { hours: number; minutes: number; seconds: number };
 };
+
+export type DeleteTimerRequest = {
+	start: number;
+	end?: number;
+};

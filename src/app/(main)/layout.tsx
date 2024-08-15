@@ -12,6 +12,7 @@ import ReactToastContainer from '@/components/common/toast/ReactToastContainer';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { whereHost } from '@/utils/util';
 import PopupStandard from '@/components/common/PopupStandard/PopupStandard';
+import DialogContextProvider from '@/context/DialogContext';
 
 export const metadata: Metadata = {
 	metadataBase: new URL(whereHost() || ''),
@@ -41,18 +42,20 @@ export default function RootLayout({
 					<TimeContextProvider>
 						<CheckUnloadHOC>
 							<body>
-								<div className="flex h-full w-full flex-col-reverse gap-4 bg-h_black text-white md:flex-row">
-									<Sidebar />
-									<main className="relative flex-1 overflow-y-auto overflow-x-hidden">
-										{/* 팝업 기준 요소 */}
-										<PopupStandard />
-										<div className="mx-auto h-full min-h-full w-full max-w-screen-xl px-4 md:px-0">
-											{children}
-										</div>
-									</main>
-								</div>
-								<ReactToastContainer />
-								<ReactQueryDevtools />
+								<DialogContextProvider>
+									<div className="flex h-full w-full flex-col-reverse gap-4 bg-h_black text-white md:flex-row">
+										<Sidebar />
+										<main className="relative flex-1 overflow-y-auto overflow-x-hidden">
+											{/* 팝업 기준 요소 */}
+											<PopupStandard />
+											<div className="mx-auto h-full min-h-full w-full max-w-screen-xl px-4 md:px-0">
+												{children}
+											</div>
+										</main>
+									</div>
+									<ReactToastContainer />
+									<ReactQueryDevtools />
+								</DialogContextProvider>
 							</body>
 						</CheckUnloadHOC>
 					</TimeContextProvider>
