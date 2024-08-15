@@ -9,6 +9,8 @@ import styles from './TimeTable.module.css';
 import { Time } from '@prisma/client';
 import { useEffect, useRef, useState } from 'react';
 import { useDialogContext } from '@/context/DialogContext';
+import { useDeleteTimes } from '@/hooks/api/time';
+import { toast } from 'react-toastify';
 
 type Props = {
 	times: Time[];
@@ -26,6 +28,7 @@ export default function TimeTable({ times = [] }: Props) {
 	const [clickedItem, setClickedItem] = useState<ClickedItem>(null);
 	const tableRef = useRef<HTMLDivElement>(null);
 	const { initDialog, reset } = useDialogContext();
+	const deleteMutate = useDeleteTimes(() => reset());
 
 	let filteredData: FlatedTime[] = times.flatMap((currentItem, i) => {
 		// 마지막이 start일 경우
@@ -61,6 +64,11 @@ export default function TimeTable({ times = [] }: Props) {
 	}) as FlatedTime[];
 
 	const deleteDialog = (item: ClickedItem) => {
+		if (!item?.end) {
+			toast.error('현재 진행중인 타이머는 삭제할 수 없습니다!');
+			return;
+		}
+
 		initDialog({
 			title: '기록된 시간이 삭제됩니다!',
 			body: (
@@ -77,7 +85,9 @@ export default function TimeTable({ times = [] }: Props) {
 			cancel: () => {
 				reset();
 			},
-			confirm: () => {},
+			confirm: () => {
+				deleteMutate.mutate({ start: item!.start.id, end: item!.end?.id });
+			},
 		});
 	};
 

@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios';
 import {
+	DeleteTimerRequest,
 	GetPersonalTodayTimeResponse,
 	PostAddTimerRequest,
 	PostTimeRequest,
@@ -72,6 +73,11 @@ export default class TimeService {
 		});
 
 		return res;
+	}
+
+	async deleteTimer(reqeustData: DeleteTimerRequest) {
+		const url = '/api/time/delete';
+		return await this.axios.post(url, { ...reqeustData });
 	}
 
 	async postAddTimer({
