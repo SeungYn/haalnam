@@ -4,6 +4,7 @@ import {
 	GetPersonalTodayTimeResponse,
 	PostAddTimerRequest,
 	PostTimeRequest,
+	StartTimerRequest,
 } from '../types/time';
 import { whereHost } from '@/utils/util';
 import { Time } from '@prisma/client';
@@ -11,21 +12,19 @@ import { Time } from '@prisma/client';
 export default class TimeService {
 	constructor(private axios: AxiosInstance) {}
 
-	async postTime({ time, subject, status }: PostTimeRequest) {
-		const formData = new FormData();
-
-		formData.append('subject', subject);
-		formData.append('status', status);
-		formData.append('time', String(time));
-
-		const res = await fetch(whereHost() + '/api/time', {
-			method: 'POST',
-			body: formData,
-			keepalive: true,
+	async postStartTimer({ status, subject }: StartTimerRequest) {
+		const { data } = await this.axios.post<Time>('/api/time', {
+			status,
+			subject,
 		});
-		const data = await res.json();
 
 		return data;
+	}
+
+	async fetchStopTimer({ timeId }: DeleteTimerRequest) {
+		return await this.axios.patch('/api/time', {
+			timeId,
+		});
 	}
 
 	async getPersonalTodayTime() {
@@ -123,4 +122,21 @@ export default class TimeService {
 
 		return data;
 	}
+
+	// async postTime({ time, subject, status }: PostTimeRequest) {
+	// 	const formData = new FormData();
+
+	// 	formData.append('subject', subject);
+	// 	formData.append('status', status);
+	// 	formData.append('time', String(time));
+
+	// 	const res = await fetch(whereHost() + '/api/time', {
+	// 		method: 'POST',
+	// 		body: formData,
+	// 		keepalive: true,
+	// 	});
+	// 	const data = await res.json();
+
+	// 	return data;
+	// }
 }

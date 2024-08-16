@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import client from '@/lib/db';
 import { getNowYYYY_MM_DD } from '@/utils/date';
-import { User } from '@prisma/client';
+import { Time, User } from '@prisma/client';
 import { auth } from '@/lib/auth';
 import { checkUser } from '@/service/server/userServerService';
 import { CustomException, ExceptionRes } from '@/utils/exception';
@@ -33,8 +33,9 @@ export async function POST(request: NextRequest) {
 		});
 	}
 
+	let res: Time;
 	try {
-		const res = await timeService.startTimer({
+		res = await timeService.startTimer({
 			status: reqData.status,
 			subject: reqData.subject,
 			id,
@@ -51,11 +52,11 @@ export async function POST(request: NextRequest) {
 		);
 	}
 
-	return new NextResponse(null, { status: 204 });
+	return NextResponse.json(res, { status: 201 });
 }
 
 // timer stop api
-export async function FETCH(request: NextRequest) {
+export async function PATCH(request: NextRequest) {
 	const session = await auth();
 
 	let user: User;

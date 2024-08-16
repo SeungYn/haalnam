@@ -29,51 +29,6 @@ const colorPalette = [
 	{ r: 33, g: 151, b: 255, a: 100 },
 ];
 
-function randomIndexInclusive(min: number, max: number) {
-	return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function paletteRandomIndex(colorPalette: RGBA[]) {
-	return randomIndexInclusive(0, colorPalette.length - 1);
-}
-
-/**
- * 이전 Path2D 색상과 겹치면 다시 랜덤 색상 뽑음
- */
-function filterDuplicatePrevIndex(
-	currentIndex: number,
-	customPath2Ds: CustomPath2D[],
-	colorPalette: RGBA[]
-) {
-	if (currentIndex === 0) return paletteRandomIndex(colorPalette);
-
-	const currentColorPaletteIndex = paletteRandomIndex(colorPalette);
-	const prevIndex = currentIndex - 1;
-
-	// 현재 인덱스가 배열의 마지막 인덱스인경우
-	// 0 번째 인덱스와 이전 인덱스에서 중복을 걸러내야함.
-	if (currentIndex === customPath2Ds.length - 1) {
-		const colorPaletteIndexOfZeroIndex = customPath2Ds[0].colorPaletteIndex;
-		if (colorPaletteIndexOfZeroIndex === currentColorPaletteIndex)
-			return filterDuplicatePrevIndex(
-				currentIndex,
-				customPath2Ds,
-				colorPalette
-			);
-		if (customPath2Ds[prevIndex].colorPaletteIndex === currentColorPaletteIndex)
-			return filterDuplicatePrevIndex(
-				currentIndex,
-				customPath2Ds,
-				colorPalette
-			);
-	}
-	///debugger;
-	if (customPath2Ds[prevIndex].colorPaletteIndex !== currentColorPaletteIndex)
-		return currentColorPaletteIndex;
-
-	return filterDuplicatePrevIndex(currentIndex, customPath2Ds, colorPalette);
-}
-
 type Props = {
 	times: Time[];
 };
@@ -158,28 +113,6 @@ export default function TimeChart({ times }: Props) {
 		setHoverCustomPath2D(null);
 	};
 
-	const drawChartMiddleCycle = useCallback(
-		(ctx: CanvasRenderingContext2D) => {
-			// 차트 가운데 동그라미 그리기
-			const startPoint = parseInt(String(chartWidth / 2));
-			ctx.save();
-			ctx.fillStyle = '#6b7280';
-			ctx.arc(
-				startPoint,
-				startPoint,
-				startPoint / 30,
-				0,
-				(Math.PI / 180) * 360
-			);
-			ctx.strokeStyle = 'black';
-			ctx.lineWidth = 2;
-			ctx.stroke();
-			ctx.fill();
-			ctx.restore();
-		},
-		[chartWidth]
-	);
-
 	// 프롭이 바뀔 때마다 캔버스 초기화
 	// useLayoutEffect(() => {
 	// 	if (canvasRef.current) {
@@ -228,17 +161,11 @@ export default function TimeChart({ times }: Props) {
 		const customPath2dList: CustomPath2D[] = [];
 
 		for (let i = 0, index = 0; i < times.length; i++) {
-			if (i % 2 !== 0) continue;
+			// timer가 진행중이면 cancel
+			if (!times[i].endTime) continue;
 
-			// 데이터가 홀수 이고 마지막이 시작으로 끝나는 경우 캔슬
-			if (times.length % 2 && i === times.length - 1) continue;
 			const path = new Path2D();
-			// 랜덤으로 색상을 뽑아주는 인덱스
-			// const paletteIndex = filterDuplicatePrevIndex(
-			//   customPath2dList.length,
-			//   customPath2dList,
-			//   colorPalette
-			// );
+			const currentTime = times[i];
 
 			// 색상을 규칙적을 뽑는 인덱스
 			const paletteIndex = index % colorPalette.length;
@@ -252,9 +179,9 @@ export default function TimeChart({ times }: Props) {
 				startX,
 				startX,
 				chartWidth / 2,
-				+((Math.PI / 180) * timeToDegree(times[i].time)).toFixed(2) -
+				+((Math.PI / 180) * timeToDegree(currentTime.startTime)).toFixed(2) -
 					Math.PI / 2,
-				+((Math.PI / 180) * timeToDegree(times[i + 1].time)).toFixed(2) -
+				+((Math.PI / 180) * timeToDegree(currentTime.endTime!)).toFixed(2) -
 					Math.PI / 2
 			);
 
@@ -267,8 +194,10 @@ export default function TimeChart({ times }: Props) {
 				path2D: path,
 				rgba: colorPalette[paletteIndex],
 				colorPaletteIndex: paletteIndex,
-				startTimeObj: times[i],
-				endTimeObj: times[i + 1],
+				startTimeObj: currentTime,
+				startTime: currentTime.startTime,
+				endTimeObj: currentTime,
+				endTime: currentTime.endTime!,
 			});
 		}
 
@@ -325,19 +254,15 @@ export default function TimeChart({ times }: Props) {
 					}}
 				>
 					<h2>{hoverCustomPath2D.startTimeObj.subject}</h2>
-					<p>
-						시작시간: {formatDisplayTime(hoverCustomPath2D.startTimeObj.time)}
-					</p>
-					<p>
-						종료시간: {formatDisplayTime(hoverCustomPath2D.endTimeObj.time)}
-					</p>
+					<p>시작시간: {formatDisplayTime(hoverCustomPath2D.startTime)}</p>
+					<p>종료시간: {formatDisplayTime(hoverCustomPath2D.endTime)}</p>
 					<p>
 						사용시간(분):{' '}
 						{Math.floor(
 							toSecondsByMilliseconds(
 								differenceTime(
-									hoverCustomPath2D.startTimeObj.time,
-									hoverCustomPath2D.endTimeObj.time
+									hoverCustomPath2D.startTime,
+									hoverCustomPath2D.endTime
 								)
 							)! / 60
 						)}
@@ -346,8 +271,8 @@ export default function TimeChart({ times }: Props) {
 						사용시간(초):{' '}
 						{toSecondsByMilliseconds(
 							differenceTime(
-								hoverCustomPath2D.startTimeObj.time,
-								hoverCustomPath2D.endTimeObj.time
+								hoverCustomPath2D.startTime,
+								hoverCustomPath2D.endTime
 							)
 						)}
 					</p>
@@ -373,4 +298,51 @@ function makeGradution(count: number) {
 	}
 
 	return list;
+}
+
+// 랜덤 색상 유틸 함수
+
+function randomIndexInclusive(min: number, max: number) {
+	return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function paletteRandomIndex(colorPalette: RGBA[]) {
+	return randomIndexInclusive(0, colorPalette.length - 1);
+}
+
+/**
+ * 이전 Path2D 색상과 겹치면 다시 랜덤 색상 뽑음
+ */
+function filterDuplicatePrevIndex(
+	currentIndex: number,
+	customPath2Ds: CustomPath2D[],
+	colorPalette: RGBA[]
+) {
+	if (currentIndex === 0) return paletteRandomIndex(colorPalette);
+
+	const currentColorPaletteIndex = paletteRandomIndex(colorPalette);
+	const prevIndex = currentIndex - 1;
+
+	// 현재 인덱스가 배열의 마지막 인덱스인경우
+	// 0 번째 인덱스와 이전 인덱스에서 중복을 걸러내야함.
+	if (currentIndex === customPath2Ds.length - 1) {
+		const colorPaletteIndexOfZeroIndex = customPath2Ds[0].colorPaletteIndex;
+		if (colorPaletteIndexOfZeroIndex === currentColorPaletteIndex)
+			return filterDuplicatePrevIndex(
+				currentIndex,
+				customPath2Ds,
+				colorPalette
+			);
+		if (customPath2Ds[prevIndex].colorPaletteIndex === currentColorPaletteIndex)
+			return filterDuplicatePrevIndex(
+				currentIndex,
+				customPath2Ds,
+				colorPalette
+			);
+	}
+	///debugger;
+	if (customPath2Ds[prevIndex].colorPaletteIndex !== currentColorPaletteIndex)
+		return currentColorPaletteIndex;
+
+	return filterDuplicatePrevIndex(currentIndex, customPath2Ds, colorPalette);
 }

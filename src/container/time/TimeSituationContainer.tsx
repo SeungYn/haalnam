@@ -14,11 +14,12 @@ export default function TimeSituationContainer() {
 	const [id, forceUpdate] = useForceUpdate();
 
 	const onEndTime = () => {
-		mutate({
-			subject: timeState.subject,
-			status: Status.END,
-			time: new Date(),
-		});
+		if (timeState.timeId)
+			mutate({
+				timeId: timeState.timeId,
+				status: Status.END,
+				time: new Date(),
+			});
 	};
 
 	// visibilityChange 이벤트 등록

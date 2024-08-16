@@ -16,7 +16,6 @@ import {
 	stringTimeToRadian,
 	radianToAngle,
 } from '@/utils/chart';
-import { TIME_MOCK_DATA } from '@/utils/mock/chart/data';
 import { Button } from '@/components/common';
 import { IoReloadCircleOutlineIcon } from '@/components/icons';
 import useIsMobile from '@/hooks/common/useIsMobile';
@@ -153,9 +152,11 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 	 * @returns
 	 */
 	const checkStartOverlappingTime = (times: Time[], currentRadian: number) => {
-		for (let i = 0; i < times.length; i += 2) {
-			const startTime = times[i].time;
-			const endTime = times[i + 1].time;
+		for (let i = 0; i < times.length; i++) {
+			const currentTime = times[i];
+			if (currentTime.endTime === null) continue;
+			const startTime = currentTime.startTime;
+			const endTime = currentTime.endTime;
 
 			const startTimeRaian = stringTimeToRadian(String(startTime));
 			const endTimeRaian = stringTimeToRadian(String(endTime));
@@ -169,9 +170,11 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 	};
 
 	const checkEndOverlappingTime = (times: Time[], currentRadian: number) => {
-		for (let i = 0; i < times.length; i += 2) {
-			const startTime = times[i].time;
-			const endTime = times[i + 1].time;
+		for (let i = 0; i < times.length; i++) {
+			const currentTime = times[i];
+			if (currentTime.endTime === null) continue;
+			const startTime = currentTime.startTime;
+			const endTime = currentTime.endTime;
 
 			const startTimeRaian = stringTimeToRadian(String(startTime));
 			const endTimeRaian = stringTimeToRadian(String(endTime));

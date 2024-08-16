@@ -18,11 +18,12 @@ export type TimeContextType = {
 	startTime: Date | undefined;
 	status: Status;
 	subject: string;
+	timeId: number | undefined;
 };
 
 export type TimeActionContextType = {
 	handleStatusToggle: () => void;
-	handleStartTime: (startTime: Date, subject: string) => void;
+	handleStartTime: (startTime: Date, subject: string, timeId: number) => void;
 	handleEndTime: () => void;
 };
 
@@ -37,13 +38,14 @@ const initialTimeContext: TimeContextType = {
 	status: 'END',
 	startTime: undefined,
 	subject: '',
+	timeId: undefined,
 };
 
 const TimeContext = createContext<TimeContextType>(initialTimeContext);
 
 const TimeActionContext = createContext<TimeActionContextType>({
 	handleStatusToggle: () => {},
-	handleStartTime: (startTime, subject) => {},
+	handleStartTime: () => {},
 	handleEndTime: () => {},
 });
 
@@ -72,9 +74,15 @@ export default function TimeContextProvider({ children }: PropsWithChildren) {
 		else dispatch({ type: 'status', payload: 'START' });
 	}, []);
 
-	const handleStartTime = useCallback((startTime: Date, subject: string) => {
-		dispatch({ type: 'all', payload: { subject, startTime, status: 'START' } });
-	}, []);
+	const handleStartTime = useCallback(
+		(startTime: Date, subject: string, timeId: number) => {
+			dispatch({
+				type: 'all',
+				payload: { subject, startTime, status: 'START', timeId },
+			});
+		},
+		[]
+	);
 
 	const handleEndTime = useCallback(() => {
 		dispatch({ type: 'reset' });
