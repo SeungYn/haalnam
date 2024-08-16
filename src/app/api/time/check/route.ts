@@ -31,6 +31,7 @@ export async function POST() {
 			let date = getNowDate();
 
 			const recentTime = await getLatestTime(userId);
+			if (recentTime === null) return;
 			const now = getNowDate();
 			// 자정
 			const midNight = new Date(
