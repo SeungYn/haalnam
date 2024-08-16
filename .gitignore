@@ -44,7 +44,7 @@ next-env.d.ts
 
 
 # prisma
-prisma/migrations/** 
+# prisma/migrations/** 
 
 # static files
 public/assets/user/personal/*
