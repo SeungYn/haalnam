@@ -47,21 +47,14 @@ export async function POST(request: NextRequest) {
 		endTime.minutes
 	);
 	try {
-		await client.time.createMany({
-			data: [
-				{
-					subject,
-					status: 'START',
-					time: startDate,
-					userId: user.id,
-				},
-				{
-					subject,
-					status: 'END',
-					time: endDate,
-					userId: user.id,
-				},
-			],
+		await client.time.create({
+			data: {
+				subject,
+				status: 'END',
+				startTime: startDate,
+				endTime: endDate,
+				userId: user.id,
+			},
 		});
 	} catch (e) {
 		console.error(e);
