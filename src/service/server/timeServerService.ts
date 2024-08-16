@@ -8,10 +8,16 @@ import { Status, Time, User } from '@prisma/client';
 import { getNowDate } from '@/utils/date';
 import { CustomException, ExceptionRes } from '@/utils/exception';
 
+/**
+ * 진행중인 가장 최근 타이머 가져오는 함수
+ * @param userId
+ * @returns
+ */
 export async function getLatestTime(userId: string) {
-	const time = await client.time.findFirstOrThrow({
+	const time = await client.time.findFirst({
 		where: {
 			userId,
+			status: 'START',
 		},
 		orderBy: {
 			startTime: 'desc',

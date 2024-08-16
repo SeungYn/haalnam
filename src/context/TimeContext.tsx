@@ -67,6 +67,7 @@ function timeContextReducer(state: TimeContextType, action: TimeContextAction) {
 }
 
 export default function TimeContextProvider({ children }: PropsWithChildren) {
+	const { data: user } = useSession();
 	const [state, dispatch] = useReducer(timeContextReducer, initialTimeContext);
 
 	const handleStatusToggle = useCallback(() => {
@@ -88,18 +89,16 @@ export default function TimeContextProvider({ children }: PropsWithChildren) {
 		dispatch({ type: 'reset' });
 	}, []);
 
-	// useEffect(() => {
-	// 	// 유저의 타이머 가져오기
-	// 	if (!user.data) return;
-	// 	service.time.getLatestTime().then((d) => {
-	// 		console.log('getTimes', d);
-	// 		if (d === null) return;
-	// 		if (d.status === 'START') {
-	// 			console.log('timer', d);
-	// 			handleStartTime(formatBroswerTime(d.time), d.subject);
-	// 		}
-	// 	});
-	// }, []);
+	useEffect(() => {
+		// 유저의 타이머 가져오기
+		if (!user) return;
+		service.time.getLatestTime().then((d) => {
+			if (d === null) return;
+			if (d.status === 'START') {
+				handleStartTime(formatBroswerTime(d.startTime), d.subject, d.id);
+			}
+		});
+	}, []);
 
 	return (
 		<TimeContext.Provider value={state}>

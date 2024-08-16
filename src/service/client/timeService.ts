@@ -60,7 +60,8 @@ export default class TimeService {
 
 	async getLatestTime() {
 		const url = `/api/time/latest`;
-		return await this.axios.get<Time>(url);
+		const { data } = await this.axios.get<Time>(url);
+		return data;
 	}
 
 	async postCheckRestTimer() {
