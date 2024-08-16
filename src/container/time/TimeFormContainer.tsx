@@ -7,22 +7,20 @@ import TimeForm from '@/components/home/time/TimeForm.tsx/TimeForm';
 import TimePopUp from '@/components/home/time/TimePopUp/TimePopUp';
 import { useTimeActionContext, useTimeContext } from '@/context/TimeContext';
 import {
-	useGetImmediateTimes,
-	useGetTimesByDate,
 	useGetTimesByDateNotSuspense,
 	usePostEndTime,
 	usePostStartTime,
 } from '@/hooks/api/time';
 import usePopUpStatus from '@/hooks/common/usePopUpStatus';
-import { PostTimeRequest } from '@/service/types/time';
+import { StartTimerRequest } from '@/service/types/time';
 import { useSelectedDateStore } from '@/store/dateStore';
 import { hoursMinutesSecondsToRadian, stringTimeToRadian } from '@/utils/chart';
 import { isCurrentDay } from '@/utils/date';
-import { Status, Time } from '@prisma/client';
+import { Time } from '@prisma/client';
 import { toast } from 'react-toastify';
 
 export default function TimeFormContainer() {
-	const { status, subject } = useTimeContext();
+	const { status, subject, timeId } = useTimeContext();
 	const { handleStartTime, handleEndTime } = useTimeActionContext();
 	const { mutate } = usePostStartTime({ handleStartTime, handleEndTime });
 	const { mutate: mutateTimeEnd } = usePostEndTime({
@@ -32,7 +30,7 @@ export default function TimeFormContainer() {
 	const { selectedDate } = useSelectedDateStore();
 	const { isMounting, isOpen, setIsOpen, setIsMounting } = usePopUpStatus(300);
 	const { data: times = [] } = useGetTimesByDateNotSuspense(selectedDate);
-	const onStart = ({ subject, time, status }: PostTimeRequest) => {
+	const onStart = ({ subject, time, status }: StartTimerRequest) => {
 		const currentTime = new Date();
 
 		const res = checkStartOverlappingTime(
@@ -53,11 +51,12 @@ export default function TimeFormContainer() {
 	};
 
 	const onEndTime = () => {
-		mutateTimeEnd({
-			subject,
-			status: Status.END,
-			time: new Date(),
-		});
+		if (timeId) {
+			mutateTimeEnd({
+				timeId,
+				status,
+			});
+		}
 	};
 
 	/**
@@ -66,9 +65,9 @@ export default function TimeFormContainer() {
 	 * @returns
 	 */
 	const checkStartOverlappingTime = (times: Time[], currentRadian: number) => {
-		for (let i = 0; i < times.length; i += 2) {
-			const startTime = times[i].time;
-			const endTime = times[i + 1].time;
+		for (let i = 0; i < times.length; i++) {
+			const startTime = times[i].startTime;
+			const endTime = times[i].endTime;
 
 			const startTimeRaian = stringTimeToRadian(String(startTime));
 			const endTimeRaian = stringTimeToRadian(String(endTime));

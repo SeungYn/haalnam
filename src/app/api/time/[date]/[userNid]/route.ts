@@ -40,14 +40,14 @@ export async function GET(
 	try {
 		times = await client.time.findMany({
 			where: {
-				time: {
+				startTime: {
 					gte: day,
 					lte: tomorrow,
 				},
 				userId: user.id,
 			},
 			orderBy: {
-				time: 'asc',
+				startTime: 'asc',
 			},
 		});
 	} catch (e) {

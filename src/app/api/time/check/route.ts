@@ -22,7 +22,7 @@ export async function POST() {
 		);
 	}
 
-	const { id, timer_status } = user;
+	const { id: userId, timer_status } = user;
 
 	if (timer_status === 'END') return NextResponse.json('굿', { status: 200 });
 
@@ -30,26 +30,29 @@ export async function POST() {
 		const res = await client.$transaction(async () => {
 			let date = getNowDate();
 
-			const recentTime = await getLatestTime(id);
+			const recentTime = await getLatestTime(userId);
 			const now = getNowDate();
-
+			// 자정
+			const midNight = new Date(
+				`${recentTime!.startTime.toISOString().split('T')[0]}T23:59:59Z`
+			);
 			// 만약 자정을 넘길경우 23:59:59 시간으로 처리
-			if (recentTime && recentTime?.time.getDate() < now.getDate()) {
-				date = new Date(
-					`${recentTime.time.toISOString().split('T')[0]}T23:59:59Z`
-				);
+			// 만약 자정을 넘길경우 23:59:59 시간으로 처리
+			if (recentTime && now.getDate() > midNight.getDate()) {
+				date = midNight;
 			}
 
-			const post = await client.time.create({
+			const post = await client.time.update({
 				data: {
-					userId: id,
-					status: 'END',
-					subject: recentTime!.subject,
-					time: date,
+					endTime: now,
+				},
+				where: {
+					id: recentTime.id,
+					userId,
 				},
 			});
 			await client.user.update({
-				where: { id },
+				where: { id: userId },
 				data: {
 					timer_status: 'END',
 				},

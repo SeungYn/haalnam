@@ -1,10 +1,6 @@
 'use client';
 
-import {
-	type ChartSize,
-	makeChartGradutionTimeInfo,
-	timeToDegree,
-} from '@/utils/chart';
+import { type ChartSize, timeToDegree } from '@/utils/chart';
 import {
 	differenceTime,
 	formatDisplayTime,
@@ -17,7 +13,6 @@ import {
 	ForwardedRef,
 	forwardRef,
 	MouseEvent,
-	useCallback,
 	useEffect,
 	useLayoutEffect,
 	useRef,
@@ -157,11 +152,10 @@ export function TimeAddChartFoward(
 		const customPath2dList: CustomPath2D[] = [];
 
 		for (let i = 0, index = 0; i < times.length; i++) {
-			// 데이터가 홀수 이고 마지막이 시작으로 끝나는 경우 캔슬
-			// 마지막으로 타이머가 시작일 경우
-			if (times.length % 2 && i === times.length - 1) continue;
-			if (i % 2 !== 0) continue;
+			// timer가 진행중이면 cancel
+			if (!times[i].endTime) continue;
 
+			const currentTime = times[i];
 			const path = new Path2D();
 			// 색상을 규칙적을 뽑는 인덱스
 			const paletteIndex = index % colorPalette.length;
@@ -175,9 +169,9 @@ export function TimeAddChartFoward(
 				startX,
 				startX,
 				chartWidth / 2,
-				+((Math.PI / 180) * timeToDegree(times[i].time)).toFixed(2) -
+				+((Math.PI / 180) * timeToDegree(currentTime.startTime)).toFixed(2) -
 					Math.PI / 2,
-				+((Math.PI / 180) * timeToDegree(times[i + 1].time)).toFixed(2) -
+				+((Math.PI / 180) * timeToDegree(currentTime.endTime!)).toFixed(2) -
 					Math.PI / 2
 			);
 
@@ -191,8 +185,10 @@ export function TimeAddChartFoward(
 				path2D: path,
 				rgba: colorPalette[paletteIndex],
 				colorPaletteIndex: paletteIndex,
-				startTimeObj: times[i],
-				endTimeObj: times[i + 1],
+				startTimeObj: currentTime,
+				startTime: currentTime.startTime,
+				endTimeObj: currentTime,
+				endTime: currentTime.endTime!,
 			});
 		}
 
@@ -231,19 +227,15 @@ export function TimeAddChartFoward(
 					}}
 				>
 					<h2>{hoverCustomPath2D.startTimeObj.subject}</h2>
-					<p>
-						시작시간: {formatDisplayTime(hoverCustomPath2D.startTimeObj.time)}
-					</p>
-					<p>
-						종료시간: {formatDisplayTime(hoverCustomPath2D.endTimeObj.time)}
-					</p>
+					<p>시작시간: {formatDisplayTime(hoverCustomPath2D.startTime)}</p>
+					<p>종료시간: {formatDisplayTime(hoverCustomPath2D.endTime)}</p>
 					<p>
 						사용시간(분):{' '}
 						{Math.floor(
 							toSecondsByMilliseconds(
 								differenceTime(
-									hoverCustomPath2D.startTimeObj.time,
-									hoverCustomPath2D.endTimeObj.time
+									hoverCustomPath2D.startTime,
+									hoverCustomPath2D.endTime
 								)
 							)! / 60
 						)}
@@ -252,8 +244,8 @@ export function TimeAddChartFoward(
 						사용시간(초):{' '}
 						{toSecondsByMilliseconds(
 							differenceTime(
-								hoverCustomPath2D.startTimeObj.time,
-								hoverCustomPath2D.endTimeObj.time
+								hoverCustomPath2D.startTime,
+								hoverCustomPath2D.endTime
 							)
 						)}
 					</p>

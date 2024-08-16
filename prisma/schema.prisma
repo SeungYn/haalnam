@@ -49,12 +49,13 @@ model Account {
 }
 
 model Time {
-  id      Int      @id @default(autoincrement())
-  userId  String
-  subject String
-  time    DateTime @default(now())
-  status  Status
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        Int       @id @default(autoincrement())
+  userId    String
+  subject   String
+  startTime DateTime  @default(now()) // 시작 시간
+  endTime   DateTime?
+  status    Status
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId], map: "Time_userId_fkey")
 }

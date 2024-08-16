@@ -8,6 +8,8 @@ declare global {
 		colorPaletteIndex: number;
 		startTimeObj: Time;
 		endTimeObj: Time;
+		startTime: Date | string;
+		endTime: Date | string;
 	};
 
 	type RGBA = {

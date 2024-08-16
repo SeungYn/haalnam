@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/common';
 import { IoAddCircleIcon } from '@/components/icons';
-import { PostTimeRequest } from '@/service/types/time';
+import { StartTimerRequest } from '@/service/types/time';
 import { Status } from '@prisma/client';
 import {
 	ChangeEvent,
@@ -13,7 +13,7 @@ import {
 } from 'react';
 
 type Props = {
-	onStart: ({ subject, time, status }: PostTimeRequest) => void;
+	onStart: ({ subject, time, status }: StartTimerRequest) => void;
 	onEndTime: () => void;
 	onAddPopUpOpen: Dispatch<SetStateAction<boolean>>;
 };

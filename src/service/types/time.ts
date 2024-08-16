@@ -1,4 +1,4 @@
-import { Time } from '@prisma/client';
+import { Status, Time } from '@prisma/client';
 
 export type PostTimeRequest = Omit<Time, 'id' | 'userId'>;
 export type PostTimeResponse = Time;
@@ -17,6 +17,17 @@ export type PostAddTimerRequest = {
 };
 
 export type DeleteTimerRequest = {
-	start: number;
-	end?: number;
+	timeId: number;
+};
+
+export type StartTimerRequest = {
+	subject: string;
+	status: Status;
+	time?: Date;
+};
+
+export type StopTimerRequest = {
+	timeId: number;
+	status: Status;
+	time?: Date;
 };

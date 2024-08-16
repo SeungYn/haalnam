@@ -104,8 +104,9 @@ export async function getUsedTotalTimes(userId: string) {
 	const length = times.length % 2 === 0 ? times.length : times.length - 1;
 
 	let totalMs = 0;
-	for (let i = 0; i < length; i += 2) {
-		const ms = times[i + 1].time.getTime() - times[i].time.getTime();
+	for (let i = 0; i < length; i++) {
+		if (times[i].endTime === null) continue;
+		const ms = times[i].endTime!.getTime() - times[i].startTime.getTime();
 		totalMs += ms;
 	}
 
@@ -122,8 +123,9 @@ export async function getUsedTodayTotalTimesByUserId(userId: string) {
 	const length = times.length % 2 === 0 ? times.length : times.length - 1;
 
 	let totalMs = 0;
-	for (let i = 0; i < length; i += 2) {
-		const ms = times[i + 1].time.getTime() - times[i].time.getTime();
+	for (let i = 0; i < length; i++) {
+		if (times[i].endTime === null) continue;
+		const ms = times[i].endTime!.getTime() - times[i].startTime.getTime();
 		totalMs += ms;
 	}
 

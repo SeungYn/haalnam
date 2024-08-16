@@ -149,8 +149,8 @@ export function isCurrentDay(selectedDate: Date) {
 }
 
 /**
- * 브라우저에서의 시간으로 변경시키는 함수
- * -9시간을 해줌
+ * 서버에서 받아온 date를 브라우저에서의 시간으로 변경시키는 함수
+ * -9시간을 해줌. 서버는 UTC기준이기 때문
  * @param serverDate +9시간된 UTC 시간
  * @returns
  */

@@ -26,7 +26,7 @@ export const makeChartGradutionTimeInfo = (radius: number) => {
 	}));
 };
 
-// 시간을 각도로 변환해주는 함수
+// 문자열 시간을  각도로 변환해주는 함수
 export const timeToDegree = (time: Date) => {
 	//const date = new Date(time);
 	const date = String(time).split(/[T:]/);

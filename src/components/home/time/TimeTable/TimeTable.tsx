@@ -11,73 +11,42 @@ import { useEffect, useRef, useState } from 'react';
 import { useDialogContext } from '@/context/DialogContext';
 import { useDeleteTimes } from '@/hooks/api/time';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 type Props = {
 	times: Time[];
 };
-type FlatedTime = {
-	start: Time;
-	end?: Time;
-	parseTime: string;
-	status: string;
-};
 
-type ClickedItem = (FlatedTime & { x: number; y: number }) | null;
+type ClickedItem = (Time & { x: number; y: number }) | null;
 
 export default function TimeTable({ times = [] }: Props) {
 	const [clickedItem, setClickedItem] = useState<ClickedItem>(null);
+	const { data } = useSession();
 	const tableRef = useRef<HTMLDivElement>(null);
 	const { initDialog, reset } = useDialogContext();
 	const deleteMutate = useDeleteTimes(() => reset());
 
-	let filteredData: FlatedTime[] = times.flatMap((currentItem, i) => {
-		// 마지막이 start일 경우
-
-		if (i === times.length - 1 && times.length % 2) {
-			return [
-				{
-					start: currentItem,
-					parseTime: `${formatDisplayTime(currentItem.time)} ~ `,
-					status: '시작',
-				},
-			];
-		}
-
-		// 홀수 아이템
-		if (i % 2) return [];
-
-		// 짝수 아이템
-		if (i <= times.length - 2 && i % 2 === 0) {
-			return [
-				{
-					start: currentItem,
-					end: times[i + 1],
-					parseTime: `${formatDisplayTime(
-						currentItem.time
-					)} ~ ${formatDisplayTime(times[i + 1].time)}`,
-					status: '종료',
-				},
-			];
-		}
-
-		return [];
-	}) as FlatedTime[];
-
 	const deleteDialog = (item: ClickedItem) => {
-		if (!item?.end) {
+		if (!item?.endTime) {
 			toast.error('현재 진행중인 타이머는 삭제할 수 없습니다!');
 			return;
 		}
+
+		const parseTime = item.endTime
+			? `${formatDisplayTime(
+					item.startTime
+				)} ~ ${formatDisplayTime(item.endTime)}`
+			: `${formatDisplayTime(item.startTime)} ~ `;
 
 		initDialog({
 			title: '기록된 시간이 삭제됩니다!',
 			body: (
 				<>
 					<p className="text-h_gray_semi_light">
-						<span>주제: {item!.start.subject}</span>
+						<span>주제: {item!.subject}</span>
 					</p>
 					<p className="text-h_gray_semi_light">
-						<span>시간: {item!.parseTime}</span>
+						<span>시간: {parseTime}</span>
 					</p>
 				</>
 			),
@@ -86,7 +55,7 @@ export default function TimeTable({ times = [] }: Props) {
 				reset();
 			},
 			confirm: () => {
-				deleteMutate.mutate({ start: item!.start.id, end: item!.end?.id });
+				deleteMutate.mutate({ timeId: item.id });
 			},
 		});
 	};
@@ -121,28 +90,34 @@ export default function TimeTable({ times = [] }: Props) {
 				<span>사용시간(원)</span>
 				<span>상태</span>
 			</div>
-			{filteredData.map((item) => (
-				<div
-					key={item.parseTime}
-					className={`${styles.columnContainer} cursor-pointer border-b border-h_gray bg-h_black text-xl hover:bg-h_light_black`}
-					onClick={(e) => {
-						e.stopPropagation();
-
-						setClickedItem({ ...item, x: e.clientX, y: e.clientY });
-					}}
-				>
-					<span className="overflow-hidden">{item.start.subject}</span>
-					<span>{item.parseTime}</span>
-					<span>
-						{item.end
-							? toSecondsByMilliseconds(
-									differenceTime(item.start.time, item.end.time)
-								)
-							: ''}
-					</span>
-					<span>{item.status}</span>
-				</div>
-			))}
+			{times.map((item) => {
+				const parseTime = item.endTime
+					? `${formatDisplayTime(
+							item.startTime
+						)} ~ ${formatDisplayTime(item.endTime)}`
+					: `${formatDisplayTime(item.startTime)} ~ `;
+				return (
+					<div
+						key={parseTime}
+						className={`${styles.columnContainer} cursor-pointer border-b border-h_gray bg-h_black text-xl hover:bg-h_light_black`}
+						onClick={(e) => {
+							if (data?.user.id !== item.userId) return;
+							setClickedItem({ ...item, x: e.clientX, y: e.clientY });
+						}}
+					>
+						<span className="overflow-hidden">{item.subject}</span>
+						<span>{parseTime}</span>
+						<span>
+							{item.endTime
+								? toSecondsByMilliseconds(
+										differenceTime(item.startTime, item.endTime)
+									)
+								: ''}
+						</span>
+						<span>{item.status}</span>
+					</div>
+				);
+			})}
 
 			{clickedItem && (
 				<ul
@@ -151,6 +126,7 @@ export default function TimeTable({ times = [] }: Props) {
 				>
 					<li
 						onClick={(e) => {
+							if (data?.user.id !== clickedItem.userId) return;
 							deleteDialog(clickedItem);
 							setClickedItem(null);
 						}}
