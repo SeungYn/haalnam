@@ -1,3 +1,13 @@
+export class CustomException extends Error {
+	message;
+	code?: number;
+	constructor(message: string, code?: number) {
+		super(message);
+		this.message = message;
+		this.code = code;
+	}
+}
+
 export class ExceptionRes {
 	message;
 	code?: number;
