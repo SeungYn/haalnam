@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 
-export function useAddEventListenerToDocument<K extends keyof DocumentEventMap>(
-  type: K,
-  callback: () => void
+export function useAddEventListenerToDocument<K extends keyof WindowEventMap>(
+	type: K,
+	callback: (e: WindowEventMap[K]) => void
 ) {
-  useEffect(() => {
-    document.addEventListener(type, callback);
+	useEffect(() => {
+		window.addEventListener(type, callback);
 
-    return () => {
-      document.removeEventListener(type, callback);
-    };
-  }, [callback, type]);
+		return () => {
+			window.removeEventListener(type, callback);
+		};
+	}, [callback, type]);
 }
