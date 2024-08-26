@@ -22,8 +22,12 @@ export default function TimePopUp({
 	 * 2. 네비게이션
 	 * 3. 백 스페이스
 	 */
+
 	useEffect(() => {
 		if (!isOpen) return;
+		if (isOpen) {
+			document.querySelector('main')!.style.overflowY = 'hidden';
+		}
 
 		let isFire = false;
 		history.pushState(null, '', location.href);
@@ -39,6 +43,7 @@ export default function TimePopUp({
 				if (pathname === '/my') history.back();
 			}
 			window.removeEventListener('popstate', backEvent);
+			document.querySelector('main')!.style.overflowY = 'auto';
 		};
 	}, [isOpen]);
 
@@ -47,6 +52,7 @@ export default function TimePopUp({
 
 	return createPortal(
 		<section
+			id="popup-container"
 			className={`fixed top-0 z-[999] h-screen w-full overflow-auto bg-h_black px-4 transition-all duration-300 md:absolute md:px-0 ${isMounting ? 'translate-y-0' : 'translate-y-full'}`}
 		>
 			{children}
