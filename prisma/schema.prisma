@@ -8,20 +8,23 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  nid           Int       @unique @default(autoincrement())
-  name          String    @db.VarChar(255)
-  createdAt     DateTime  @default(now())
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  is_public     Boolean   @default(true)
-  nickname      String    @default("") @db.VarChar(255)
-  timer_status  Status    @default(END)
-  instagram     String    @default("")
-  introduce     String?   @db.Text
-  accounts      Account[]
-  Time          Time[]
+  id                        String     @id @default(cuid())
+  nid                       Int        @unique @default(autoincrement())
+  name                      String     @db.VarChar(255)
+  createdAt                 DateTime   @default(now())
+  email                     String?    @unique
+  emailVerified             DateTime?
+  image                     String?
+  is_public                 Boolean    @default(true)
+  nickname                  String     @default("") @db.VarChar(255)
+  timer_status              Status     @default(END)
+  instagram                 String     @default("")
+  introduce                 String?    @db.Text
+  default_main_plan_page_id Int?
+  accounts                  Account[]
+  Time                      Time[]
+  plan_pages                PlanPage[]
+  plans                     Plan[]
 }
 
 model Account {
@@ -49,13 +52,14 @@ model Account {
 }
 
 model Time {
-  id        Int       @id @default(autoincrement())
-  userId    String
-  subject   String
-  startTime DateTime  @default(now()) // 시작 시간
-  endTime   DateTime?
-  status    Status
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         Int       @id @default(autoincrement())
+  userId     String?
+  subject    String
+  startTime  DateTime  @default(now()) // 시작 시간
+  endTime    DateTime?
+  status     Status
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  is_deleted Boolean   @default(false)
 
   @@index([userId], map: "Time_userId_fkey")
 }
@@ -63,4 +67,28 @@ model Time {
 enum Status {
   START
   END
+}
+
+// Plan
+model PlanPage {
+  id         Int      @id @default(autoincrement())
+  userId     String?
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User?    @relation(fields: [userId], references: [id])
+  plans      Plan[]
+  is_deleted Boolean  @default(false)
+}
+
+model Plan {
+  id           Int       @id @default(autoincrement())
+  plan_page_id Int?
+  user_id      String?
+  subject      String
+  startTime    DateTime  @db.Time(3)
+  endTime      DateTime  @db.Time(3)
+  plan_page    PlanPage? @relation(fields: [plan_page_id], references: [id])
+  user         User?     @relation(fields: [user_id], references: [id])
+  is_deleted   Boolean   @default(false)
 }
