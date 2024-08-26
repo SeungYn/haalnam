@@ -59,7 +59,7 @@ export async function findUserBynid(nid: number) {
 }
 
 export async function findUserById(id: string) {
-	const user = dbClient.user.findFirst({
+	const user = dbClient.user.findFirstOrThrow({
 		where: {
 			id,
 		},
