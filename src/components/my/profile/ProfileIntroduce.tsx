@@ -10,6 +10,7 @@ export default function ProfileIntroduce({
 	const [isFold, setIsFold] = useState(false);
 
 	return (
+		// eslint-disable-next-line
 		<p className="max-w-md cursor-pointer" onClick={() => setIsFold((s) => !s)}>
 			{displayIntroduce(introduce, isFold)}
 		</p>

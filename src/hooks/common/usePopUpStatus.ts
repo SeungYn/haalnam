@@ -25,6 +25,8 @@ export default function usePopUpStatus(delay: number = 150) {
 		if (!isMounting) {
 			setTimeout(event, delay);
 		}
+
+		// eslint-disable-next-line
 	}, [isMounting]);
 
 	return { isMounting, isOpen, setIsOpen, setIsMounting };

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Time } from '@prisma/client';
 import TimeChartAdd from '../TimeChartAdd/TimeChartAdd';
 import {

@@ -72,7 +72,7 @@ export async function startTimer({
 				// 타이머 종료시간 설정
 
 				// 만약 자정을 넘길경우 23:59:59 시간으로 처리
-				if (recentTime && now.getDate() > midNight.getDate()) {
+				if (recentTime && now.getTime() > midNight.getTime()) {
 					now = midNight;
 				}
 
@@ -177,7 +177,7 @@ export async function stopTimer({
 			);
 
 			// 만약 자정을 넘길경우 23:59:59 시간으로 처리
-			if (recentTime && now.getDate() > midNight.getDate()) {
+			if (recentTime && now.getTime() > midNight.getTime()) {
 				now = midNight;
 			}
 

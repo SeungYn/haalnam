@@ -56,10 +56,6 @@ export const radianToAngle = (radian: number) => {
  *
  */
 export const radianToTime = (radian: number) => {
-	// const angle = radian * (180 / Math.PI);
-
-	// const hours = Math.floor(angle / 15);
-	// const minutes = Math.floor((angle % 15) / 0.25);
 	const hours = Math.floor((radian * 12) / Math.PI);
 	const minutes = Math.floor(((radian * 12 * 60) / Math.PI) % 60);
 	const seconds = Math.floor(((radian * 12 * 60 * 60) / Math.PI) % 60);
@@ -69,6 +65,19 @@ export const radianToTime = (radian: number) => {
 		seconds,
 		str: `${hours.toString().padStart(2, '0')}시 ${minutes.toString().padStart(2, '0')}분`,
 	};
+};
+
+export const radianToBroswerDate = (radian: number) => {
+	const hours = Math.floor((radian * 12) / Math.PI);
+	const minutes = Math.floor(((radian * 12 * 60) / Math.PI) % 60);
+	const seconds = Math.floor(((radian * 12 * 60 * 60) / Math.PI) % 60);
+
+	const date = new Date();
+	date.setHours(hours);
+	date.setMinutes(minutes);
+	date.setSeconds(seconds);
+
+	return date;
 };
 
 /**

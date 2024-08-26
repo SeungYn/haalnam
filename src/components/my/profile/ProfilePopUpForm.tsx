@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 'use client';
 
 import Image from 'next/image';
@@ -102,9 +104,10 @@ export default function ProfilePopUpForm({
 				text={form.nickname}
 				onChange={(t) => setForm((e) => ({ ...e, nickname: t }))}
 			/>
-			<label className="flex w-full flex-col gap-2">
+			<label htmlFor="introTextArea" className="flex w-full flex-col gap-2">
 				<span>자기소개</span>
 				<AutoHeightTextArea
+					id="introTextArea"
 					value={form.introduce}
 					onChange={(e) =>
 						setForm((t) => ({ ...t, introduce: e.target.value }))

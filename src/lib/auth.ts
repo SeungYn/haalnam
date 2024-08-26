@@ -20,11 +20,21 @@ export const nextOptions: NextAuthConfig = {
 	],
 	events: {
 		async linkAccount({ user }) {
-			await dbClient.user.update({
-				where: { id: user.id },
-				data: {
-					nickname: generateNickname(),
-				},
+			await dbClient.$transaction(async (tx) => {
+				const planPage = await tx.planPage.create({
+					data: {
+						name: '기본 페이지',
+						userId: user.id!,
+					},
+				});
+
+				await tx.user.update({
+					where: { id: user.id },
+					data: {
+						nickname: generateNickname(),
+						default_main_plan_page_id: planPage.id,
+					},
+				});
 			});
 		},
 	},
@@ -52,6 +62,7 @@ export const nextOptions: NextAuthConfig = {
 				session.user = {
 					...session.user,
 					nickname: existingUser.nickname,
+					defaultMainPlanPageId: existingUser.default_main_plan_page_id!,
 				};
 			}
 

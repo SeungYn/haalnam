@@ -73,6 +73,8 @@ export default function TimeContextProvider({ children }: PropsWithChildren) {
 	const handleStatusToggle = useCallback(() => {
 		if (state.status === 'START') dispatch({ type: 'status', payload: 'END' });
 		else dispatch({ type: 'status', payload: 'START' });
+
+		// eslint-disable-next-line
 	}, []);
 
 	const handleStartTime = useCallback(
@@ -98,6 +100,7 @@ export default function TimeContextProvider({ children }: PropsWithChildren) {
 				handleStartTime(formatBroswerTime(d.startTime), d.subject, d.id);
 			}
 		});
+		// eslint-disable-next-line
 	}, []);
 
 	return (

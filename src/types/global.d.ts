@@ -1,4 +1,4 @@
-import { Time, User } from '@prisma/client';
+import { Plan, Time, User } from '@prisma/client';
 
 export {};
 declare global {
@@ -10,6 +10,13 @@ declare global {
 		endTimeObj: Time;
 		startTime: Date | string;
 		endTime: Date | string;
+	};
+
+	type CustomPlanPath2D = {
+		path2D: Path2D;
+		rgba: RGBA;
+		colorPaletteIndex: number;
+		plan: Plan;
 	};
 
 	type RGBA = {
@@ -24,6 +31,10 @@ declare global {
 		date: Date;
 		accent: boolean;
 	};
+
+	/**
+	 * Plan 관련 타입
+	 */
 
 	/**
 	 * 유저 관련 타입들

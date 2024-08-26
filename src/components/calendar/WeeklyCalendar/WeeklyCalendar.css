@@ -5,21 +5,21 @@
 		@apply flex justify-between text-2xl;
 	}
 
-	.weekly__calendar > li {
+	.weekly__calendar > button {
 		@apply flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-1;
 	}
 
 	.weekly__calendar {
-		& > li {
+		& > button {
 			@apply transition-all;
 		}
 
-		& > li.active {
+		& > button.active {
 			@apply bg-h_gray_semi_dark;
 		}
 	}
 
-	.weekly__calendar > li > div {
+	.weekly__calendar > button  div {
 		@apply flex h-8 w-8 items-center justify-center rounded-full bg-h_gray_semi_light;
 	}
 
@@ -112,10 +112,10 @@
 
 	@media screen and (min-width: 640px) {
 		.weekly__calendar {
-			& > li {
+			& > button {
 				@apply px-6 py-2;
 			}
-			& > li > div {
+			& > button  div {
 				@apply h-12 w-12;
 			}
 		}

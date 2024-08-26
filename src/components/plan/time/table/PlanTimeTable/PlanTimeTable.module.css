@@ -1,0 +1,24 @@
+.columnContainer {
+	display: grid;
+	grid-template-columns: 21% 57% 22%;
+	grid-template-rows: minmax(3rem, auto);
+	text-align: center;
+	align-items: center;
+}
+
+.columnContainer > span {
+	height: 100%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* .columnContainer > span::first-line {
+  line-height: 3rem;
+} */
+
+.columnContainer span:not(:last-child) {
+	border-right: 1px solid;
+	@apply border-h_gray;
+}

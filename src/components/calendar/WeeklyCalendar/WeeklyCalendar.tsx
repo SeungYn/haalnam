@@ -57,7 +57,7 @@ export default function WeeklyCalendar({
 		} else {
 			setIsMounting(false);
 			// 팝업이 닫히면 달력 초기화
-			setCalendarDate(selectedDate);
+			//setCalendarDate(selectedDate);
 		}
 	}, [isOpen]);
 
@@ -107,15 +107,16 @@ export default function WeeklyCalendar({
 			<div>
 				<ul className="weekly__calendar">
 					{weekDates.map((i) => (
-						<li
+						<button
 							key={i.toDateString()}
-							role="button"
 							className={`${checkCurrentDate(selectedDate, i) ? 'active' : ''}`}
 							onClick={() => setSelectedDate(i)}
 						>
-							<span>{DayToName[i.getDay()]}</span>
-							<div>{i.getDate()}</div>
-						</li>
+							<li>
+								<span>{DayToName[i.getDay()]}</span>
+								<div>{i.getDate()}</div>
+							</li>
+						</button>
 					))}
 				</ul>
 			</div>
@@ -123,6 +124,13 @@ export default function WeeklyCalendar({
 				<div
 					className="calendar__popup__container"
 					onClick={() => setIsOpen(false)}
+					tabIndex={0}
+					role="button"
+					onKeyDown={(e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							setIsOpen(false);
+						}
+					}}
 				>
 					<div
 						className={`${isMounting ? 'open' : 'close'} calendar__container`}
@@ -155,16 +163,17 @@ export default function WeeklyCalendar({
 						</ul>
 						<ul className="calendar">
 							{calendar.map((c) => (
-								<li
-									role="button"
+								<button
 									key={c.date.toDateString()}
 									className={`${c.accent ? 'calendar-textAccent' : 'calendar-textMute'} ${checkCurrentDate(c.date, new Date()) ? 'calendar-current' : ''} ${checkCurrentDate(c.date, selectedDate) ? 'calendar-selected' : ''}`}
 									onClick={() => {
 										setSelectedDate(c.date);
 									}}
 								>
-									<p className="calendar__day">{c.day}</p>
-								</li>
+									<li>
+										<p className="calendar__day">{c.day}</p>
+									</li>
+								</button>
 							))}
 						</ul>
 					</div>

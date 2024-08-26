@@ -4,7 +4,7 @@ import { Button } from '@/components/common';
 import { TbFaceIdErrorIcon } from '@/components/icons';
 import { useRouter } from 'next/navigation';
 
-export default function error({ error }: { error: Error }) {
+export default function Error({ error }: { error: Error }) {
 	const router = useRouter();
 	return (
 		<div className="flex h-full flex-col items-center justify-center">

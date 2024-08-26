@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 	}
 
 	try {
-		timeService.deleteTimes(reqData, id);
+		await timeService.deleteTimes(reqData, id);
 	} catch (e) {
 		return NextResponse.json(
 			new ExceptionRes('오류가 발생했습니다. 다시 시도해주세요'),
