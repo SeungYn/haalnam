@@ -5,7 +5,6 @@ import TimeChartContainer from '@/container/time/TimeChartContainer';
 import TimeFormContainer from '@/container/time/TimeFormContainer';
 import TimeSituationContainer from '@/container/time/TimeSituationContainer';
 import TimeTableContainer from '@/container/time/TimeTableContainer';
-import AuthGuarder from '@/hoc/AuthGuarder';
 import { useSelectedDateStore } from '@/store/dateStore';
 
 export default function MyTimerPage() {

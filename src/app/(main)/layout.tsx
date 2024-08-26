@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { whereHost } from '@/utils/util';
 import PopupStandard from '@/components/common/PopupStandard/PopupStandard';
 import DialogContextProvider from '@/context/DialogContext';
+import BasicLoading from '@/components/common/loading/BasicLoading';
 
 export const metadata: Metadata = {
 	metadataBase: new URL(whereHost() || ''),
@@ -42,6 +43,7 @@ export default function RootLayout({
 					<TimeContextProvider>
 						{/* <CheckUnloadHOC> */}
 						<body>
+							<BasicLoading />
 							<DialogContextProvider>
 								<div className="flex h-full w-full flex-col-reverse gap-4 bg-h_black text-white md:flex-row">
 									<Sidebar />
