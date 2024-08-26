@@ -23,7 +23,7 @@ type DialogStateType = {
 	cancel: () => void;
 	confirm: () => void;
 	body: ReactNode | null;
-	title: string | null;
+	title: ReactNode | string | null;
 	actionType: Actions;
 };
 
