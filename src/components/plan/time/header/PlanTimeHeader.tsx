@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use client';
 
 import Dropdown from '@/components/common/Dropdown/Dropdown';

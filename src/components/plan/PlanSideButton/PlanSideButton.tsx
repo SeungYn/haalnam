@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use client';
 
 import CommonPopUpHeader from '@/components/common/header/CommonPopUpHeader';

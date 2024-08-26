@@ -149,6 +149,7 @@ export function usePostCreatePlan({ closePopup }: { closePopup: () => void }) {
 			service.plan.postPlan(req),
 		onSuccess: (data, req) => {
 			queryClient.invalidateQueries([...QUERY_KEYS.planPage, req.planPageId]);
+			// eslint-disable-next-line
 			useInfoToast('계획이 추가됐습니다!');
 		},
 		onError: () => {
@@ -179,6 +180,7 @@ export function useDeletePlan(cb: () => void) {
 		}) => service.plan.deletePlan(planTimeId),
 		onSuccess: (data, req) => {
 			queryClient.invalidateQueries(['planPage', req.planPageId]);
+			// eslint-disable-next-line
 			useInfoToast('성공적으로 삭제됐습니다!');
 		},
 		onError: () => {

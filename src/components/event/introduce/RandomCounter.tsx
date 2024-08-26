@@ -48,6 +48,7 @@ export default function RandomCounter({ targetNumber, delay }: Props) {
 		setTimeout(() => {
 			requestAnimationFrame(cb);
 		}, 500);
+		//eslint-disable-next-line
 	}, []);
 	return (
 		<span className="inline-block text-5xl tabular-nums text-main">

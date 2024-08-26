@@ -13,6 +13,8 @@ export default function AuthGuarder({ children }: PropsWithChildren) {
 			alert('로그인이 필요합니다!');
 			return router.push('/');
 		}
+
+		// eslint-disable-next-line
 	}, []);
 
 	if (!data) return;

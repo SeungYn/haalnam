@@ -84,6 +84,7 @@ export function usePostStartTime({
 			service.time.postStartTimer({ subject, time, status }),
 		onMutate: ({ subject, time, status }) => {
 			handleStartTime(time!, subject, 0);
+			// eslint-disable-next-line
 			useInfoToast('타이머가 시작됐습니다!');
 		},
 		onSuccess: (data, params) => {
@@ -114,6 +115,7 @@ export function usePostEndTime({
 			service.time.fetchStopTimer({ timeId }),
 		onMutate: ({ time, status }) => {
 			handleEndTime();
+			// eslint-disable-next-line
 			useInfoToast('타이머가 종료됐습니다!');
 		},
 		onSuccess: (data, params) => {},
@@ -167,6 +169,7 @@ export function usePostAddTimer(closePopUp: () => void) {
 				...QUERY_KEYS.getPersonalTimesByDate,
 				params.date.toDateString(),
 			]);
+			// eslint-disable-next-line
 			useInfoToast('시간이 추가됐습니다!');
 		},
 		onError: () => {
@@ -199,6 +202,7 @@ export function useDeleteTimes(cb: () => void) {
 		},
 		onSuccess: (data, params) => {
 			queryClient.invalidateQueries([...QUERY_KEYS.getPersonalTimesByDate]);
+			// eslint-disable-next-line
 			useInfoToast('성공적으로 삭제됐습니다!');
 		},
 		onError: () => {

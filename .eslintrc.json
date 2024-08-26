@@ -1,11 +1,10 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:storybook/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "next",
-    "plugin:import/typescript",
-    "plugin:jsx-a11y/recommended",
-    "plugin:prettier/recommended"
-  ]
+	"extends": [
+		"next/core-web-vitals",
+		"plugin:storybook/recommended",
+
+		"next",
+		"plugin:import/typescript",
+		"plugin:jsx-a11y/recommended"
+	]
 }

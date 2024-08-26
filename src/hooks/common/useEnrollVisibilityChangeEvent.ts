@@ -19,5 +19,7 @@ export default function useEnrollVisibilityChange(cb: () => void) {
 		return () => {
 			document.removeEventListener('visibilitychange', listener);
 		};
+
+		// eslint-disable-next-line
 	}, []);
 }

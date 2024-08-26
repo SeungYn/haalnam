@@ -56,23 +56,31 @@ export default function Dropdown<T extends { id: number; name: string }>({
 			{isOpen && (
 				<ul className="absolute left-0 top-full z-50 w-full overflow-hidden rounded-bl-xl rounded-br-xl border border-h_gray bg-h_light_black text-xl tabular-nums">
 					{list.map((i) => (
-						<li
+						<button
 							key={i.id.toString()}
-							className={`cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap px-2 py-2 tabular-nums hover:bg-h_gray_semi_light ${clickedItem.id === i.id ? 'bg-h_gray_semi_light' : ''} `}
+							className={`block w-full cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap px-2 py-2 tabular-nums hover:bg-h_gray_semi_light ${clickedItem.id === i.id ? 'bg-h_gray_semi_light' : ''} `}
 							onClick={() => {
 								setClickedItem(i.id);
 								setIsOpen(false);
 							}}
+							tabIndex={0}
+							aria-pressed={clickedItem.id === i.id} // 현재 버튼이 눌린 상태인지를 나타냄
+							onKeyDown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									setClickedItem(i.id);
+									setIsOpen(false);
+								}
+							}}
 						>
-							{i.name}
-						</li>
+							<li>{i.name}</li>
+						</button>
 					))}
-					<li
-						className="cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap px-2 py-2 tabular-nums hover:bg-h_gray_semi_light"
+					<button
+						className="block w-full cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap px-2 py-2 tabular-nums hover:bg-h_gray_semi_light"
 						onClick={onAddPlanPage}
 					>
-						계획 추가하기
-					</li>
+						<li>계획 추가하기</li>
+					</button>
 				</ul>
 			)}
 		</div>

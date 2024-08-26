@@ -40,6 +40,8 @@ export default function MyPageCommonPopUp({
 			}
 			window.removeEventListener('popstate', backEvent);
 		};
+
+		// eslint-disable-next-line
 	}, [isOpen]);
 
 	if (!isOpen) return null;

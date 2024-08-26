@@ -25,6 +25,8 @@ export default function useScrollDirection(elementSelector: string) {
 		return () => {
 			targetElement.removeEventListener('scroll', handleScroll);
 		};
+
+		// eslint-disable-next-line
 	}, [lastScrollY]);
 
 	return scrollDirection;

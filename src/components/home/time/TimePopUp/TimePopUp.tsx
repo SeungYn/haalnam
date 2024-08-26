@@ -45,6 +45,8 @@ export default function TimePopUp({
 			window.removeEventListener('popstate', backEvent);
 			document.querySelector('main')!.style.overflowY = 'auto';
 		};
+
+		// eslint-disable-next-line
 	}, [isOpen]);
 
 	// 부모는

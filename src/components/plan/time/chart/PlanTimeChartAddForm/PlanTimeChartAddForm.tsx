@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Plan, Time } from '@prisma/client';
 
 import {

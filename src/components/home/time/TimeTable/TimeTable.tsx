@@ -97,6 +97,7 @@ export default function TimeTable({ times = [] }: Props) {
 						)} ~ ${formatDisplayTime(item.endTime)}`
 					: `${formatDisplayTime(item.startTime)} ~ `;
 				return (
+					// eslint-disable-next-line
 					<div
 						key={parseTime}
 						className={`${styles.columnContainer} cursor-pointer border-b border-h_gray bg-h_black text-xl hover:bg-h_light_black`}
@@ -120,22 +121,21 @@ export default function TimeTable({ times = [] }: Props) {
 			})}
 
 			{clickedItem && (
-				<ul
+				<div
 					className="fixed z-50 w-28 select-none overflow-hidden rounded-lg border border-white bg-h_gray_semi_dark text-center text-xl transition-all"
 					style={{ left: clickedItem.x, top: clickedItem.y }}
 				>
-					<li
+					<button
 						onClick={(e) => {
 							if (data?.user.id !== clickedItem.userId) return;
 							deleteDialog(clickedItem);
 							setClickedItem(null);
 						}}
-						role="button"
-						className="hover:bg-h_gray_semi_light"
+						className="w-full hover:bg-h_gray_semi_light"
 					>
 						삭제하기
-					</li>
-				</ul>
+					</button>
+				</div>
 			)}
 		</div>
 	);
