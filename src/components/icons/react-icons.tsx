@@ -19,6 +19,14 @@ import {
 	IoHappyOutline,
 	IoReloadCircleOutline,
 	IoAddCircle,
+	IoCalendarClearOutline,
+	IoCalendarClear,
+	IoPencilOutline,
+	IoEllipsisHorizontalSharp,
+	IoTrash,
+	IoAdd,
+	IoTimerOutline,
+	IoReaderOutline,
 } from 'react-icons/io5';
 import { IconProp } from './types';
 import { LuDot } from 'react-icons/lu';
@@ -29,6 +37,33 @@ type Prop = IconProp;
 export function DownArrowIcon({ size = '', style, ...rest }: Prop) {
 	return (
 		<IoIosArrowDown
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+			color="white"
+		/>
+	);
+}
+
+/**
+ * accent있는 아이콘은 네비게이션 아이콘
+ */
+
+export function IoPlanIcon({
+	size = '',
+	style,
+	accent = false,
+	...rest
+}: Prop) {
+	if (accent)
+		return (
+			<IoCalendarClear
+				style={{ fontSize: getIconSize(size), ...style }}
+				{...rest}
+				color="white"
+			/>
+		);
+	return (
+		<IoCalendarClearOutline
 			style={{ fontSize: getIconSize(size), ...style }}
 			{...rest}
 			color="white"
@@ -229,5 +264,66 @@ export function IoReloadCircleOutlineIcon({
 export function IoAddCircleIcon({ size = '', style, color, ...rest }: Prop) {
 	return (
 		<IoAddCircle style={{ fontSize: getIconSize(size), ...style }} {...rest} />
+	);
+}
+
+export function IoPencilOutlineIcon({
+	size = '',
+	style,
+	color,
+	...rest
+}: Prop) {
+	return (
+		<IoPencilOutline
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+		/>
+	);
+}
+
+export function IoEllipsisHorizontalSharpIcon({
+	size = '',
+	style,
+	color,
+	...rest
+}: Prop) {
+	return (
+		<IoEllipsisHorizontalSharp
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+		/>
+	);
+}
+
+export function IoTrashIcon({ size = '', style, color, ...rest }: Prop) {
+	return (
+		<IoTrash style={{ fontSize: getIconSize(size), ...style }} {...rest} />
+	);
+}
+
+export function IoAddIcon({ size = '', style, color, ...rest }: Prop) {
+	return <IoAdd style={{ fontSize: getIconSize(size), ...style }} {...rest} />;
+}
+
+export function IoTimerOutlineIcon({ size = '', style, color, ...rest }: Prop) {
+	return (
+		<IoTimerOutline
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+		/>
+	);
+}
+
+export function IoReaderOutlineIcon({
+	size = '',
+	style,
+	color,
+	...rest
+}: Prop) {
+	return (
+		<IoReaderOutline
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+		/>
 	);
 }
