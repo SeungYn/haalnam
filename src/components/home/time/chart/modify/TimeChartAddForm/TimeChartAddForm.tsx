@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { Time } from '@prisma/client';
-import TimeChartAdd from '../TimeChartAdd/TimeChartAdd';
+import TimeChartAdd, { TimeTest } from '../TimeChartAdd/TimeChartAdd';
 import {
 	MouseEvent,
 	useLayoutEffect,
@@ -82,8 +82,11 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 		const ctx = timeChartAddModifyCanvas.current?.getContext('2d');
 
 		if (!ctx) return;
-		// 모바일일 경우 진동
-		window.navigator.vibrate(1);
+		// 사파리가 아닐경우 진동
+		if (!window.navigator.userAgent.toLocaleLowerCase().includes('safari')) {
+			window.navigator?.vibrate(1);
+		}
+
 		ctx.fillStyle = 'white';
 
 		let angleData = getAngleFromCoordinates(
@@ -372,10 +375,9 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 			/>
 
 			<div className="relative flex items-center justify-center py-14">
-				<div className="absolute left-1/2 top-1/2 z-40 -translate-x-1/2 -translate-y-1/2">
+				<div className="absolute left-1/2 top-1/2 z-40 h-auto -translate-x-1/2 -translate-y-1/2">
 					<TimeChartAdd times={times} ref={timeChartAddRef} />
 				</div>
-
 				<div
 					className={`z-40 ${isMobile ? '' : 'cursor-pointer'} touch-none`}
 					onTouchMove={isMobile ? onTouchMoveEvent : undefined}
@@ -521,4 +523,8 @@ function TimeChartAddHeader({
 			</div>
 		</>
 	);
+}
+
+function Tett() {
+	return <div className="h-[120px] w-[120px]"></div>;
 }
