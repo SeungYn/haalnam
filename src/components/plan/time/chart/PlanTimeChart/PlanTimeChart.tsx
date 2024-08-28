@@ -183,7 +183,7 @@ export default function PlanTimeChart({ times, mode = 'Normal' }: Props) {
 	}, [canvasRef, chartWidth, times]);
 
 	return (
-		<div className="relative p-10">
+		<div className="relative">
 			{/* 눈금 별 시간 표시 */}
 			{mode === 'Normal' &&
 				makeChartGradutionTimeInfo((chartWidth + 45) / 2).map((v) => {
