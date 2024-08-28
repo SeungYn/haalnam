@@ -196,7 +196,7 @@ export function TimeAddChartFoward(
 	}, [canvasRef, chartWidth, times]);
 
 	return (
-		<div ref={ref} className="relative inline-block p-10">
+		<div ref={ref} className="relative">
 			<div
 				className="relative h-[250px] w-[250px] overflow-hidden rounded-full outline outline-2 outline-h_gray"
 				style={{ width: chartWidth, height: chartWidth }}
@@ -274,4 +274,8 @@ function makeGradution(count: number) {
 	}
 
 	return list;
+}
+
+export function TimeTest({ times }: Props) {
+	return <div className="relative inline-block h-[400px] w-[400px]"></div>;
 }

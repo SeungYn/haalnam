@@ -81,6 +81,19 @@ export const nextOptions: NextAuthConfig = {
 	},
 	secret: process.env.NEXTAUTH_SECRET,
 	trustHost: true,
+
+	// InvalidCheck: PKCE code_verifier cookie was missing 에러 제거를 위한 옵션
+	cookies: {
+		pkceCodeVerifier: {
+			name: 'next-auth.pkce.code_verifier',
+			options: {
+				httpOnly: true,
+				sameSite: 'none',
+				path: '/',
+				secure: true,
+			},
+		},
+	},
 };
 
 const handler = NextAuth(nextOptions);

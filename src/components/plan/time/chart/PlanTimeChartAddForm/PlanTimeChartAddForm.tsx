@@ -88,8 +88,10 @@ export default function PlanTimeChartAddForm({
 		const ctx = timeChartAddModifyCanvas.current?.getContext('2d');
 
 		if (!ctx) return;
-		// 모바일일 경우 진동
-		window.navigator.vibrate(1);
+		// 사파리가 아닐경우 진동
+		if (!window.navigator.userAgent.toLocaleLowerCase().includes('safari')) {
+			window.navigator?.vibrate(1);
+		}
 		ctx.fillStyle = 'white';
 
 		let angleData = getAngleFromCoordinates(
