@@ -7,6 +7,7 @@ import { Button } from '../common';
 
 export function IntroLogin() {
 	const onClick = () => {
+		// 기본적으로 프로바이더를 명시하면 해당 프로바이더 로그인 창이 뜸. 이후 callbackUrl은 로그인을 성공하면 리다이렉트 시킬 url임
 		signIn('kakao', { callbackUrl: '/' });
 	};
 	return (
