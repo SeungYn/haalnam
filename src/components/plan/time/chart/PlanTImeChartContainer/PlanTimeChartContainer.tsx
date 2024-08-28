@@ -11,5 +11,9 @@ export default function PlanTimeChartContainer() {
 	const { data: planPage } = useGetPlanPageWithSuspense(
 		selectedPlanId || data!.user.defaultMainPlanPageId
 	);
-	return <PlanTimeChart times={planPage!.plans} />;
+	return (
+		<div className="my-10">
+			<PlanTimeChart times={planPage!.plans} />
+		</div>
+	);
 }

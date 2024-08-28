@@ -229,7 +229,7 @@ export default function PlanTimeChart({ times, mode = 'Normal' }: Props) {
 					style={{
 						left: '10px',
 						top: '10px',
-						transform: `translate3d(calc(${hoverCustomPath2D.x}px + 2.5rem), calc(${hoverCustomPath2D.y}px + 2.5rem), 0)`,
+						transform: `translate3d(calc(${hoverCustomPath2D.x}px ), calc(${hoverCustomPath2D.y}px ), 0)`,
 					}}
 				>
 					<h2>{hoverCustomPath2D.plan.subject}</h2>
