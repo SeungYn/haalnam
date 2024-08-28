@@ -250,6 +250,7 @@ export default function TimeChart({ times }: Props) {
 					style={{
 						left: '10px',
 						top: '10px',
+						// rem이 추가 된 것은 차트를 감싸는 요소가 패딩이 들어있기 때문 패딩 값까지 계산해서 hover를 띄어줌
 						transform: `translate3d(calc(${hoverCustomPath2D.x}px + 2.5rem), calc(${hoverCustomPath2D.y}px + 2.5rem), 0)`,
 					}}
 				>
