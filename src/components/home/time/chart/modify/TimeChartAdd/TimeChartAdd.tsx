@@ -1,3 +1,7 @@
+/**
+ * 제거 될 컴포넌트
+ */
+
 'use client';
 
 import { type ChartSize, timeToDegree } from '@/utils/chart';

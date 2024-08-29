@@ -1,6 +1,9 @@
 'use client';
 
 import {
+	ChartAccentColorPalette,
+	ChartCanvasPixelSize,
+	ChartColorPalette,
 	type ChartSize,
 	makeChartGradutionTimeInfo,
 	timeToDegree,
@@ -21,16 +24,9 @@ import {
 	useState,
 } from 'react';
 
-const colorPalette = [
-	{ r: 33, g: 255, b: 140, a: 100 },
-	{ r: 33, g: 222, b: 255, a: 100 },
-	{ r: 33, g: 255, b: 214, a: 100 },
-	{ r: 33, g: 255, b: 63, a: 100 },
-	{ r: 33, g: 151, b: 255, a: 100 },
-];
-
 type Props = {
 	times: Time[];
+	mode?: 'Normal' | 'Add';
 };
 
 type HoverChartPiece = CustomPath2D & {
@@ -41,12 +37,13 @@ type HoverChartPiece = CustomPath2D & {
 // 새로 적용할 color
 // rgb(161, 161, 161)
 // bg rgb(10, 10, 10)
-export default function TimeChart({ times }: Props) {
+export default function TimeChart({ times, mode = 'Normal' }: Props) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [chartWidth, setChartWidth] = useState<ChartSize>(300);
 	const [path2Ds, setPath2Ds] = useState<CustomPath2D[]>([]);
 	const [hoverCustomPath2D, setHoverCustomPath2D] =
 		useState<HoverChartPiece | null>(null);
+	const chartSizeRatio = ChartCanvasPixelSize / chartWidth;
 
 	const onClickCanvas = (e: MouseEvent) => {
 		const { offsetY, offsetX, pageX, pageY } = e.nativeEvent;
@@ -57,8 +54,15 @@ export default function TimeChart({ times }: Props) {
 			let hoveredObj: CustomPath2D | null = null;
 			path2Ds.forEach((obj) => {
 				const path2D = obj.path2D;
-				const { r, g, b } = obj.rgba;
-				if (ctx.isPointInPath(path2D, offsetX, offsetY)) {
+
+				const colorIndex = obj.colorPaletteIndex;
+				if (
+					ctx.isPointInPath(
+						path2D,
+						offsetX * chartSizeRatio,
+						offsetY * chartSizeRatio
+					)
+				) {
 					//const isInPath = ctx.isPointInPath(path2D, offsetX, offsetY);
 					hoveredObj = obj;
 					// 흰색 호를 그려서 투명색을 조정
@@ -67,11 +71,11 @@ export default function TimeChart({ times }: Props) {
 					ctx.fill(path2D);
 					ctx.stroke(path2D);
 
-					ctx.fillStyle = `rgb(${r}, ${g}, ${b}, 0.4)`;
+					ctx.fillStyle = ChartAccentColorPalette[colorIndex];
 					ctx.fill(path2D);
 				} else {
-					ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-					ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+					ctx.fillStyle = ChartColorPalette[colorIndex];
+					ctx.strokeStyle = ChartColorPalette[colorIndex];
 					ctx.fill(path2D);
 					ctx.stroke(path2D);
 				}
@@ -99,9 +103,10 @@ export default function TimeChart({ times }: Props) {
 		if (ctx) {
 			path2Ds.forEach((obj) => {
 				const path2D = obj.path2D;
-				const { r, g, b } = obj.rgba;
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`; //채울 색상
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+
+				const colorIndex = obj.colorPaletteIndex;
+				ctx.fillStyle = ChartColorPalette[colorIndex];
+				ctx.strokeStyle = ChartColorPalette[colorIndex];
 				ctx.fill(path2D);
 				ctx.stroke(path2D);
 			});
@@ -157,7 +162,7 @@ export default function TimeChart({ times }: Props) {
 			?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
 		const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D;
-		const startX = parseInt(String(chartWidth / 2));
+		const startX = ChartCanvasPixelSize / 2;
 		const customPath2dList: CustomPath2D[] = [];
 
 		for (let i = 0, index = 0; i < times.length; i++) {
@@ -168,7 +173,7 @@ export default function TimeChart({ times }: Props) {
 			const currentTime = times[i];
 
 			// 색상을 규칙적을 뽑는 인덱스
-			const paletteIndex = index % colorPalette.length;
+			const paletteIndex = index % ChartColorPalette.length;
 
 			index++;
 			ctx.beginPath();
@@ -178,21 +183,21 @@ export default function TimeChart({ times }: Props) {
 			path.arc(
 				startX,
 				startX,
-				chartWidth / 2,
+				startX,
 				+((Math.PI / 180) * timeToDegree(currentTime.startTime)).toFixed(2) -
 					Math.PI / 2,
 				+((Math.PI / 180) * timeToDegree(currentTime.endTime!)).toFixed(2) -
 					Math.PI / 2
 			);
 
-			ctx.fillStyle = `rgb(${colorPalette[paletteIndex].r}, ${colorPalette[paletteIndex].g}, ${colorPalette[paletteIndex].b})`; //채울 색상
-			ctx.strokeStyle = `rgb(${colorPalette[paletteIndex].r}, ${colorPalette[paletteIndex].g}, ${colorPalette[paletteIndex].b})`; //채울 색상
+			ctx.fillStyle = ChartColorPalette[paletteIndex];
+			ctx.strokeStyle = ChartColorPalette[paletteIndex];
 			ctx.fill(path); //채우기
 			ctx.stroke(path); //테두리
 			path.closePath();
 			customPath2dList.push({
 				path2D: path,
-				rgba: colorPalette[paletteIndex],
+				rgba: { r: 33, g: 255, b: 140, a: 100 }, // 제거 될 속성
 				colorPaletteIndex: paletteIndex,
 				startTimeObj: currentTime,
 				startTime: currentTime.startTime,
@@ -205,24 +210,25 @@ export default function TimeChart({ times }: Props) {
 	}, [canvasRef, chartWidth, times]);
 
 	return (
-		<div className="relative p-10">
+		<div className="relative">
 			{/* 눈금 별 시간 표시 */}
-			{makeChartGradutionTimeInfo((chartWidth + 45) / 2).map((v) => {
-				return (
-					<div
-						suppressHydrationWarning
-						key={JSON.stringify(v)}
-						className="absolute text-2xl"
-						style={{
-							transform: `translate(${v.x + chartWidth / 2}px, ${
-								v.y + chartWidth / 2
-							}px) translate(-50%, -50%)`,
-						}}
-					>
-						{v.time}
-					</div>
-				);
-			})}
+			{mode === 'Normal' &&
+				makeChartGradutionTimeInfo((chartWidth + 45) / 2).map((v) => {
+					return (
+						<div
+							suppressHydrationWarning
+							key={JSON.stringify(v)}
+							className="absolute text-2xl"
+							style={{
+								transform: `translate(${v.x + chartWidth / 2}px, ${
+									v.y + chartWidth / 2
+								}px) translate(-50%, -50%)`,
+							}}
+						>
+							{v.time}
+						</div>
+					);
+				})}
 
 			<div
 				className="relative h-[250px] w-[250px] overflow-hidden rounded-full outline outline-2 outline-h_gray"
@@ -230,8 +236,9 @@ export default function TimeChart({ times }: Props) {
 			>
 				<canvas
 					ref={canvasRef}
-					width={chartWidth}
-					height={chartWidth}
+					width={ChartCanvasPixelSize}
+					height={ChartCanvasPixelSize}
+					style={{ width: chartWidth, height: chartWidth }}
 					className="absolute z-30"
 					onClick={onClickCanvas}
 					onMouseMove={onClickCanvas}
@@ -250,8 +257,8 @@ export default function TimeChart({ times }: Props) {
 					style={{
 						left: '10px',
 						top: '10px',
-						// rem이 추가 된 것은 차트를 감싸는 요소가 패딩이 들어있기 때문 패딩 값까지 계산해서 hover를 띄어줌
-						transform: `translate3d(calc(${hoverCustomPath2D.x}px + 2.5rem), calc(${hoverCustomPath2D.y}px + 2.5rem), 0)`,
+						// calc(${hoverCustomPath2D.x}px , 2.5rem) rem이 추가 된 것은 차트를 감싸는 요소가 패딩이 들어있기 때문 패딩 값까지 계산해서 hover를 띄어줌
+						transform: `translate3d(calc(${hoverCustomPath2D.x}px ), calc(${hoverCustomPath2D.y}px ), 0)`,
 					}}
 				>
 					<h2>{hoverCustomPath2D.startTimeObj.subject}</h2>

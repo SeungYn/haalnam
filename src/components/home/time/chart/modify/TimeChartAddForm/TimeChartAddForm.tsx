@@ -17,10 +17,13 @@ import {
 	makeChartGradutionTimeInfo,
 	stringTimeToRadian,
 	radianToAngle,
+	ChartCanvasPixelSize,
+	getAngleFromCoordinates,
 } from '@/utils/chart';
 import { Button } from '@/components/common';
 import { IoReloadCircleOutlineIcon } from '@/components/icons';
 import useIsMobile from '@/hooks/common/useIsMobile';
+import TimeChart from '../../TimeChart/TimeChart';
 
 type Props = {
 	closePopUp: () => void;
@@ -36,7 +39,6 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 	const { selectedDate } = useSelectedDateStore();
 
 	const { data: times = [] } = useGetTimesByDate(selectedDate, false); //useGetPersonalTodayTime(true);
-	const timeChartAddRef = useRef<HTMLDivElement>(null);
 	const [addChartWidth, setAddChartWidth] = useState<number>(250);
 	const timeChartAddModifyCanvas = useRef<HTMLCanvasElement>(null);
 	const [subject, setSubject] = useState('');
@@ -50,6 +52,7 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 	const [currentAngles, setCurrentAngles] = useState<ReturnType<
 		typeof getAngleFromCoordinates
 	> | null>(null);
+	const chartSizeRatio = ChartCanvasPixelSize / addChartWidth;
 
 	const onTouchMoveEvent = (e: TouchEvent<HTMLDivElement>) =>
 		onMoveEvent(
@@ -96,7 +99,7 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 			addChartWidth / 2
 		);
 
-		const originX = addChartWidth / 2;
+		const originX = ChartCanvasPixelSize / 2;
 
 		let overlappingTime = checkStartOverlappingTime(times, angleData[1]);
 
@@ -213,7 +216,7 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 	};
 
 	const onSetTime = () => {
-		const originX = addChartWidth / 2;
+		const originX = ChartCanvasPixelSize / 2;
 		if (error !== '') return;
 		if (currentAngles === null) return;
 
@@ -232,7 +235,7 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 			if (angleDifferenceStartEnd <= 0) return;
 
 			setAngles((s) => ({ ...s, end: [...currentAngles!] }));
-			const originX = addChartWidth / 2;
+
 			drawArcCanvasByRadian(originX, angles.start[1], currentAngles![1]);
 		}
 	};
@@ -288,35 +291,6 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 				timeChartAddModifyCanvas.current.height
 			);
 	};
-
-	function getAngleFromCoordinates(
-		x: number,
-		y: number,
-		cx: number,
-		cy: number
-	): [number, number] {
-		// x와 y를 중심 좌표에 대해 상대적으로 변환
-
-		const dx = x - cx;
-		const dy = -(y - cy); // y좌표 대칭 시킴 원점을 기준으로 위쪽은 양수 아래쪽은 음수로 나타내기 위해
-
-		// 각도 계산 (라디안)
-		let radians = Math.atan2(dx, dy); // 12시 방향을 기준으로 하기 위해 dy를 음수로 설정하고 x,y 좌표를 반전시킴
-		if (radians < 0) {
-			radians += 2 * Math.PI;
-		}
-
-		// 라디안을 도(degree)로 변환
-		let angle = Math.round(radians * (180 / Math.PI));
-		// console.log(angle);
-
-		// 각도를 0~360도로 변환
-		// if (angle < 0) {
-		// 	angle += 360;
-		// }
-		//console.log('angle:: ', angle, 'radians:: ', radians);
-		return [angle, radians];
-	}
 
 	const onSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -376,7 +350,7 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 
 			<div className="relative flex items-center justify-center py-14">
 				<div className="absolute left-1/2 top-1/2 z-40 h-auto -translate-x-1/2 -translate-y-1/2">
-					<TimeChartAdd times={times} ref={timeChartAddRef} />
+					<TimeChart times={times} mode="Add" />
 				</div>
 				<div
 					className={`z-40 ${isMobile ? '' : 'cursor-pointer'} touch-none`}
@@ -388,8 +362,9 @@ export default function TimeChartAddForm({ closePopUp }: Props) {
 					<canvas
 						ref={timeChartAddModifyCanvas}
 						className="relative z-50 rounded-full"
-						width={addChartWidth}
-						height={addChartWidth}
+						width={ChartCanvasPixelSize}
+						height={ChartCanvasPixelSize}
+						style={{ width: addChartWidth, height: addChartWidth }}
 					></canvas>
 				</div>
 
