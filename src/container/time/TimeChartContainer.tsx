@@ -19,5 +19,9 @@ function TimeChartSuspense() {
 
 	const { data } = useGetTimesByDate(selectedDate, true); //useGetPersonalTodayTime(true);
 
-	return <TimeChart times={data!} />;
+	return (
+		<div className="my-10">
+			<TimeChart times={data!} />
+		</div>
+	);
 }
