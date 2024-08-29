@@ -231,3 +231,23 @@ export default function PlanTimeHeader() {
 		</header>
 	);
 }
+
+export function PlanTimeHeaderSkelton() {
+	return (
+		<header className="flex w-full animate-pulse select-none items-center py-2">
+			<Dropdown.DropdownSkelton />
+			<div className="relative shrink grow text-center text-4xl">
+				<div className="flex items-center gap-4 px-2">
+					<h2 className="grow overflow-hidden text-ellipsis">계획표</h2>
+					<div className="relative flex items-center">
+						<button className="border-none">
+							<IoEllipsisHorizontalSharpIcon size="medium" title="옵션 버튼" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</header>
+	);
+}
+
+PlanTimeHeader.PlanTimeHeaderSkelton = PlanTimeHeaderSkelton;
