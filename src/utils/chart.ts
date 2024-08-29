@@ -1,4 +1,34 @@
+// chartCssSizeType
 export type ChartSize = 300 | 600 | 250;
+export const ChartCanvasPixelSize = 1500;
+
+export const ChartColorPalette = [
+	'hsla(0, 100%, 80%, 1)',
+	'hsla(30, 100%, 80%, 1)',
+	'hsla(60, 100%, 80%, 1)',
+	'hsla(90, 100%, 80%, 1)',
+	'hsla(120, 100%, 80%, 1)',
+	'hsla(150, 100%, 80%, 1)',
+	'hsla(180, 100%, 80%, 1)',
+	'hsla(210, 100%, 80%, 1)',
+	'hsla(240, 100%, 80%, 1)',
+	'hsla(270, 100%, 80%, 1)',
+	'hsla(300, 100%, 80%, 1)',
+];
+
+export const ChartAccentColorPalette = [
+	'hsla(0, 100%, 90%, 1)',
+	'hsla(30, 100%, 90%, 1)',
+	'hsla(60, 100%, 90%, 1)',
+	'hsla(90, 100%, 90%, 1)',
+	'hsla(120, 100%, 90%, 1)',
+	'hsla(150, 100%, 90%, 1)',
+	'hsla(180, 100%, 90%, 1)',
+	'hsla(210, 100%, 90%, 1)',
+	'hsla(240, 100%, 90%, 1)',
+	'hsla(270, 100%, 90%, 1)',
+	'hsla(300, 100%, 90%, 1)',
+];
 
 export const getChartDegrees = (() => {
 	return Array.from({ length: 24 }, (_, i) => i * 15);
@@ -36,6 +66,42 @@ export const timeToDegree = (time: Date) => {
 	return hours * 15 + minutes * 0.25;
 };
 
+/**
+ * 마우스 좌표로부터 각도와 라디안을 반환하는 함수
+ * @param x 마우스 x
+ * @param y 마우스 y
+ * @param cx 원 중심 x
+ * @param cy 원 중심 y
+ * @returns
+ */
+export function getAngleFromCoordinates(
+	x: number,
+	y: number,
+	cx: number,
+	cy: number
+): [number, number] {
+	// x와 y를 중심 좌표에 대해 상대적으로 변환
+
+	const dx = x - cx;
+	const dy = -(y - cy); // y좌표 대칭 시킴 원점을 기준으로 위쪽은 양수 아래쪽은 음수로 나타내기 위해
+
+	// 각도 계산 (라디안)
+	let radians = Math.atan2(dx, dy); // 12시 방향을 기준으로 하기 위해 dy를 음수로 설정하고 x,y 좌표를 반전시킴
+	if (radians < 0) {
+		radians += 2 * Math.PI;
+	}
+
+	// 라디안을 도(degree)로 변환
+	let angle = Math.round(radians * (180 / Math.PI));
+	// console.log(angle);
+
+	// 각도를 0~360도로 변환
+	// if (angle < 0) {
+	// 	angle += 360;
+	// }
+	//console.log('angle:: ', angle, 'radians:: ', radians);
+	return [angle, radians];
+}
 /**
  * 각도를 시간으로 변환해주는 함수
  * @param angle
