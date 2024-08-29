@@ -1,6 +1,9 @@
 'use client';
 
 import {
+	ChartAccentColorPalette,
+	ChartCanvasPixelSize,
+	ChartColorPalette,
 	type ChartSize,
 	makeChartGradutionTimeInfo,
 	timeToDegree,
@@ -8,16 +11,8 @@ import {
 import { formatDisplayTime } from '@/utils/date';
 import { ROTATE_DEG } from '@/utils/size';
 import { deepCopy } from '@/utils/util';
-import { Plan, Time } from '@prisma/client';
+import { Plan } from '@prisma/client';
 import { MouseEvent, useLayoutEffect, useRef, useState } from 'react';
-
-const colorPalette = [
-	{ r: 33, g: 255, b: 140, a: 100 },
-	{ r: 33, g: 222, b: 255, a: 100 },
-	{ r: 33, g: 255, b: 214, a: 100 },
-	{ r: 33, g: 255, b: 63, a: 100 },
-	{ r: 33, g: 151, b: 255, a: 100 },
-];
 
 type Props = {
 	times: Plan[];
@@ -38,18 +33,24 @@ export default function PlanTimeChart({ times, mode = 'Normal' }: Props) {
 	const [path2Ds, setPath2Ds] = useState<CustomPlanPath2D[]>([]);
 	const [hoverCustomPath2D, setHoverCustomPath2D] =
 		useState<HoverChartPiece | null>(null);
+	const chartSizeRatio = ChartCanvasPixelSize / chartWidth;
 
 	const onClickCanvas = (e: MouseEvent) => {
 		const { offsetY, offsetX, pageX, pageY } = e.nativeEvent;
 
 		const ctx = canvasRef.current?.getContext('2d');
-
 		if (ctx) {
 			let hoveredObj: CustomPlanPath2D | null = null;
 			path2Ds.forEach((obj) => {
 				const path2D = obj.path2D;
-				const { r, g, b } = obj.rgba;
-				if (ctx.isPointInPath(path2D, offsetX, offsetY)) {
+				const colorIndex = obj.colorPaletteIndex;
+				if (
+					ctx.isPointInPath(
+						path2D,
+						offsetX * chartSizeRatio,
+						offsetY * chartSizeRatio
+					)
+				) {
 					//const isInPath = ctx.isPointInPath(path2D, offsetX, offsetY);
 					hoveredObj = obj;
 					// 흰색 호를 그려서 투명색을 조정
@@ -58,11 +59,11 @@ export default function PlanTimeChart({ times, mode = 'Normal' }: Props) {
 					ctx.fill(path2D);
 					ctx.stroke(path2D);
 
-					ctx.fillStyle = `rgb(${r}, ${g}, ${b}, 0.4)`;
+					ctx.fillStyle = ChartAccentColorPalette[colorIndex];
 					ctx.fill(path2D);
 				} else {
-					ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-					ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+					ctx.fillStyle = ChartColorPalette[colorIndex];
+					ctx.strokeStyle = ChartColorPalette[colorIndex];
 					ctx.fill(path2D);
 					ctx.stroke(path2D);
 				}
@@ -90,9 +91,9 @@ export default function PlanTimeChart({ times, mode = 'Normal' }: Props) {
 		if (ctx) {
 			path2Ds.forEach((obj) => {
 				const path2D = obj.path2D;
-				const { r, g, b } = obj.rgba;
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`; //채울 색상
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+				const colorIndex = obj.colorPaletteIndex;
+				ctx.fillStyle = ChartColorPalette[colorIndex];
+				ctx.strokeStyle = ChartColorPalette[colorIndex];
 				ctx.fill(path2D);
 				ctx.stroke(path2D);
 			});
@@ -138,7 +139,7 @@ export default function PlanTimeChart({ times, mode = 'Normal' }: Props) {
 			?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
 		const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D;
-		const startX = parseInt(String(chartWidth / 2));
+		const startX = ChartCanvasPixelSize / 2;
 		const customPath2dList: CustomPlanPath2D[] = [];
 
 		for (let i = 0, index = 0; i < times.length; i++) {
@@ -149,7 +150,7 @@ export default function PlanTimeChart({ times, mode = 'Normal' }: Props) {
 			const currentTime = times[i];
 
 			// 색상을 규칙적을 뽑는 인덱스
-			const paletteIndex = index % colorPalette.length;
+			const paletteIndex = index % ChartColorPalette.length;
 
 			index++;
 			ctx.beginPath();
@@ -159,21 +160,21 @@ export default function PlanTimeChart({ times, mode = 'Normal' }: Props) {
 			path.arc(
 				startX,
 				startX,
-				chartWidth / 2,
+				startX,
 				+((Math.PI / 180) * timeToDegree(currentTime.startTime)).toFixed(2) -
 					Math.PI / 2,
 				+((Math.PI / 180) * timeToDegree(currentTime.endTime!)).toFixed(2) -
 					Math.PI / 2
 			);
 
-			ctx.fillStyle = `rgb(${colorPalette[paletteIndex].r}, ${colorPalette[paletteIndex].g}, ${colorPalette[paletteIndex].b})`; //채울 색상
-			ctx.strokeStyle = `rgb(${colorPalette[paletteIndex].r}, ${colorPalette[paletteIndex].g}, ${colorPalette[paletteIndex].b})`; //채울 색상
+			ctx.fillStyle = ChartColorPalette[paletteIndex];
+			ctx.strokeStyle = ChartColorPalette[paletteIndex];
 			ctx.fill(path); //채우기
 			ctx.stroke(path); //테두리
 			path.closePath();
 			customPath2dList.push({
 				path2D: path,
-				rgba: colorPalette[paletteIndex],
+				rgba: { r: 33, g: 255, b: 140, a: 100 }, // 제거 될 속성
 				colorPaletteIndex: paletteIndex,
 				plan: currentTime,
 			});
@@ -209,8 +210,9 @@ export default function PlanTimeChart({ times, mode = 'Normal' }: Props) {
 			>
 				<canvas
 					ref={canvasRef}
-					width={chartWidth}
-					height={chartWidth}
+					width={ChartCanvasPixelSize}
+					height={ChartCanvasPixelSize}
+					style={{ width: chartWidth, height: chartWidth }}
 					className="absolute z-30"
 					onClick={onClickCanvas}
 					onMouseMove={onClickCanvas}

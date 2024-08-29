@@ -16,6 +16,8 @@ import {
 	makeChartGradutionTimeInfo,
 	stringTimeToRadian,
 	radianToAngle,
+	ChartCanvasPixelSize,
+	getAngleFromCoordinates,
 } from '@/utils/chart';
 import { Button } from '@/components/common';
 import { IoReloadCircleOutlineIcon } from '@/components/icons';
@@ -56,6 +58,7 @@ export default function PlanTimeChartAddForm({
 	const [currentAngles, setCurrentAngles] = useState<ReturnType<
 		typeof getAngleFromCoordinates
 	> | null>(null);
+	const chartSizeRatio = ChartCanvasPixelSize / addChartWidth;
 
 	const onTouchMoveEvent = (e: TouchEvent<HTMLDivElement>) =>
 		onMoveEvent(
@@ -101,7 +104,7 @@ export default function PlanTimeChartAddForm({
 			addChartWidth / 2
 		);
 
-		const originX = addChartWidth / 2;
+		const originX = ChartCanvasPixelSize / 2;
 
 		let overlappingTime = checkStartOverlappingTime(times, angleData[1]);
 
@@ -110,8 +113,8 @@ export default function PlanTimeChartAddForm({
 				? '이미 타이머가 진행된 시간대입니다., 다른 시간대를 선택해주세요'
 				: ''
 		);
-		ctx.fillStyle = overlappingTime ? 'rgb(252 165 165)' : 'white';
-		ctx.strokeStyle = overlappingTime ? 'rgb(252 165 165)' : 'white';
+		ctx.fillStyle = overlappingTime ? 'red' : 'white';
+		ctx.strokeStyle = overlappingTime ? 'red' : 'white';
 
 		// 추가 조건
 		/**
@@ -143,8 +146,8 @@ export default function PlanTimeChartAddForm({
 				setError(
 					'이미 타이머가 진행된 시간대입니다., 다른 시간대를 선택해주세요'
 				);
-				ctx.fillStyle = 'rgb(252 165 165)';
-				ctx.strokeStyle = 'rgb(252 165 165)';
+				ctx.fillStyle = 'red';
+				ctx.strokeStyle = 'red';
 			} else {
 				setError('');
 				ctx.fillStyle = 'white';
@@ -224,7 +227,7 @@ export default function PlanTimeChartAddForm({
 	};
 
 	const onSetTime = () => {
-		const originX = addChartWidth / 2;
+		const originX = ChartCanvasPixelSize / 2;
 		if (error !== '') return;
 		if (currentAngles === null) return;
 
@@ -243,7 +246,7 @@ export default function PlanTimeChartAddForm({
 			if (angleDifferenceStartEnd <= 0) return;
 
 			setAngles((s) => ({ ...s, end: [...currentAngles!] }));
-			const originX = addChartWidth / 2;
+
 			drawArcCanvasByRadian(originX, angles.start[1], currentAngles![1]);
 		}
 	};
@@ -299,35 +302,6 @@ export default function PlanTimeChartAddForm({
 				timeChartAddModifyCanvas.current.height
 			);
 	};
-
-	function getAngleFromCoordinates(
-		x: number,
-		y: number,
-		cx: number,
-		cy: number
-	): [number, number] {
-		// x와 y를 중심 좌표에 대해 상대적으로 변환
-
-		const dx = x - cx;
-		const dy = -(y - cy); // y좌표 대칭 시킴 원점을 기준으로 위쪽은 양수 아래쪽은 음수로 나타내기 위해
-
-		// 각도 계산 (라디안)
-		let radians = Math.atan2(dx, dy); // 12시 방향을 기준으로 하기 위해 dy를 음수로 설정하고 x,y 좌표를 반전시킴
-		if (radians < 0) {
-			radians += 2 * Math.PI;
-		}
-
-		// 라디안을 도(degree)로 변환
-		let angle = Math.round(radians * (180 / Math.PI));
-		// console.log(angle);
-
-		// 각도를 0~360도로 변환
-		// if (angle < 0) {
-		// 	angle += 360;
-		// }
-		//console.log('angle:: ', angle, 'radians:: ', radians);
-		return [angle, radians];
-	}
 
 	const onSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -393,8 +367,9 @@ export default function PlanTimeChartAddForm({
 					<canvas
 						ref={timeChartAddModifyCanvas}
 						className="relative z-50 rounded-full"
-						width={addChartWidth}
-						height={addChartWidth}
+						style={{ width: addChartWidth, height: addChartWidth }}
+						width={ChartCanvasPixelSize}
+						height={ChartCanvasPixelSize}
 					></canvas>
 				</div>
 

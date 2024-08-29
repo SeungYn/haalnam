@@ -62,3 +62,7 @@
 - 사파리 vribrate 조건부 추가 [issue #53](https://github.com/SeungYn/haalnam/issues/53)
 - 차트 레이아웃 이슈 해결 [issue #54](https://github.com/SeungYn/haalnam/issues/54)
 - authjs PKEC 설정
+
+### 1.341.1v 24.8.28
+
+- 차트 고화질 변경 및 색상 추가 [issue #57](https://github.com/SeungYn/haalnam/issues/57)
