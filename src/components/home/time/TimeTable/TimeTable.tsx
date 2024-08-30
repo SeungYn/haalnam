@@ -145,7 +145,6 @@ export default function TimeTable({ times = [] }: Props) {
 							setIsPopupOpen(true);
 							// setClickedItem(null);
 						}}
-						role="button"
 						className="hover:bg-h_gray_semi_light"
 					>
 						수정하기

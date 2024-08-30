@@ -16,6 +16,7 @@ export default function usePopUpStatus(delay: number = 150, cb?: () => void) {
 			cb?.();
 			//document.querySelector('main')!.style.overflowY = 'auto';
 		}
+		// eslint-disable-next-line
 	}, [isOpen]);
 
 	// popUp close effect
