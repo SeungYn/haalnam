@@ -5,6 +5,7 @@
 import {
 	differenceTime,
 	formatDisplayTime,
+	formatToTimeHoursMinutes,
 	toSecondsByMilliseconds,
 } from '@/utils/date';
 import styles from './PlanTimeTable.module.css';
@@ -14,6 +15,10 @@ import { useDialogContext } from '@/context/DialogContext';
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
 import { useDeletePlan } from '@/hooks/api/plan';
+import usePopUpStatus from '@/hooks/common/usePopUpStatus';
+import TimePopUp from '@/components/home/time/TimePopUp/TimePopUp';
+import CommonPopUpHeader from '@/components/common/header/CommonPopUpHeader';
+import PlanTimeChartModifyFormContainer from '../../chart/PlanTimeChartModifyFormContainer/PlanTimeChartModifyFormContainer';
 
 type Props = {
 	times: Plan[];
@@ -25,7 +30,16 @@ export default function PlanTimeTable({ times = [] }: Props) {
 	const [clickedItem, setClickedItem] = useState<ClickedItem>(null);
 	const { data } = useSession();
 	const tableRef = useRef<HTMLDivElement>(null);
+	const clickedItemRef = useRef<HTMLUListElement>(null);
 	const { initDialog, reset } = useDialogContext();
+	const {
+		isMounting,
+		isOpen: isPopupOpen,
+		setIsOpen: setIsPopupOpen,
+		setIsMounting,
+	} = usePopUpStatus(300, () => {
+		setClickedItem(null);
+	});
 	const deleteMutate = useDeletePlan(() => reset());
 
 	const deleteDialog = (item: ClickedItem) => {
@@ -35,10 +49,10 @@ export default function PlanTimeTable({ times = [] }: Props) {
 		}
 
 		const parseTime = item.endTime
-			? `${formatDisplayTime(
-					item.startTime
-				)} ~ ${formatDisplayTime(item.endTime)}`
-			: `${formatDisplayTime(item.startTime)} ~ `;
+			? `${formatToTimeHoursMinutes(
+					formatDisplayTime(item.startTime)
+				)} ~ ${formatToTimeHoursMinutes(formatDisplayTime(item.endTime))}`
+			: `${formatToTimeHoursMinutes(formatDisplayTime(item.startTime))} ~ `;
 
 		initDialog({
 			title: '기록된 계획이 삭제됩니다!',
@@ -67,10 +81,15 @@ export default function PlanTimeTable({ times = [] }: Props) {
 
 	useEffect(() => {
 		const cb = (e: MouseEvent) => {
+			// 팝업이 열려있을 때는 무시
+			if (isPopupOpen) return;
+
 			if (
 				e.target !== null &&
 				e.target !== tableRef.current &&
-				!tableRef.current?.contains(e.target as HTMLElement)
+				e.target !== clickedItemRef.current &&
+				!tableRef.current?.contains(e.target as HTMLElement) &&
+				!clickedItemRef.current?.contains(e.target as HTMLElement)
 			) {
 				setClickedItem(null);
 			}
@@ -80,7 +99,7 @@ export default function PlanTimeTable({ times = [] }: Props) {
 		return () => {
 			document.removeEventListener('click', cb);
 		};
-	}, []);
+	}, [isPopupOpen]);
 
 	return (
 		<div
@@ -96,10 +115,10 @@ export default function PlanTimeTable({ times = [] }: Props) {
 			</div>
 			{times.map((item) => {
 				const parseTime = item.endTime
-					? `${formatDisplayTime(
-							item.startTime
-						)} ~ ${formatDisplayTime(item.endTime)}`
-					: `${formatDisplayTime(item.startTime)} ~ `;
+					? `${formatToTimeHoursMinutes(
+							formatDisplayTime(item.startTime)
+						)} ~ ${formatToTimeHoursMinutes(formatDisplayTime(item.endTime))}`
+					: `${formatToTimeHoursMinutes(formatDisplayTime(item.startTime))} ~ `;
 				return (
 					<div
 						key={parseTime}
@@ -124,9 +143,21 @@ export default function PlanTimeTable({ times = [] }: Props) {
 
 			{clickedItem && (
 				<ul
-					className="fixed z-50 w-28 select-none overflow-hidden rounded-lg border border-white bg-h_gray_semi_dark text-center text-xl transition-all"
+					ref={clickedItemRef}
+					className="fixed z-50 select-none overflow-hidden rounded-lg border border-white bg-h_gray_semi_dark text-center text-2xl transition-all [&>li]:px-8 [&>li]:py-2"
 					style={{ left: clickedItem.x, top: clickedItem.y }}
 				>
+					<li
+						onClick={(e) => {
+							if (data?.user.id !== clickedItem.user_id) return;
+							setIsPopupOpen(true);
+							// setClickedItem(null);
+						}}
+						role="button"
+						className="hover:bg-h_gray_semi_light"
+					>
+						수정하기
+					</li>
 					<li
 						onClick={(e) => {
 							if (data?.user.id !== clickedItem.user_id) return;
@@ -139,6 +170,30 @@ export default function PlanTimeTable({ times = [] }: Props) {
 						삭제하기
 					</li>
 				</ul>
+			)}
+			{clickedItem && (
+				<TimePopUp
+					isMounting={isMounting}
+					isOpen={isPopupOpen}
+					setIsOpen={setIsPopupOpen}
+					setIsMounting={setIsMounting}
+				>
+					<CommonPopUpHeader
+						title={'계획 수정'}
+						onEvent={() => {
+							setIsMounting(false);
+						}}
+					/>
+					<div>
+						<PlanTimeChartModifyFormContainer
+							closePopUp={() => {
+								setIsMounting(false);
+							}}
+							selectedPlan={clickedItem}
+							plans={times}
+						/>
+					</div>
+				</TimePopUp>
 			)}
 		</div>
 	);
