@@ -60,8 +60,7 @@ export default function PlanSideButton() {
 						className="flex items-center gap-5 border-none"
 						role="button"
 						onClick={() => {
-							setIsPopupOpen(true);
-							setIsOpen(false);
+							alert('준비중입니다...');
 						}}
 					>
 						<p>투두 추가</p>{' '}
