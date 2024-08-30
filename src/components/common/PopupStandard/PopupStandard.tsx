@@ -20,29 +20,30 @@ export default function PopupStandard() {
 			timeoutId = setTimeout(() => {
 				const { left } = main.getBoundingClientRect();
 				const mainClientWidth = main.clientWidth;
+
 				if (ref.current) {
 					ref.current.style.left = `${left}px`;
 					ref.current.style.width = `${mainClientWidth}px`;
 				}
 			}, 10);
 		};
-		resizeCB();
+		// resizeCB();
 		const resizeObserver = new ResizeObserver((entries) => {
 			for (let entry of entries) {
-				const { width } = entry.contentRect;
+				const { inlineSize } = entry.borderBoxSize[0];
 				const { left } = entry.target.getBoundingClientRect();
 
 				if (ref.current) {
 					ref.current.style.left = `${left}px`;
-					ref.current.style.width = `${width}px`;
+					ref.current.style.width = `${inlineSize}px`;
 				}
 			}
 		});
 		resizeObserver.observe(main);
-		window.addEventListener('resize', resizeCB);
+		// window.addEventListener('resize', resizeCB);
 
 		return () => {
-			window.removeEventListener('resize', resizeCB);
+			// window.removeEventListener('resize', resizeCB);
 			resizeObserver.unobserve(main);
 		};
 	}, []);
