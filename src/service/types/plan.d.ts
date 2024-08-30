@@ -19,6 +19,13 @@ export type PostPlanRequest = {
 	subject: string;
 };
 
+export type PatchPlanRequest = {
+	startTime: { hours: number; minutes: number; seconds: number };
+	endTime: { hours: number; minutes: number; seconds: number };
+	planId: number;
+	subject: string;
+};
+
 export type PlanPageResponse = PlanPage & {
 	plans: Plan[];
 };
