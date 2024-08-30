@@ -159,3 +159,13 @@ export function formatBroswerTime(serverDate: Date | string) {
 	date.setHours(date.getHours() - 9);
 	return date;
 }
+/**
+ * "00시 00분 00초"인 문자열에서 초를 제거해주는 함수
+ * @param time
+ * @returns
+ */
+export function formatToTimeHoursMinutes(time: string) {
+	const reg = /.*(?=\s.*초)/;
+
+	return time.match(reg)![0];
+}
