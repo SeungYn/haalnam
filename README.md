@@ -66,3 +66,14 @@
 ### 1.341.1v 24.8.28
 
 - 차트 고화질 변경 및 색상 추가 [issue #57](https://github.com/SeungYn/haalnam/issues/57)
+
+### 1.342.0v 24.8.29
+
+- 계획 스켈레톤 ui 추가
+
+### 1.343.0v 24.8.30
+
+- 타이머 수정 기능 추가
+- 계획 수정 기능 추가
+- 다른 사람 페이지 레이아웃 이슈 해결
+- 팝업 레이아웃 이슈 해결 [issue #59](https://github.com/SeungYn/haalnam/issues/59)
