@@ -105,6 +105,34 @@ export async function createPlanByUserId({
 	return res;
 }
 
+export async function updatePlanByUserId({
+	startTime,
+	subject,
+	userId,
+	endTime,
+	planId,
+}: {
+	startTime: Date;
+	endTime: Date;
+	userId: string;
+	planId: number;
+	subject: string;
+}) {
+	const res = await dbClient.plan.update({
+		where: {
+			id: planId,
+			user_id: userId,
+		},
+		data: {
+			startTime,
+			endTime,
+			subject,
+		},
+	});
+
+	return res;
+}
+
 export async function deletePlanByPlanId(planId: number, userId: string) {
 	const res = await dbClient.plan.update({
 		where: {

@@ -2,6 +2,7 @@ import { AxiosInstance } from 'axios';
 import {
 	DeleteTimerRequest,
 	GetPersonalTodayTimeResponse,
+	PatchTimeRequest,
 	PostAddTimerRequest,
 	PostTimeRequest,
 	StartTimerRequest,
@@ -118,8 +119,16 @@ export default class TimeService {
 				seconds: endTime.s,
 			},
 		};
-		const url = '/api/time/add';
+		const url = '/api/time/modify';
 		const { data } = await this.axios.post<Time>(url, { ...reqData });
+
+		return data;
+	}
+
+	async patchUpdateTime(req: PatchTimeRequest) {
+		const url = `/api/time/modify`;
+
+		const { data } = await this.axios.patch<Time>(url, { ...req });
 
 		return data;
 	}

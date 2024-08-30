@@ -12,6 +12,10 @@ import { useDialogContext } from '@/context/DialogContext';
 import { useDeleteTimes } from '@/hooks/api/time';
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
+import usePopUpStatus from '@/hooks/common/usePopUpStatus';
+import TimePopUp from '../TimePopUp/TimePopUp';
+import CommonPopUpHeader from '@/components/common/header/CommonPopUpHeader';
+import TimeChartModifyFormContainer from '../chart/modify/TimeChartModifyFormContainer/TimeChartModifyFormContainer';
 
 type Props = {
 	times: Time[];
@@ -24,6 +28,14 @@ export default function TimeTable({ times = [] }: Props) {
 	const { data } = useSession();
 	const tableRef = useRef<HTMLDivElement>(null);
 	const { initDialog, reset } = useDialogContext();
+	const {
+		isMounting,
+		isOpen: isPopupOpen,
+		setIsOpen: setIsPopupOpen,
+		setIsMounting,
+	} = usePopUpStatus(300, () => {
+		setClickedItem(null);
+	});
 	const deleteMutate = useDeleteTimes(() => reset());
 
 	const deleteDialog = (item: ClickedItem) => {
@@ -62,6 +74,8 @@ export default function TimeTable({ times = [] }: Props) {
 
 	useEffect(() => {
 		const cb = (e: MouseEvent) => {
+			// 팝업이 열려있을 때는 무시
+			if (isPopupOpen) return;
 			if (
 				e.target !== null &&
 				e.target !== tableRef.current &&
@@ -75,7 +89,7 @@ export default function TimeTable({ times = [] }: Props) {
 		return () => {
 			document.removeEventListener('click', cb);
 		};
-	}, []);
+	}, [isPopupOpen]);
 
 	return (
 		<div
@@ -122,20 +136,56 @@ export default function TimeTable({ times = [] }: Props) {
 
 			{clickedItem && (
 				<div
-					className="fixed z-50 w-28 select-none overflow-hidden rounded-lg border border-white bg-h_gray_semi_dark text-center text-xl transition-all"
+					className="fixed z-50 flex select-none flex-col overflow-hidden rounded-lg border border-white bg-h_gray_semi_dark text-center text-2xl transition-all [&>button]:px-8 [&>button]:py-2"
 					style={{ left: clickedItem.x, top: clickedItem.y }}
 				>
+					<button
+						onClick={(e) => {
+							if (data?.user.id !== clickedItem.userId) return;
+							setIsPopupOpen(true);
+							// setClickedItem(null);
+						}}
+						role="button"
+						className="hover:bg-h_gray_semi_light"
+					>
+						수정하기
+					</button>
 					<button
 						onClick={(e) => {
 							if (data?.user.id !== clickedItem.userId) return;
 							deleteDialog(clickedItem);
 							setClickedItem(null);
 						}}
-						className="w-full hover:bg-h_gray_semi_light"
+						className="hover:bg-h_gray_semi_light"
 					>
 						삭제하기
 					</button>
 				</div>
+			)}
+
+			{clickedItem && (
+				<TimePopUp
+					isMounting={isMounting}
+					isOpen={isPopupOpen}
+					setIsOpen={setIsPopupOpen}
+					setIsMounting={setIsMounting}
+				>
+					<CommonPopUpHeader
+						title={'타이머 수정'}
+						onEvent={() => {
+							setIsMounting(false);
+						}}
+					/>
+					<div>
+						<TimeChartModifyFormContainer
+							closePopUp={() => {
+								setIsMounting(false);
+							}}
+							selectedTime={clickedItem}
+							times={times}
+						/>
+					</div>
+				</TimePopUp>
 			)}
 		</div>
 	);

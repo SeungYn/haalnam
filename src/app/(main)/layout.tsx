@@ -45,9 +45,9 @@ export default function RootLayout({
 						<body>
 							<BasicLoading />
 							<DialogContextProvider>
-								<div className="flex h-full w-full flex-col-reverse gap-4 bg-h_black text-white md:flex-row">
+								<div className="flex h-full w-full flex-col-reverse bg-h_black text-white md:flex-row">
 									<Sidebar />
-									<main className="relative flex-1 overflow-y-auto overflow-x-hidden">
+									<main className="relative flex-1 overflow-y-auto overflow-x-hidden md:px-4">
 										{/* 팝업 기준 요소 */}
 										<PopupStandard />
 										<div className="mx-auto h-full min-h-full w-full max-w-screen-xl px-4 md:px-0">

@@ -51,7 +51,11 @@ function OtherUserTimeChartContainer() {
 	const { selectedDate } = useOtherUserSelectedDateContext();
 	const { data } = useGetTimesByuserNidAndDate(+params.userid, selectedDate);
 
-	return <TimeChart times={data!} />;
+	return (
+		<div className="my-10">
+			<TimeChart times={data!} />
+		</div>
+	);
 }
 
 function OtherUserTimeTableContainer() {

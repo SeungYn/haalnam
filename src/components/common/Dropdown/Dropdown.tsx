@@ -86,3 +86,20 @@ export default function Dropdown<T extends { id: number; name: string }>({
 		</div>
 	);
 }
+
+Dropdown.DropdownSkelton = DropdownSkelton;
+
+function DropdownSkelton() {
+	return (
+		<div
+			className={`relative inline-block w-48 ${interFont.className} shrink-0 select-none py-1`}
+		>
+			<button className="flex w-full flex-nowrap items-center text-2xl">
+				<span className="grow select-none overflow-hidden text-ellipsis whitespace-nowrap">
+					제목
+				</span>
+				<DownArrowIcon size="medium" className={`ml-2 inline`} />
+			</button>
+		</div>
+	);
+}

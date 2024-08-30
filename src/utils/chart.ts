@@ -123,8 +123,11 @@ export const radianToAngle = (radian: number) => {
  */
 export const radianToTime = (radian: number) => {
 	const hours = Math.floor((radian * 12) / Math.PI);
-	const minutes = Math.floor(((radian * 12 * 60) / Math.PI) % 60);
+	const minutes = Math.floor(
+		radianPrecision(((radian * 12 * 60) / Math.PI) % 60)
+	);
 	const seconds = Math.floor(((radian * 12 * 60 * 60) / Math.PI) % 60);
+
 	return {
 		hours,
 		minutes,
@@ -171,4 +174,14 @@ export const hoursMinutesSecondsToRadian = (
 	const secondsRadian = (s * Math.PI) / (12 * 60 * 60);
 
 	return hoursRadian + minutesRadian + secondsRadian;
+};
+
+/**
+ * 라디안을 시간으로 변환시킬 때 정밀도 작업해주는 함수
+ * 6.9999999993 같은 수를 소수점 7자리에서 반올림 시킴
+ * @param num
+ * @returns
+ */
+export const radianPrecision = (num: number) => {
+	return Math.round(num * 1000000) / 1000000;
 };

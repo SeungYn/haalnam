@@ -8,3 +8,11 @@ export function useInfoToast(msg: string) {
 		</div>
 	);
 }
+
+export function InfoToast({ msg }: { msg: string }) {
+	return (
+		<div className="flex items-center gap-2">
+			<IoHappyOutlineIcon size="medium" /> <p>{msg}</p>
+		</div>
+	);
+}

@@ -31,3 +31,15 @@ export type StopTimerRequest = {
 	status: Status;
 	time?: Date;
 };
+
+export type PatchTimeRequest = {
+	startTime: { hours: number; minutes: number; seconds: number };
+	endTime: { hours: number; minutes: number; seconds: number };
+	date: {
+		y: number;
+		m: number;
+		d: number;
+	};
+	timeId: number;
+	subject: string;
+};

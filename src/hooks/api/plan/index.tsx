@@ -8,7 +8,8 @@ import { QUERY_KEYS } from './queryKey';
 import { useBasicLoadingStore } from '@/store/basicLoadingStore';
 import { useSelectedPlanStore } from '@/store/SelectPlanStore';
 import { useDialogContext } from '@/context/DialogContext';
-import { useInfoToast } from '@/hooks/toast';
+import { InfoToast, useInfoToast } from '@/hooks/toast';
+import { getAngleFromCoordinates, radianToTime } from '@/utils/chart';
 
 /**
  * 계회 페이지들 가져오는 hook
@@ -151,6 +152,51 @@ export function usePostCreatePlan({ closePopup }: { closePopup: () => void }) {
 			queryClient.invalidateQueries([...QUERY_KEYS.planPage, req.planPageId]);
 			// eslint-disable-next-line
 			useInfoToast('계획이 추가됐습니다!');
+		},
+		onError: () => {
+			toast.error('에러가 발생했습니다. 다시 시도해주세요');
+		},
+		onSettled: () => {
+			closePopup();
+		},
+	});
+
+	return mutation;
+}
+
+/**
+ * 계획 수정 hook
+ * @returns
+ */
+export function usePatchUptatePlan({ closePopup }: { closePopup: () => void }) {
+	const queryClient = useQueryClient();
+
+	const mutation = useMutation({
+		mutationFn: (
+			req: Omit<
+				Parameters<typeof service.plan.patchUpdatePlan>[0],
+				'startTime' | 'endTime'
+			> & {
+				startTimeAngles: ReturnType<typeof getAngleFromCoordinates>;
+				endTimeAngles: ReturnType<typeof getAngleFromCoordinates>;
+				planPageId: number;
+			}
+		) => {
+			const { startTimeAngles, subject, planPageId, planId, endTimeAngles } =
+				req;
+			const startTime = radianToTime(startTimeAngles[1]);
+			const endTime = radianToTime(endTimeAngles[1]);
+
+			return service.plan.patchUpdatePlan({
+				subject,
+				planId,
+				endTime,
+				startTime,
+			});
+		},
+		onSuccess: (data, req) => {
+			queryClient.invalidateQueries([...QUERY_KEYS.planPage, req.planPageId]);
+			toast(<InfoToast msg="계획이 수정됐습니다" />);
 		},
 		onError: () => {
 			toast.error('에러가 발생했습니다. 다시 시도해주세요');

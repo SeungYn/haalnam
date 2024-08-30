@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export default function usePopUpStatus(delay: number = 150) {
+export default function usePopUpStatus(delay: number = 150, cb?: () => void) {
 	const [isMounting, setIsMounting] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -13,6 +13,7 @@ export default function usePopUpStatus(delay: number = 150) {
 			//document.querySelector('main')!.style.overflowY = 'hidden';
 		} else {
 			setIsMounting(false);
+			cb?.();
 			//document.querySelector('main')!.style.overflowY = 'auto';
 		}
 	}, [isOpen]);

@@ -1,13 +1,14 @@
 import client from '@/lib/db';
 import {
 	DeleteTimerRequest,
+	PatchTimeRequest,
 	StartTimerRequest,
 	StopTimerRequest,
 } from '../types/time';
 import { Status, Time, User } from '@prisma/client';
-import { getNowDate } from '@/utils/date';
+import { getNowDate, makeUTCStringDate } from '@/utils/date';
 import { CustomException, ExceptionRes } from '@/utils/exception';
-
+import * as timeRepository from '@/repository/timeRepository';
 /**
  * 진행중인 가장 최근 타이머 가져오는 함수
  * @param userId
@@ -207,4 +208,29 @@ export async function stopTimer({
 
 		throw new CustomException('에러가 발생했습니다. 다시 시도해주세요');
 	}
+}
+
+export async function updateTime(req: PatchTimeRequest & { userId: string }) {
+	const utcStartTime = makeUTCStringDate(
+		req.date.y,
+		req.date.m,
+		req.date.d,
+		req.startTime.hours,
+		req.startTime.minutes
+	);
+	const utcEndTime = makeUTCStringDate(
+		req.date.y,
+		req.date.m,
+		req.date.d,
+		req.endTime.hours,
+		req.endTime.minutes
+	);
+
+	const res = await timeRepository.updateTimeByUserId({
+		...req,
+		startTime: utcStartTime,
+		endTime: utcEndTime,
+	});
+
+	return res;
 }
