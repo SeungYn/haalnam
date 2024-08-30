@@ -7,11 +7,12 @@ import { useSession } from 'next-auth/react';
 import { StartTimerRequest, StopTimerRequest } from '@/service/types/time';
 import { TimeActionContextType } from '@/context/TimeContext';
 import { toast } from 'react-toastify';
-import { useInfoToast } from '@/hooks/toast';
+import { InfoToast, useInfoToast } from '@/hooks/toast';
 import { Time } from '@prisma/client';
 import { isAxiosError } from 'axios';
 import { ExceptionCode, ExceptionRes } from '@/utils/exception';
 import { formatBroswerTime } from '@/utils/date';
+import { getAngleFromCoordinates, radianToTime } from '@/utils/chart';
 
 export function useGetPersonalTodayTime(isSuspense: boolean = false) {
 	const { data: session } = useSession();
@@ -214,4 +215,58 @@ export function useDeleteTimes(cb: () => void) {
 	});
 
 	return mutate;
+}
+
+/**
+ * 타이머 수정 hook
+ * @returns
+ */
+export function usePatchUptateTime({ closePopup }: { closePopup: () => void }) {
+	const queryClient = useQueryClient();
+
+	const mutation = useMutation({
+		mutationFn: (
+			req: Omit<
+				Parameters<typeof service.time.patchUpdateTime>[0],
+				'startTime' | 'endTime' | 'date'
+			> & {
+				date: Date;
+				startTimeAngles: ReturnType<typeof getAngleFromCoordinates>;
+				endTimeAngles: ReturnType<typeof getAngleFromCoordinates>;
+				timeId: number;
+			}
+		) => {
+			const { startTimeAngles, subject, timeId, endTimeAngles, date } = req;
+			const [y, m, d] = [date.getFullYear(), date.getMonth(), date.getDate()];
+			const startTime = radianToTime(startTimeAngles[1]);
+			const endTime = radianToTime(endTimeAngles[1]);
+
+			return service.time.patchUpdateTime({
+				subject,
+				timeId,
+				endTime,
+				startTime,
+				date: {
+					y,
+					m,
+					d,
+				},
+			});
+		},
+		onSuccess: (data, req) => {
+			queryClient.invalidateQueries([
+				...QUERY_KEYS.getPersonalTimesByDate,
+				req.date.toDateString(),
+			]);
+			toast(<InfoToast msg="계획이 수정됐습니다" />);
+		},
+		onError: () => {
+			toast.error('에러가 발생했습니다. 다시 시도해주세요');
+		},
+		onSettled: () => {
+			closePopup();
+		},
+	});
+
+	return mutation;
 }
