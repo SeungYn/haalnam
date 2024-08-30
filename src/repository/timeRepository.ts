@@ -35,3 +35,31 @@ export async function findTodayTimesByUserId(userId: string) {
 
 	return times;
 }
+
+export async function updateTimeByUserId({
+	startTime,
+	subject,
+	userId,
+	endTime,
+	timeId,
+}: {
+	startTime: Date;
+	endTime: Date;
+	userId: string;
+	timeId: number;
+	subject: string;
+}) {
+	const res = await dbClient.time.update({
+		where: {
+			id: timeId,
+			userId,
+		},
+		data: {
+			startTime,
+			endTime,
+			subject,
+		},
+	});
+
+	return res;
+}
