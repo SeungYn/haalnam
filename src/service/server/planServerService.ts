@@ -1,5 +1,5 @@
 import * as planRepository from '@/repository/planRepository';
-import { PostPlanRequest } from '../types/plan';
+import { PatchPlanRequest, PostPlanRequest } from '../types/plan';
 import { makeUTCStringDate } from '@/utils/date';
 
 export async function getPlanPageById(id: number, userId: string) {
@@ -49,6 +49,31 @@ export async function createPlan(req: PostPlanRequest & { userId: string }) {
 	);
 
 	const res = await planRepository.createPlanByUserId({
+		...req,
+		startTime: utcStartTime,
+		endTime: utcEndTime,
+	});
+
+	return res;
+}
+
+export async function updatePlan(req: PatchPlanRequest & { userId: string }) {
+	const utcStartTime = makeUTCStringDate(
+		2000,
+		1,
+		1,
+		req.startTime.hours,
+		req.startTime.minutes
+	);
+	const utcEndTime = makeUTCStringDate(
+		2000,
+		1,
+		1,
+		req.endTime.hours,
+		req.endTime.minutes
+	);
+
+	const res = await planRepository.updatePlanByUserId({
 		...req,
 		startTime: utcStartTime,
 		endTime: utcEndTime,
