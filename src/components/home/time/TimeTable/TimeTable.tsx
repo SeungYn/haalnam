@@ -16,6 +16,7 @@ import usePopUpStatus from '@/hooks/common/usePopUpStatus';
 import TimePopUp from '../TimePopUp/TimePopUp';
 import CommonPopUpHeader from '@/components/common/header/CommonPopUpHeader';
 import TimeChartModifyFormContainer from '../chart/modify/TimeChartModifyFormContainer/TimeChartModifyFormContainer';
+import { useTimeContext } from '@/context/TimeContext';
 
 type Props = {
 	times: Time[];
@@ -24,6 +25,7 @@ type Props = {
 type ClickedItem = (Time & { x: number; y: number }) | null;
 
 export default function TimeTable({ times = [] }: Props) {
+	const { timeId: progressingTimeId } = useTimeContext();
 	const [clickedItem, setClickedItem] = useState<ClickedItem>(null);
 	const { data } = useSession();
 	const tableRef = useRef<HTMLDivElement>(null);
@@ -142,6 +144,11 @@ export default function TimeTable({ times = [] }: Props) {
 					<button
 						onClick={(e) => {
 							if (data?.user.id !== clickedItem.userId) return;
+							if (progressingTimeId && progressingTimeId === clickedItem.id) {
+								alert('현재 진행 중인 타이머는 수정할 수 없습니다 ');
+								return;
+							}
+
 							setIsPopupOpen(true);
 							// setClickedItem(null);
 						}}
