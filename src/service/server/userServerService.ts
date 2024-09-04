@@ -101,7 +101,7 @@ export async function postUserProfileById(
  */
 export async function getUsedTotalTimes(userId: string) {
 	const times = await findTimesByUserId(userId);
-	const length = times.length % 2 === 0 ? times.length : times.length - 1;
+	const length = times.length;
 
 	let totalMs = 0;
 	for (let i = 0; i < length; i++) {
@@ -120,7 +120,7 @@ export async function getUsedTotalTimes(userId: string) {
  */
 export async function getUsedTodayTotalTimesByUserId(userId: string) {
 	const times = await findTodayTimesByUserId(userId);
-	const length = times.length % 2 === 0 ? times.length : times.length - 1;
+	const length = times.length;
 
 	let totalMs = 0;
 	for (let i = 0; i < length; i++) {
