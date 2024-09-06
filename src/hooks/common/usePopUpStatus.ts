@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+// 팝업을 열 때는 setIsopen 닫을 때는 setIsMounting을 사용해서 열고 닫아야함.
 export default function usePopUpStatus(delay: number = 150, cb?: () => void) {
 	const [isMounting, setIsMounting] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
