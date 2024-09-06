@@ -23,7 +23,8 @@ jobs:
           cache: 'npm'
 
       - run: npm ci --legacy-peer-deps
-      # 일단 직접 접속해서 서버를 키는 걸로...
+
+      - run: npx prisma generate
       - run: npm run build
       - run: pm2 restart haalnam
       # - run: npm run start
