@@ -146,3 +146,7 @@ export async function deletePlanByPlanId(planId: number, userId: string) {
 
 	return res;
 }
+
+export async function findPlansAll() {
+	return await dbClient.plan.findMany();
+}
