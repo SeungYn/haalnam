@@ -14,6 +14,13 @@ import { whereHost } from '@/utils/util';
 import PopupStandard from '@/components/common/PopupStandard/PopupStandard';
 import DialogContextProvider from '@/context/DialogContext';
 import BasicLoading from '@/components/common/loading/BasicLoading';
+import ServiceWorkerRegisterHoc from '@/hoc/ServiceWorkerRegisterHoc';
+
+import dynamic from 'next/dynamic';
+const PWAInstallPrompt = dynamic(
+	() => import('@/components/common/pwa/PWAInstallPrompt'),
+	{ ssr: false }
+);
 
 export const metadata: Metadata = {
 	metadataBase: new URL(whereHost() || ''),
@@ -40,27 +47,31 @@ export default function RootLayout({
 		<html lang="ko" className={sincerity.className}>
 			<ReactQueryContext>
 				<AuthContext>
-					<TimeContextProvider>
-						{/* <CheckUnloadHOC> */}
-						<body>
-							<BasicLoading />
-							<DialogContextProvider>
-								<div className="flex h-full w-full flex-col-reverse bg-h_black text-white md:flex-row">
-									<Sidebar />
-									<main className="relative flex-1 overflow-y-auto overflow-x-hidden md:px-4">
-										{/* 팝업 기준 요소 */}
-										<PopupStandard />
-										<div className="mx-auto h-full min-h-full w-full max-w-screen-xl px-4 md:px-0">
-											{children}
-										</div>
-									</main>
-								</div>
-								<ReactToastContainer />
-								<ReactQueryDevtools />
-							</DialogContextProvider>
-						</body>
-						{/* </CheckUnloadHOC> */}
-					</TimeContextProvider>
+					<ServiceWorkerRegisterHoc>
+						<TimeContextProvider>
+							{/* <CheckUnloadHOC> */}
+
+							<body>
+								<PWAInstallPrompt />
+								<BasicLoading />
+								<DialogContextProvider>
+									<div className="flex h-full w-full flex-col-reverse bg-h_black text-white md:flex-row">
+										<Sidebar />
+										<main className="relative flex-1 overflow-y-auto overflow-x-hidden md:px-4">
+											{/* 팝업 기준 요소 */}
+											<PopupStandard />
+											<div className="mx-auto h-full min-h-full w-full max-w-screen-xl px-4 md:px-0">
+												{children}
+											</div>
+										</main>
+									</div>
+									<ReactToastContainer />
+									<ReactQueryDevtools />
+								</DialogContextProvider>
+							</body>
+							{/* </CheckUnloadHOC> */}
+						</TimeContextProvider>
+					</ServiceWorkerRegisterHoc>
 				</AuthContext>
 			</ReactQueryContext>
 		</html>
