@@ -473,7 +473,7 @@ export default function TimeChartModifyForm({
 						isLoading={mutateTime.isLoading}
 						disabled={angles.start === null || angles.end === null}
 					>
-						계획 추가하기
+						타이머 수정하기
 					</Button>
 				</div>
 			</form>

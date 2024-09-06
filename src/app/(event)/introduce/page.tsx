@@ -74,7 +74,7 @@ export default function IntroducePage() {
 
 	return (
 		<div className="relative overflow-x-hidden">
-			<header className="fixed z-10 w-full bg-h_black py-2">
+			<header className="fixed z-50 w-full bg-h_black py-2">
 				<div className="mx-auto max-w-7xl px-4">
 					<Image
 						width={140}

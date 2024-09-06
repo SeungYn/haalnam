@@ -1,0 +1,47 @@
+{
+	"name": "하얼남",
+	"short_name": "하얼남",
+	"description": "일상을 기록하는 타이머 어플리케이션",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#000000",
+	"theme_color": "#000000",
+	"icons": [
+		{
+			"src": "/thumnail/favicon.ico",
+			"sizes": "48x48",
+			"purpose": "any"
+		},
+		{
+			"src": "/thumnail/haalnam-thumnail-maskable_144.jpg",
+			"sizes": "144x144",
+			"type": "image/jpg",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/thumnail/haalnam-thumnail_200.png",
+			"sizes": "200x200",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+
+		{
+			"src": "/thumnail/haalnam-thumnail-maskable_200.jpg",
+			"sizes": "200x200",
+			"type": "image/jpg",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/thumnail/haalnam-icon_192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/thumnail/haalnam-icon_512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any maskable"
+		}
+	]
+}

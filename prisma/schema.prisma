@@ -8,23 +8,25 @@ datasource db {
 }
 
 model User {
-  id                        String     @id @default(cuid())
-  nid                       Int        @unique @default(autoincrement())
-  name                      String     @db.VarChar(255)
-  createdAt                 DateTime   @default(now())
-  email                     String?    @unique
+  id                        String                @id @default(cuid())
+  nid                       Int                   @unique @default(autoincrement())
+  name                      String                @db.VarChar(255)
+  createdAt                 DateTime              @default(now())
+  email                     String?               @unique
   emailVerified             DateTime?
   image                     String?
-  is_public                 Boolean    @default(true)
-  nickname                  String     @default("") @db.VarChar(255)
-  timer_status              Status     @default(END)
-  instagram                 String     @default("")
-  introduce                 String?    @db.Text
+  is_public                 Boolean               @default(true)
+  is_webpush_privilege      Boolean               @default(false)
+  nickname                  String                @default("") @db.VarChar(255)
+  timer_status              Status                @default(END)
+  instagram                 String                @default("")
+  introduce                 String?               @db.Text
   default_main_plan_page_id Int?
   accounts                  Account[]
   Time                      Time[]
   plan_pages                PlanPage[]
   plans                     Plan[]
+  WebPushSubscription       WebPushSubscription[]
 }
 
 model Account {
@@ -49,6 +51,14 @@ model Account {
 
   @@unique([provider, providerAccountId])
   @@index([userId], map: "Account_userId_fkey")
+}
+
+model WebPushSubscription {
+  id                Int    @id @default(autoincrement())
+  subscription_info String @db.Text
+  endpoint          String @unique
+  user_id           String
+  user              User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model Time {

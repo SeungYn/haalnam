@@ -1,6 +1,6 @@
+import { PermissionPopupContainer } from '@/components/common/PermissionPopup/PermissionPopup';
 import SSRSuspense from '@/components/common/SSRSuspense';
 import TimeChartSkeleton from '@/components/home/time/chart/TimeChart/TimeChartSkeleton';
-import TimeTableSkeleton from '@/components/home/time/TimeTable/TimeTableSkeleton';
 import PlanNavbar from '@/components/plan/PlanNavbar/PlanNavbar';
 import PlanSideButton from '@/components/plan/PlanSideButton/PlanSideButton';
 import PlanTimeChartContainer from '@/components/plan/time/chart/PlanTImeChartContainer/PlanTimeChartContainer';
@@ -13,10 +13,10 @@ import PlanTimeTableContainer from '@/components/plan/time/table/PlanTimeTableCo
 export default function PlanPage() {
 	return (
 		<>
+			<PermissionPopupContainer />
 			<SSRSuspense fallback={<PlanTimeHeaderSkelton />}>
 				<PlanTimeHeader />
 			</SSRSuspense>
-
 			<SSRSuspense fallback={<TimeChartSkeleton />}>
 				<PlanTimeChartContainer />
 			</SSRSuspense>

@@ -129,3 +129,58 @@ export async function updateUserProfileById({
 export async function getUserById(id: string) {
 	return await dbClient.user.findUnique({ where: { id } });
 }
+
+export async function findUsersAllWithPlans() {
+	return await dbClient.user.findMany({
+		include: {
+			plans: {
+				where: {
+					is_deleted: false,
+				},
+			},
+			WebPushSubscription: true,
+		},
+	});
+}
+
+/**
+ * 유저 아이디로 계획과 구독 정보를 가져옴
+ * @param userId
+ * @returns
+ */
+export async function findUsersAllWithPlansAndWebPushSebscriptionByUserId(
+	userId: string
+) {
+	return await dbClient.user.findFirst({
+		where: { id: userId },
+		include: {
+			plans: {
+				where: {
+					is_deleted: false,
+				},
+			},
+			WebPushSubscription: true,
+		},
+	});
+}
+
+/**
+ * 유저 아이디 리스트로로 계획과 구독 정보를 가져옴
+ * @param userId
+ * @returns
+ */
+export async function findUserListAllWithPlansAndWebPushSebscriptionByUserId(
+	userIds: string[]
+) {
+	return await dbClient.user.findMany({
+		where: { id: { in: userIds } },
+		include: {
+			plans: {
+				where: {
+					is_deleted: false,
+				},
+			},
+			WebPushSubscription: true,
+		},
+	});
+}

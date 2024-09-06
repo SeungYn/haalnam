@@ -48,3 +48,7 @@ next-env.d.ts
 
 # static files
 public/assets/user/personal/*
+
+
+# etc
+webPush.js

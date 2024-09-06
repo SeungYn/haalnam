@@ -10,6 +10,7 @@ declare module 'next-auth' {
 			id: string;
 			nickname: string;
 			defaultMainPlanPageId: number;
+			is_webpush_privilege: boolean;
 		} & DefaultSession['user'];
 	}
 }
