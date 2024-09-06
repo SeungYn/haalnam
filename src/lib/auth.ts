@@ -1,17 +1,15 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import { PrismaClient } from '@prisma/client';
 import NextAuth, { NextAuthConfig } from 'next-auth';
 import { Adapter } from 'next-auth/adapters';
 import KakaoProvider from 'next-auth/providers/kakao';
 import dbClient from './db';
 import { findUserById } from '@/repository/userRepository';
 import { generateNickname } from './user';
-
-const prisma = new PrismaClient();
+import client from './db';
 
 export const nextOptions: NextAuthConfig = {
 	// 타입 Adapter를 명시해 줘야함
-	adapter: PrismaAdapter(prisma) as Adapter,
+	adapter: PrismaAdapter(client) as Adapter,
 	providers: [
 		KakaoProvider({
 			clientId: process.env.KAKAO_ID || ``,
@@ -43,6 +41,7 @@ export const nextOptions: NextAuthConfig = {
 			// signIn이 session보다 먼저 호출 됨
 			//console.log(context, 'context signin', context.user.id);
 			//console.log('signin', context);
+
 			return true;
 		},
 		async session({ session, token, user: test }) {
@@ -63,6 +62,7 @@ export const nextOptions: NextAuthConfig = {
 					...session.user,
 					nickname: existingUser.nickname,
 					defaultMainPlanPageId: existingUser.default_main_plan_page_id!,
+					is_webpush_privilege: existingUser.is_webpush_privilege,
 				};
 			}
 
@@ -83,18 +83,47 @@ export const nextOptions: NextAuthConfig = {
 	trustHost: true,
 
 	// InvalidCheck: PKCE code_verifier cookie was missing 에러 제거를 위한 옵션
-	cookies: {
-		pkceCodeVerifier: {
-			name: 'next-auth.pkce.code_verifier',
-			options: {
-				httpOnly: true,
-				sameSite: 'none',
-				path: '/',
-				secure: true,
-			},
-		},
-	},
+	//cookies: {
+	// csrfToken: {
+	// 	name: 'next-auth.csrf-token',
+	// 	options: {
+	// 		httpOnly: true,
+	// 		sameSite: 'none',
+	// 		path: '/',
+	// 		secure: true,
+	// 	},
+	// },
+	// 로컬 호스트에서 pkce를 지정하면 사파리에서 에러가 발생함
+	// pkceCodeVerifier: {
+	// 	name: 'next-auth.pkce.code_verifier',
+	// 	options: {
+	// 		httpOnly: true,
+	// 		sameSite: 'none',
+	// 		path: '/',
+	// 		secure: true,
+	// 	},
+	// },
+	//},
+	...cookiesConfig(),
 };
+
+function cookiesConfig(): Pick<NextAuthConfig, 'cookies'> {
+	if (process.env.NODE_ENV === 'development')
+		return {
+			cookies: {
+				pkceCodeVerifier: {
+					name: 'next-auth.pkce.code_verifier',
+					options: {
+						httpOnly: true,
+						sameSite: 'none',
+						path: '/',
+						secure: true,
+					},
+				},
+			},
+		};
+	return { cookies: {} };
+}
 
 const handler = NextAuth(nextOptions);
 
