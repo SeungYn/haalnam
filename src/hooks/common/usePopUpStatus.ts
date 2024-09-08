@@ -9,7 +9,7 @@ export default function usePopUpStatus(delay: number = 150, cb?: () => void) {
 	useEffect(() => {
 		if (isOpen) {
 			// 다음 스택에 열리도록 수정
-			setTimeout(() => setIsMounting(true), 0);
+			setTimeout(() => setIsMounting(true), 300);
 			// 팝업 열리면 스크롤 막음
 			//document.querySelector('main')!.style.overflowY = 'hidden';
 		} else {
