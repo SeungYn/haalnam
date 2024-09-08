@@ -8,7 +8,6 @@ import { Button } from '../Button';
 import service from '@/service/client';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
-import { title } from 'process';
 import { useRouter } from 'next/navigation';
 
 type Props = {
@@ -78,17 +77,17 @@ export default function PermissionPopup({
 	// 계획 페이지 오면 알림 권한 확인
 
 	useEffect(() => {
-		// if (!data) return;
+		if (!data) return;
 
-		// if (data.user.is_webpush_privilege && Notification.permission === 'granted')
-		// 	return;
-		// // 어느 기기에서 사용자가 알림을 허용을 했는데 다른 기기에서는 알림이 허용 안 돼었을 경우
-		// // 시스템으로 허용했을 경우도 포함
-		// // 이경우 백그라운드에서 등록
-		// if (Notification.permission === 'granted') {
-		// 	subscribeUserToNotifications();
-		// 	return;
-		// }
+		if (data.user.is_webpush_privilege && Notification.permission === 'granted')
+			return;
+		// 어느 기기에서 사용자가 알림을 허용을 했는데 다른 기기에서는 알림이 허용 안 돼었을 경우
+		// 시스템으로 허용했을 경우도 포함
+		// 이경우 백그라운드에서 등록
+		if (Notification.permission === 'granted') {
+			subscribeUserToNotifications();
+			return;
+		}
 
 		// 위 조건이 아닐경우 팝업 오픈
 		setTimeout(() => {
