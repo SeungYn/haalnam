@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 
 export default function PWAInstallPrompt() {
 	const isMobile = useIsMobile();
-	const { isMounting, isOpen, setIsOpen, setIsMounting } = usePopUpStatus();
+	const { isMounting, isOpen, setIsOpen, setIsMounting } = usePopUpStatus(700);
 	const router = useRouter();
 	const [installCb, setInstallCb] = useState(() => () => {
 		router.push('/pwa');
@@ -47,7 +47,6 @@ export default function PWAInstallPrompt() {
 
 		// 브라우저가 어떤 브라우저인지 확인
 
-		console.log(userAgent);
 		// 만약 지정된 시간이 지나지 않으면 종료, 즉 아직 쿠키가 존재하는 경우
 		if (Cookie.getCookie('PwaInstalled')) return;
 		// 사파리일 경우
@@ -89,9 +88,12 @@ export default function PWAInstallPrompt() {
 			Cookie.setCookie('PwaInstalled', '1', { 'max-age': 60 * 60 * 24 });
 		}
 
-		setTimeout(() => {
-			setIsOpen(true);
-		}, 3000);
+		setTimeout(
+			() => {
+				setIsOpen(true);
+			},
+			60 * 2 * 1000
+		);
 
 		// 웹인데 pc인경우 하루마다 설치하라 해야함.
 
@@ -112,10 +114,10 @@ export default function PWAInstallPrompt() {
 	}, [isOpen]);
 
 	if (!isOpen) return null;
-
+	//${isMounting ? 'translate-y-0' : 'translate-y-full'}
 	return createPortal(
 		<section
-			className={`fixed top-0 z-[99999999] flex h-screen w-full flex-col justify-end backdrop-blur-sm md:absolute ${interFont.className}`}
+			className={`fixed top-0 z-[99999999] flex h-full w-full flex-col justify-end backdrop-blur-sm md:absolute md:h-screen ${interFont.className} overflow-hidden`}
 		>
 			<form
 				onSubmit={(e) => e.preventDefault()}

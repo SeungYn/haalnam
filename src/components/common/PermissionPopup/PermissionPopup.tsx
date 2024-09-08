@@ -53,8 +53,6 @@ export default function PermissionPopup({
 								endpoint: subscription.endpoint,
 							})
 							.then((r) => {
-								console.log(r);
-								console.log('완료');
 								toast.success('알림 등록 완료!');
 								setIsSubscribeLoading(false);
 								setIsMounting(false);
@@ -80,17 +78,17 @@ export default function PermissionPopup({
 	// 계획 페이지 오면 알림 권한 확인
 
 	useEffect(() => {
-		if (!data) return;
+		// if (!data) return;
 
-		if (data.user.is_webpush_privilege && Notification.permission === 'granted')
-			return;
-		// 어느 기기에서 사용자가 알림을 허용을 했는데 다른 기기에서는 알림이 허용 안 돼었을 경우
-		// 시스템으로 허용했을 경우도 포함
-		// 이경우 백그라운드에서 등록
-		if (Notification.permission === 'granted') {
-			subscribeUserToNotifications();
-			return;
-		}
+		// if (data.user.is_webpush_privilege && Notification.permission === 'granted')
+		// 	return;
+		// // 어느 기기에서 사용자가 알림을 허용을 했는데 다른 기기에서는 알림이 허용 안 돼었을 경우
+		// // 시스템으로 허용했을 경우도 포함
+		// // 이경우 백그라운드에서 등록
+		// if (Notification.permission === 'granted') {
+		// 	subscribeUserToNotifications();
+		// 	return;
+		// }
 
 		// 위 조건이 아닐경우 팝업 오픈
 		setTimeout(() => {
@@ -108,7 +106,7 @@ export default function PermissionPopup({
 		>
 			<form
 				onSubmit={(e) => e.preventDefault()}
-				className={`mx-auto block w-full rounded-t-2xl bg-h_light_black px-8 py-10 transition-transform duration-700 md:w-3/4 ${isMounting ? 'translate-y-0' : 'translate-y-full'}`}
+				className={`mx-auto block w-full rounded-t-2xl bg-h_light_black px-8 py-10 transition-all duration-700 md:w-3/4 ${isMounting ? 'translate-y-0' : 'translate-y-full'}`}
 			>
 				<div className="text-center">
 					<p className="mb-8 text-3xl font-bold">{title}</p>
