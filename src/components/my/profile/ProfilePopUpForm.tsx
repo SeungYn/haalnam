@@ -79,7 +79,7 @@ export default function ProfilePopUpForm({
 							}
 
 							const temporalImageUrl = URL.createObjectURL(e.target.files[0]);
-							console.log(temporalImageUrl);
+
 							setForm((f) => ({
 								...f,
 								image: temporalImageUrl,
