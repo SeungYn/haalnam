@@ -239,3 +239,28 @@ export function useDeletePlan(cb: () => void) {
 
 	return mutation;
 }
+
+/**
+ * 기본 계획 페이지 바꿔주는 hook
+ * @returns
+ */
+export function usePatchDefaultPlanPage(cb: (planPageId: number) => void) {
+	const queryClient = useQueryClient();
+
+	const mutation = useMutation({
+		mutationFn: ({ planPageId }: { planPageId: number }) =>
+			service.user.patchDefaultPlanPage(planPageId),
+		onSuccess: (data, req) => {
+			queryClient.invalidateQueries(['planPage', req.planPageId]);
+			// eslint-disable-next-line
+			useInfoToast('지정된 페이지로 알림을 보내드릴게요!');
+			cb(req.planPageId);
+		},
+		onError: () => {
+			toast.error('에러가 발생했습니다. 다시 시도해주세요');
+		},
+		onSettled: () => {},
+	});
+
+	return mutation;
+}

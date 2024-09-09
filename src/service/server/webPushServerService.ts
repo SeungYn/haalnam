@@ -45,6 +45,8 @@ export function enrollWebPushToPushServer(
 		headers: {
 			'Content-Type': 'application/json',
 		},
+	}).catch((e) => {
+		console.log('스케줄링 요청 에러', e);
 	});
 }
 

@@ -6,6 +6,7 @@ import Dropdown from '@/components/common/Dropdown/Dropdown';
 import {
 	IoEllipsisHorizontalSharpIcon,
 	IoPencilOutlineIcon,
+	IoStarOutlineIcon,
 	IoTrashIcon,
 } from '@/components/icons';
 import { useDialogContext } from '@/context/DialogContext';
@@ -13,6 +14,7 @@ import {
 	useDeletePlanPage,
 	useGetPlanPagesWithSuspense,
 	useGetPlanPageWithSuspense,
+	usePatchDefaultPlanPage,
 	usePatchModifyPlanPage,
 	usePostCreatePlanPage,
 } from '@/hooks/api/plan';
@@ -26,7 +28,7 @@ export default function PlanTimeHeader() {
 	const { selectedPlan, setSelectedPlan, selectedPlanId, setSelectedPlanId } =
 		useSelectedPlanStore();
 	const { initDialog, reset } = useDialogContext();
-	const { data } = useSession();
+	const { data, update } = useSession();
 
 	const pageTitleRef = useRef<HTMLInputElement>(null);
 
@@ -44,6 +46,12 @@ export default function PlanTimeHeader() {
 	);
 
 	const { mutate: mutatePlanPage } = usePostCreatePlanPage();
+	const { mutate: mutateDefaultPlanPage } = usePatchDefaultPlanPage(
+		(id: number) => {
+			setSelectedPlanId(id);
+			update();
+		}
+	);
 	const { mutate: mudateDeletePlanPage } = useDeletePlanPage();
 	const { mutate: mutatePlanPageTitle } = usePatchModifyPlanPage(() => {
 		setIsTitleModify(false);
@@ -52,6 +60,9 @@ export default function PlanTimeHeader() {
 	const currentItem = selectedPlanId
 		? planPages.find((i) => i.id === selectedPlanId)!
 		: planPages.find((i) => i.id === data?.user.defaultMainPlanPageId)!;
+	const isDefaultPlanPage = selectedPlanId
+		? data?.user.defaultMainPlanPageId === selectedPlanId
+		: data?.user.defaultMainPlanPageId === currentItem.id;
 
 	const onAddPlanPage = () => {
 		//if (!pageTitleRef.current) return;
@@ -182,6 +193,11 @@ export default function PlanTimeHeader() {
 					</form>
 				) : (
 					<div className="flex items-center gap-4 px-2">
+						{isDefaultPlanPage && (
+							<span>
+								<IoStarOutlineIcon className="text-2xl" />
+							</span>
+						)}
 						<h2 className="grow overflow-hidden text-ellipsis">
 							{currentItem.name}
 						</h2>
@@ -201,9 +217,22 @@ export default function PlanTimeHeader() {
 									ref={titleOptionRef}
 									className="absolute right-0 top-full z-50 flex flex-col items-center justify-center overflow-hidden rounded-xl border border-h_gray bg-h_light_black text-2xl"
 								>
+									{!isDefaultPlanPage && (
+										<li
+											role="button"
+											className="flex flex-nowrap items-center gap-4 whitespace-nowrap px-4 py-2 hover:bg-h_gray_semi_light"
+											onClick={() => {
+												mutateDefaultPlanPage({ planPageId: selectedPlanId! });
+												setIsTitleOptionOpen(true);
+											}}
+										>
+											<IoStarOutlineIcon className="text-2xl" />
+											<p>메인 페이지로 지정하기</p>
+										</li>
+									)}
 									<li
 										role="button"
-										className="flex flex-nowrap items-center gap-4 whitespace-nowrap px-4 py-2 hover:bg-h_gray_semi_light"
+										className="flex w-full flex-nowrap items-center gap-4 whitespace-nowrap px-4 py-2 hover:bg-h_gray_semi_light"
 										onClick={() => {
 											setIsTitleModify(true);
 											setIsTitleOptionOpen(false);
@@ -214,7 +243,7 @@ export default function PlanTimeHeader() {
 									</li>
 									<li
 										role="button"
-										className="flex items-center gap-4 px-4 py-2 hover:bg-h_gray_semi_light"
+										className="flex w-full items-center gap-4 px-4 py-2 hover:bg-h_gray_semi_light"
 										onClick={() => {
 											onDeletePlanPage();
 										}}

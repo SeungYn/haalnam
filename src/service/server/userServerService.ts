@@ -11,8 +11,12 @@ import {
 	USER_ELEMENTS_PER_PAGE,
 	USER_PAGES_PER_BLOCK,
 	findUserById,
+	updateDefaultPlanPageByUserIdANDPlanPageId,
 } from '@/repository/userRepository';
+import * as planService from '@/service/server/planServerService';
+import * as webPushService from '@/service/server/webPushServerService';
 import { Session } from 'next-auth';
+import { getPlanPageById } from './planServerService';
 
 export async function getUserList(
 	cursor?: number,
@@ -130,4 +134,20 @@ export async function getUsedTodayTotalTimesByUserId(userId: string) {
 	}
 
 	return (totalMs / (1000 * 60 * 60)).toFixed(1);
+}
+
+export async function updateUserDefaultPlanPage(
+	userId: string,
+	planPageId: number
+) {
+	const planPage = await getPlanPageById(planPageId, userId);
+	const res = await updateDefaultPlanPageByUserIdANDPlanPageId(
+		userId,
+		planPageId
+	);
+
+	const user = await planService.getUserDefaultPlansByUserId(userId);
+	webPushService.enrollWebPushToPushServer([user]);
+
+	return user;
 }

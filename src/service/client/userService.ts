@@ -33,4 +33,14 @@ export default class UserService {
 
 		return data;
 	}
+
+	async patchDefaultPlanPage(planPageId: number) {
+		const url = `/api/plan/page`;
+
+		const { data } = await this.axios.patch(url, {
+			planPageId: planPageId,
+		});
+
+		return data;
+	}
 }

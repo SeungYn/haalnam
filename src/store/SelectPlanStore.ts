@@ -11,6 +11,7 @@ interface SelectPlan {
 	setSelectedPlanId: (id: number) => void;
 }
 
+// 선택된 planPageId
 export const useSelectedPlanStore = create<SelectPlan>()((set) => {
 	return {
 		selectedPlan: null,
