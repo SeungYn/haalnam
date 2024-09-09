@@ -184,3 +184,18 @@ export async function findUserListAllWithPlansAndWebPushSebscriptionByUserId(
 		},
 	});
 }
+
+// 기본 디폴트 계획 페이지 바꾸는 함수
+export async function updateDefaultPlanPageByUserIdANDPlanPageId(
+	userId: string,
+	planPageId: number
+) {
+	return await dbClient.user.update({
+		where: {
+			id: userId,
+		},
+		data: {
+			default_main_plan_page_id: planPageId,
+		},
+	});
+}
