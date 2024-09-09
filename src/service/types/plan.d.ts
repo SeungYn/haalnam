@@ -12,6 +12,10 @@ export type DeletePlanPageRequest = {
 	id: number;
 };
 
+export type PatchDefaultPlanPageRequest = {
+	planPageId: number;
+};
+
 export type PostPlanRequest = {
 	startTime: { hours: number; minutes: number; seconds: number };
 	endTime: { hours: number; minutes: number; seconds: number };
@@ -29,3 +33,7 @@ export type PatchPlanRequest = {
 export type PlanPageResponse = PlanPage & {
 	plans: Plan[];
 };
+
+export namespace PlanDTO {
+	export type PatchDefaultPlanPageReq = PatchDefaultPlanPageRequest;
+}
