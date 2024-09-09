@@ -89,7 +89,24 @@ export default function PermissionPopup({
 		// 시스템으로 허용했을 경우도 포함
 		// 이경우 백그라운드에서 등록
 		if (Notification.permission === 'granted') {
-			subscribeUserToNotifications();
+			Notification.requestPermission().then((permission) => {
+				if (permission === 'granted') {
+					var subscribeOptions = {
+						userVisibleOnly: true,
+						applicationServerKey: process.env.NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY,
+					};
+					navigator.serviceWorker.ready
+						.then((registration) =>
+							registration.pushManager.subscribe(subscribeOptions)
+						)
+						.then((subscription) => {
+							return service.webPush.postCreateSubscription({
+								subscriptionInfo: JSON.stringify(subscription),
+								endpoint: subscription.endpoint,
+							});
+						});
+				}
+			});
 			return;
 		}
 
