@@ -53,6 +53,7 @@ export default function PermissionPopup({
 							})
 							.then((r) => {
 								toast.success('알림 등록 완료!');
+								localStorage.setItem('alarmPermission', '1');
 								setIsSubscribeLoading(false);
 								setIsMounting(false);
 							});
@@ -79,7 +80,10 @@ export default function PermissionPopup({
 	useEffect(() => {
 		if (!data) return;
 
-		if (data.user.is_webpush_privilege && Notification.permission === 'granted')
+		if (
+			localStorage.getItem('alarmPermission') &&
+			Notification.permission === 'granted'
+		)
 			return;
 		// 어느 기기에서 사용자가 알림을 허용을 했는데 다른 기기에서는 알림이 허용 안 돼었을 경우
 		// 시스템으로 허용했을 경우도 포함
