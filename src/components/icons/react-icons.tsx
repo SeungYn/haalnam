@@ -27,6 +27,7 @@ import {
 	IoAdd,
 	IoTimerOutline,
 	IoReaderOutline,
+	IoStarOutline,
 } from 'react-icons/io5';
 import { IconProp } from './types';
 import { LuDot } from 'react-icons/lu';
@@ -322,6 +323,15 @@ export function IoReaderOutlineIcon({
 }: Prop) {
 	return (
 		<IoReaderOutline
+			style={{ fontSize: getIconSize(size), ...style }}
+			{...rest}
+		/>
+	);
+}
+
+export function IoStarOutlineIcon({ size = '', style, color, ...rest }: Prop) {
+	return (
+		<IoStarOutline
 			style={{ fontSize: getIconSize(size), ...style }}
 			{...rest}
 		/>
