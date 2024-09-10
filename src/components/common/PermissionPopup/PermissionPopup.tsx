@@ -35,7 +35,7 @@ export default function PermissionPopup({
 		// 사용자가 알림을 해 놓아도 기기가 바뀌면 다시 등록을 해야함
 		// 사용자가 시스템에서 알림을 거부에서 허용으로 바꿨을 때
 		setIsSubscribeLoading(true);
-		Notification.requestPermission().then((permission) => {
+		window.Notification?.requestPermission().then((permission) => {
 			if (permission === 'granted') {
 				var subscribeOptions = {
 					userVisibleOnly: true,
@@ -122,7 +122,7 @@ export default function PermissionPopup({
 
 	return createPortal(
 		<section
-			className={`fixed top-0 z-[99999999] flex h-screen w-full flex-col justify-end backdrop-blur-sm md:absolute ${interFont.className}`}
+			className={`md:h-dvh fixed top-0 z-[99999999] flex h-screen w-full flex-col justify-end backdrop-blur-sm md:absolute ${interFont.className}`}
 		>
 			<form
 				onSubmit={(e) => e.preventDefault()}
@@ -133,7 +133,7 @@ export default function PermissionPopup({
 					<p className="break-keep text-xl">{body}</p>
 					<p>{additionalDescription}</p>
 				</div>
-				{Notification.permission === 'default' ? (
+				{window.Notification?.permission === 'default' ? (
 					<Button
 						className="my-4 w-full py-3 text-2xl"
 						isLoading={isSubscribeLoading}

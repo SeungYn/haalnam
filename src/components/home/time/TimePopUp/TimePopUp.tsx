@@ -55,7 +55,7 @@ export default function TimePopUp({
 	return createPortal(
 		<section
 			id="popup-container"
-			className={`fixed top-0 z-[999] h-full w-full overflow-auto bg-h_black px-4 transition-all duration-300 md:absolute md:h-screen md:px-0 ${isMounting ? 'translate-y-0' : 'translate-y-full'}`}
+			className={`md:h-dvh fixed top-0 z-[999] h-full w-full overflow-auto bg-h_black px-4 transition-all duration-300 md:absolute md:px-0 ${isMounting ? 'translate-y-0' : 'translate-y-full'}`}
 		>
 			{children}
 		</section>,

@@ -22,7 +22,6 @@ export default function PWAInstallPrompt() {
 		window.addEventListener('beforeinstallprompt', (event) => {
 			event.preventDefault();
 		});
-
 		window.addEventListener('appinstalled', (event) => {
 			localStorage.setItem('PwaInstalled', '1');
 		});
@@ -46,9 +45,9 @@ export default function PWAInstallPrompt() {
 		const userAgent = navigator.userAgent.toLowerCase();
 
 		// 브라우저가 어떤 브라우저인지 확인
-
 		// 만약 지정된 시간이 지나지 않으면 종료, 즉 아직 쿠키가 존재하는 경우
 		if (Cookie.getCookie('PwaInstalled')) return;
+
 		// 사파리일 경우
 		if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
 			if (isMobile) {
@@ -62,7 +61,6 @@ export default function PWAInstallPrompt() {
 			}
 		} else {
 			// 크롬
-
 			if (isMobile) {
 				setInstallCb(() => {
 					return () => router.push('/pwa#cand');
@@ -94,9 +92,7 @@ export default function PWAInstallPrompt() {
 			},
 			60 * 2 * 1000
 		);
-
 		// 웹인데 pc인경우 하루마다 설치하라 해야함.
-
 		// eslint-disable-next-line
 	}, []);
 
@@ -105,19 +101,17 @@ export default function PWAInstallPrompt() {
 		if (isOpen) {
 			document.querySelector('main')!.style.overflowY = 'hidden';
 		}
-
 		return () => {
 			document.querySelector('main')!.style.overflowY = 'auto';
 		};
-
 		// eslint-disable-next-line
 	}, [isOpen]);
 
 	if (!isOpen) return null;
-	//${isMounting ? 'translate-y-0' : 'translate-y-full'}
+
 	return createPortal(
 		<section
-			className={`fixed top-0 z-[99999999] flex h-full w-full flex-col justify-end backdrop-blur-sm md:absolute md:h-screen ${interFont.className} overflow-hidden`}
+			className={`md:h-dvh fixed top-0 z-[99999999] flex h-full w-full flex-col justify-end backdrop-blur-sm md:absolute ${interFont.className} overflow-hidden`}
 		>
 			<form
 				onSubmit={(e) => e.preventDefault()}

@@ -17,6 +17,7 @@ import BasicLoading from '@/components/common/loading/BasicLoading';
 import ServiceWorkerRegisterHoc from '@/hoc/ServiceWorkerRegisterHoc';
 
 import dynamic from 'next/dynamic';
+
 const PWAInstallPrompt = dynamic(
 	() => import('@/components/common/pwa/PWAInstallPrompt'),
 	{ ssr: false }
@@ -50,7 +51,6 @@ export default function RootLayout({
 					<ServiceWorkerRegisterHoc>
 						<TimeContextProvider>
 							{/* <CheckUnloadHOC> */}
-
 							<body>
 								<PWAInstallPrompt />
 								<BasicLoading />
