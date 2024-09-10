@@ -1,6 +1,6 @@
 {
 	"name": "haalnam",
-	"version": "1.345.0",
+	"version": "1.345.1",
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
@@ -32,7 +32,7 @@
 		"react-dom": "^18.2.0",
 		"react-icons": "^4.10.1",
 		"react-toastify": "^10.0.5",
-		"tailwindcss": "3.3.3",
+		"tailwindcss": "^3.4.10",
 		"typescript": "5.1.6",
 		"web-push": "^3.6.7",
 		"zustand": "^4.5.4"
