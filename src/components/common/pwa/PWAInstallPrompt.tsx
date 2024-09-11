@@ -111,7 +111,7 @@ export default function PWAInstallPrompt() {
 
 	return createPortal(
 		<section
-			className={`md:h-dvh fixed top-0 z-[99999999] flex h-full w-full flex-col justify-end backdrop-blur-sm md:absolute ${interFont.className} overflow-hidden`}
+			className={`fixed top-0 z-[99999999] flex h-full w-full flex-col justify-end backdrop-blur-sm md:absolute md:h-dvh ${interFont.className} overflow-hidden`}
 		>
 			<form
 				onSubmit={(e) => e.preventDefault()}

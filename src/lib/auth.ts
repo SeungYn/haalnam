@@ -8,6 +8,7 @@ import { generateNickname } from './user';
 import client from './db';
 
 export const nextOptions: NextAuthConfig = {
+	pages: { error: '/auth-error' },
 	// 타입 Adapter를 명시해 줘야함
 	adapter: PrismaAdapter(client) as Adapter,
 	providers: [
@@ -108,7 +109,7 @@ export const nextOptions: NextAuthConfig = {
 };
 
 function cookiesConfig(): Pick<NextAuthConfig, 'cookies'> {
-	if (process.env.NODE_ENV === 'development')
+	if (process.env.NODE_ENV !== 'development')
 		return {
 			cookies: {
 				pkceCodeVerifier: {
