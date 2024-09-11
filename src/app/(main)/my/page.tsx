@@ -26,8 +26,7 @@ export default function MyPage() {
 				className="mx-auto w-3/4 py-3 md:py-2 md:text-xl"
 				accent
 				onClick={() => {
-					signOut();
-					router.push('/	');
+					signOut({ callbackUrl: '/' });
 				}}
 			>
 				로그아웃

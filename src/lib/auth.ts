@@ -8,7 +8,7 @@ import { generateNickname } from './user';
 import client from './db';
 
 export const nextOptions: NextAuthConfig = {
-	pages: { error: '/auth-error' },
+	pages: { error: '/error' },
 	// 타입 Adapter를 명시해 줘야함
 	adapter: PrismaAdapter(client) as Adapter,
 	providers: [
