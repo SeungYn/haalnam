@@ -85,6 +85,7 @@ export default function PermissionPopup({
 			Notification.permission === 'granted'
 		)
 			return;
+
 		// 어느 기기에서 사용자가 알림을 허용을 했는데 다른 기기에서는 알림이 허용 안 돼었을 경우
 		// 시스템으로 허용했을 경우도 포함
 		// 이경우 백그라운드에서 등록
@@ -122,7 +123,7 @@ export default function PermissionPopup({
 
 	return createPortal(
 		<section
-			className={`md:h-dvh fixed top-0 z-[99999999] flex h-screen w-full flex-col justify-end backdrop-blur-sm md:absolute ${interFont.className}`}
+			className={`fixed top-0 z-[99999999] flex h-screen w-full flex-col justify-end backdrop-blur-sm md:absolute md:h-dvh ${interFont.className}`}
 		>
 			<form
 				onSubmit={(e) => e.preventDefault()}
@@ -133,7 +134,7 @@ export default function PermissionPopup({
 					<p className="break-keep text-xl">{body}</p>
 					<p>{additionalDescription}</p>
 				</div>
-				{window.Notification?.permission === 'default' ? (
+				{window.Notification?.permission !== 'denied' ? (
 					<Button
 						className="my-4 w-full py-3 text-2xl"
 						isLoading={isSubscribeLoading}

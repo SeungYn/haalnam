@@ -17,12 +17,8 @@ export async function erollPushSubscription({
 			is_webpush_privilege: true,
 		},
 	});
-	const subscription = await client.webPushSubscription.upsert({
-		where: {
-			endpoint,
-		},
-		update: {},
-		create: {
+	const subscription = await client.webPushSubscription.create({
+		data: {
 			subscription_info: subscriptionInfo,
 			user_id,
 			endpoint,
