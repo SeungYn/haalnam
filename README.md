@@ -99,3 +99,7 @@
 
 - pwa 설치 설명 페이지 추가
 - 알림 설정 설명 페이지 추가
+
+### 1.346.1v 24.9.19
+
+- 유저 이미지 저장 이슈 수정 [issue #76] (https://github.com/SeungYn/haalnam/issues/76)
