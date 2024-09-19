@@ -5,8 +5,12 @@ import { ExceptionRes, handleError } from '@/utils/exception';
 import { User } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import * as planServerService from '@/service/server/planServerService';
-import { makeUTCStringDate } from '@/utils/date';
 
+/**
+ * 계획 생성 api
+ * @param request
+ * @returns
+ */
 export async function POST(request: NextRequest) {
 	const session = await auth();
 

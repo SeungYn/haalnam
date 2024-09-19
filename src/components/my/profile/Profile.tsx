@@ -25,6 +25,7 @@ export default function Profile({
 				<div className="relative h-[68px] w-[68px] overflow-hidden rounded-full md:h-[120px] md:w-[120px]">
 					<Image
 						fill
+						sizes="160px"
 						src={image || '/assets/user/userimage.jpeg'}
 						alt="프로필 이미지"
 					/>
