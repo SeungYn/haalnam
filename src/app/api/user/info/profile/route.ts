@@ -7,6 +7,9 @@ import { escapeHTML } from '@/utils/security';
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import { Readable } from 'stream';
+import sharp from 'sharp';
+import os from 'os';
+import { whereHost } from '@/utils/util';
 
 export async function POST(req: NextRequest) {
 	const session = await auth();
@@ -39,15 +42,18 @@ export async function POST(req: NextRequest) {
 		// );
 
 		const extenison = imageFile.name.split('.')[1];
-		filename = `${Date.now()}.${extenison}`;
+		filename = `${Date.now()}`;
 		try {
-			const stream = await imageFile.stream();
-			const fileStream = fs.createWriteStream(
-				`${process.cwd()}/public/assets/user/personal/${filename}`
-			);
-			const readableStream = await webReadableStreamToNodeReadable(stream);
-			readableStream.pipe(fileStream);
+			// const stream = await imageFile.stream();
+			// const fileStream = fs.createWriteStream(`~/image/user/${filename}`);
+			// const readableStream = await webReadableStreamToNodeReadable(stream);
+			// readableStream.pipe(fileStream);
+
+			await sharp(await imageFile.arrayBuffer())
+				.jpeg({ quality: 80 })
+				.toFile(`${os.homedir()}/image/user/${filename}.jpeg`);
 		} catch (err) {
+			console.log(err);
 			return NextResponse.json(
 				{ message: '에러가 발생했습니다.' },
 				{ status: 500 }
@@ -55,7 +61,10 @@ export async function POST(req: NextRequest) {
 		}
 	}
 
-	const imageUrl = filename === '' ? null : `/assets/user/personal/${filename}`;
+	const imageUrl =
+		filename === ''
+			? null
+			: `${whereHost()}/api/user/info/profile?name=${filename}`;
 
 	const profile = await postUserProfileById({
 		id,
@@ -66,6 +75,26 @@ export async function POST(req: NextRequest) {
 	});
 
 	return NextResponse.json(profile, { status: 200 });
+}
+
+export async function GET(req: NextRequest) {
+	const searchParams = req.nextUrl.searchParams;
+	const imageName = searchParams.get('name');
+
+	try {
+		const imageFile = fs.readFileSync(
+			`${os.homedir()}/image/user/${imageName}.jpeg`
+		);
+
+		return new Response(imageFile, {
+			status: 200,
+			headers: {
+				'Content-Type': 'image/jpeg',
+			},
+		});
+	} catch (e) {
+		return NextResponse.json({ message: 'Image not found' }, { status: 404 });
+	}
 }
 
 async function webReadableStreamToNodeReadable(webStream: ReadableStream) {
