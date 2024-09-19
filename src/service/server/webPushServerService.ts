@@ -8,6 +8,14 @@ export async function erollPushSubscription({
 	user_id,
 	endpoint,
 }: WebPushDTO.PostCreateSubscriptionReq) {
+	const subScription = await client.webPushSubscription.findUnique({
+		where: {
+			endpoint,
+		},
+	});
+	// 기존 구독이 존재하면 Null 반환
+	if (subScription) return null;
+
 	// 구독이 들어오면 유저 알림권한을 true로 변경
 	await client.user.update({
 		where: {

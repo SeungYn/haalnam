@@ -39,6 +39,8 @@ export async function POST(request: NextRequest) {
 			endpoint: reqData.endpoint,
 		});
 
+		if (!res) return NextResponse.json(res, { status: 204 });
+
 		return NextResponse.json(res, { status: 201 });
 	} catch (e) {
 		return handleError(e);
