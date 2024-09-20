@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 		if (!res)
 			return NextResponse.json(
 				{ message: '이미 구독중인 경로입니다.' },
-				{ status: 204 }
+				{ status: 200 }
 			);
 
 		return NextResponse.json(res, { status: 201 });
