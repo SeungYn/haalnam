@@ -39,7 +39,11 @@ export async function POST(request: NextRequest) {
 			endpoint: reqData.endpoint,
 		});
 
-		if (!res) return NextResponse.json(res, { status: 204 });
+		if (!res)
+			return NextResponse.json(
+				{ message: '이미 구독중인 경로입니다.' },
+				{ status: 204 }
+			);
 
 		return NextResponse.json(res, { status: 201 });
 	} catch (e) {
