@@ -258,7 +258,7 @@ export function usePatchUptateTime({ closePopup }: { closePopup: () => void }) {
 				...QUERY_KEYS.getPersonalTimesByDate,
 				req.date.toDateString(),
 			]);
-			toast(<InfoToast msg="계획이 수정됐습니다" />);
+			toast(<InfoToast msg="타이머가 수정됐습니다" />);
 		},
 		onError: () => {
 			toast.error('에러가 발생했습니다. 다시 시도해주세요');

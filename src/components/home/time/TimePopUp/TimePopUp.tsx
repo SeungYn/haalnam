@@ -38,9 +38,7 @@ export default function TimePopUp({
 		window.addEventListener('popstate', backEvent);
 		return () => {
 			if (!isFire) {
-				// 마이 페이지에서만 back 호출
-				const pathname = location.pathname;
-				if (pathname === '/my') history.back();
+				history.back();
 			}
 			window.removeEventListener('popstate', backEvent);
 			document.querySelector('main')!.style.overflowY = 'auto';
@@ -55,7 +53,7 @@ export default function TimePopUp({
 	return createPortal(
 		<section
 			id="popup-container"
-			className={`md:h-dvh fixed top-0 z-[999] h-full w-full overflow-auto bg-h_black px-4 transition-all duration-300 md:absolute md:px-0 ${isMounting ? 'translate-y-0' : 'translate-y-full'}`}
+			className={`fixed top-0 z-[999] h-full w-full overflow-auto bg-h_black px-4 transition-all duration-300 md:absolute md:h-dvh md:px-0 ${isMounting ? 'translate-y-0' : 'translate-y-full'}`}
 		>
 			{children}
 		</section>,

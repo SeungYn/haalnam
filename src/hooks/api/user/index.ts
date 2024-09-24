@@ -26,7 +26,7 @@ export function usePostUserProfile(successCb: () => void, failCb: () => void) {
 			successCb();
 		},
 		onError: () => {
-			toast.error('프로필이 실패했습니다. 다시 시도해주세요');
+			toast.error('프로필 변경이 실패했습니다. 다시 시도해주세요');
 			failCb();
 		},
 	});
