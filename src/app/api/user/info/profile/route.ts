@@ -11,6 +11,8 @@ import sharp from 'sharp';
 import os from 'os';
 import { whereHost } from '@/utils/util';
 
+const MAX_IMAGE_SIZE = 500;
+
 export async function POST(req: NextRequest) {
 	const session = await auth();
 	let user;
@@ -43,13 +45,25 @@ export async function POST(req: NextRequest) {
 
 		const extenison = imageFile.name.split('.')[1];
 		filename = `${Date.now()}`;
+		console.log('이미지 파일 사이즈', imageFile.size);
 		try {
-			// const stream = await imageFile.stream();
-			// const fileStream = fs.createWriteStream(`~/image/user/${filename}`);
-			// const readableStream = await webReadableStreamToNodeReadable(stream);
-			// readableStream.pipe(fileStream);
-
-			await sharp(await imageFile.arrayBuffer())
+			const imageFileBuffer = await imageFile.arrayBuffer();
+			const { width, height } = await sharp(imageFileBuffer).metadata();
+			// 이미지의 크기가 500이상이면 리사이즈
+			let resizeOptions = {};
+			if (
+				(width && width > MAX_IMAGE_SIZE) ||
+				(height && height > MAX_IMAGE_SIZE)
+			) {
+				resizeOptions = {
+					width: Math.min(MAX_IMAGE_SIZE, width!),
+					height: Math.min(MAX_IMAGE_SIZE, height!),
+					fit: sharp.fit.inside, // 비율을 유지하며 리사이즈
+					withoutEnlargement: true, // 크기를 늘리지 않음
+				};
+			}
+			await sharp(imageFileBuffer)
+				.resize(resizeOptions)
 				.jpeg({ quality: 80 })
 				.toFile(`${os.homedir()}/image/user/${filename}.jpeg`);
 		} catch (err) {
