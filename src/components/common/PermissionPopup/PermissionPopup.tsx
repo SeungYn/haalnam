@@ -78,7 +78,7 @@ export default function PermissionPopup({
 	// 계획 페이지 오면 알림 권한 확인
 
 	useEffect(() => {
-		if (!data) return;
+		if (!data || window?.Notification === undefined) return;
 
 		if (
 			localStorage.getItem('alarmPermission') &&
