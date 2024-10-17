@@ -34,33 +34,37 @@ export default function PermissionPopup({
 	const subscribeUserToNotifications = () => {
 		// 사용자가 알림을 해 놓아도 기기가 바뀌면 다시 등록을 해야함
 		// 사용자가 시스템에서 알림을 거부에서 허용으로 바꿨을 때
-		setIsSubscribeLoading(true);
-		window.Notification?.requestPermission().then((permission) => {
-			if (permission === 'granted') {
-				var subscribeOptions = {
-					userVisibleOnly: true,
-					applicationServerKey: process.env.NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY,
-				};
-				navigator.serviceWorker.ready
-					.then((registration) =>
-						registration.pushManager.subscribe(subscribeOptions)
-					)
-					.then((subscription) => {
-						return service.webPush
-							.postCreateSubscription({
-								subscriptionInfo: JSON.stringify(subscription),
-								endpoint: subscription.endpoint,
-							})
-							.then((r) => {
-								toast.success('알림 등록 완료!');
-								localStorage.setItem('alarmPermission', '1');
-								setIsSubscribeLoading(false);
-								setIsMounting(false);
-							});
-					})
-					.then(() => console.log('완완료'));
-			}
-		});
+		if (window.Notification) {
+			setIsSubscribeLoading(true);
+			window.Notification?.requestPermission().then((permission) => {
+				if (permission === 'granted') {
+					var subscribeOptions = {
+						userVisibleOnly: true,
+						applicationServerKey: process.env.NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY,
+					};
+					navigator.serviceWorker.ready
+						.then((registration) =>
+							registration.pushManager.subscribe(subscribeOptions)
+						)
+						.then((subscription) => {
+							return service.webPush
+								.postCreateSubscription({
+									subscriptionInfo: JSON.stringify(subscription),
+									endpoint: subscription.endpoint,
+								})
+								.then((r) => {
+									toast.success('알림 등록 완료!');
+									localStorage.setItem('alarmPermission', '1');
+									setIsSubscribeLoading(false);
+									setIsMounting(false);
+								});
+						})
+						.then(() => console.log('완완료'));
+				}
+			});
+		} else {
+			window.alert('알림이 제공되지 않는 기기입니다.');
+		}
 	};
 
 	useEffect(() => {
