@@ -210,7 +210,7 @@ export default function TimeChart({ times, mode = 'Normal' }: Props) {
 	}, [canvasRef, chartWidth, times]);
 
 	return (
-		<div className="relative">
+		<div className="relative my-10">
 			{/* 눈금 별 시간 표시 */}
 			{mode === 'Normal' &&
 				makeChartGradutionTimeInfo((chartWidth + 45) / 2).map((v) => {
