@@ -12,22 +12,7 @@ export default function PopupStandard() {
 
 	useEffect(() => {
 		const main = document.querySelector('main')!;
-		//console.log(main.getBoundingClientRect());
 
-		let timeoutId: NodeJS.Timeout | undefined;
-		const resizeCB = () => {
-			if (timeoutId) clearTimeout(timeoutId);
-			timeoutId = setTimeout(() => {
-				const { left } = main.getBoundingClientRect();
-				const mainClientWidth = main.clientWidth;
-
-				if (ref.current) {
-					ref.current.style.left = `${left}px`;
-					ref.current.style.width = `${mainClientWidth}px`;
-				}
-			}, 10);
-		};
-		// resizeCB();
 		const resizeObserver = new ResizeObserver((entries) => {
 			for (let entry of entries) {
 				const { inlineSize } = entry.borderBoxSize[0];
@@ -40,10 +25,8 @@ export default function PopupStandard() {
 			}
 		});
 		resizeObserver.observe(main);
-		// window.addEventListener('resize', resizeCB);
 
 		return () => {
-			// window.removeEventListener('resize', resizeCB);
 			resizeObserver.unobserve(main);
 		};
 	}, []);
