@@ -50,3 +50,15 @@ html {
 		font-size: 100%;
 	}
 }
+
+@layer components {
+	.d3-tooltip {
+		@apply text-4xl;
+	}
+
+	@screen md {
+		.d3-tooltip {
+			@apply text-2xl;
+		}
+	}
+}
