@@ -1,10 +1,19 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+	useMutation,
+	useQueries,
+	useQuery,
+	useQueryClient,
+} from '@tanstack/react-query';
 import { QUERY_KEYS } from './queryKey';
 import service from '@/service/client';
 import { useSession } from 'next-auth/react';
-import { StartTimerRequest, StopTimerRequest } from '@/service/types/time';
+import {
+	GetPersonalTodayTimeResponse,
+	StartTimerRequest,
+	StopTimerRequest,
+} from '@/service/types/time';
 import { TimeActionContextType } from '@/context/TimeContext';
 import { toast } from 'react-toastify';
 import { InfoToast, useInfoToast } from '@/hooks/toast';
@@ -13,6 +22,7 @@ import { isAxiosError } from 'axios';
 import { ExceptionCode, ExceptionRes } from '@/utils/exception';
 import { formatBroswerTime } from '@/utils/date';
 import { getAngleFromCoordinates, radianToTime } from '@/utils/chart';
+import { Suspense } from 'react';
 
 export function useGetPersonalTodayTime(isSuspense: boolean = false) {
 	const { data: session } = useSession();
@@ -270,3 +280,30 @@ export function usePatchUptateTime({ closePopup }: { closePopup: () => void }) {
 
 	return mutation;
 }
+
+/**
+ * 최근 1주일의 타이머 데이터를 가져오는 hook
+ * @param date
+ */
+export const useAWeekTimes = (date: Date) => {
+	const { data: session } = useSession();
+
+	const days: Date[] = [];
+	for (let i = 0; i < 7; i++) {
+		const d = new Date(date);
+		d.setDate(d.getDate() - 7 + i);
+		days.push(d);
+	}
+
+	return useQueries({
+		queries: days.map((d) => ({
+			queryKey: [...QUERY_KEYS.getPersonalTimesByDate, d.toDateString()],
+			queryFn: () => service.time.getTimesByDate(d) as Promise<Time[]>,
+			select: (res: Time[]) => {
+				return { data: res, date: d };
+			},
+			suspense: true,
+			enabled: !!session,
+		})),
+	});
+};
