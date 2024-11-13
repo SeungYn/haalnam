@@ -48,9 +48,12 @@ export const nextOptions: NextAuthConfig = {
 		async session({ session, token, user: test }) {
 			// Send properties to the client, like an access_token and user id from a provider.
 			const user = session?.user;
-			const existingUser = await findUserById(user.id);
+			// console.log({ session, token });
+			// console.log('user id', user.id);
+
+			// console.log({ existingUser });
 			//console.log(existingUser?.id, session);
-			if (!existingUser) return session;
+			if (!user) return session;
 
 			if (user) {
 				session.user = {
@@ -58,6 +61,8 @@ export const nextOptions: NextAuthConfig = {
 					id: token.sub!,
 				};
 			}
+
+			const existingUser = await findUserById(session.user.id);
 			if (existingUser) {
 				session.user = {
 					...session.user,
@@ -73,7 +78,7 @@ export const nextOptions: NextAuthConfig = {
 			//console.log('jwt', context);
 			//console.log(context, 'console.log context');
 			//console.log(context.user, 'context user');
-			//console.log(context, 'token');
+			// console.log(context, 'token');
 			return context.token;
 		},
 	},
@@ -84,27 +89,27 @@ export const nextOptions: NextAuthConfig = {
 	trustHost: true,
 
 	// InvalidCheck: PKCE code_verifier cookie was missing 에러 제거를 위한 옵션
-	//cookies: {
-	// csrfToken: {
-	// 	name: 'next-auth.csrf-token',
-	// 	options: {
-	// 		httpOnly: true,
-	// 		sameSite: 'none',
-	// 		path: '/',
-	// 		secure: true,
+	// cookies: {
+	// 	csrfToken: {
+	// 		name: 'next-auth.csrf-token',
+	// 		options: {
+	// 			httpOnly: true,
+	// 			sameSite: 'none',
+	// 			path: '/',
+	// 			secure: true,
+	// 		},
+	// 	},
+	// 	//로컬 호스트에서 pkce를 지정하면 사파리에서 에러가 발생함
+	// 	pkceCodeVerifier: {
+	// 		name: 'next-auth.pkce.code_verifier',
+	// 		options: {
+	// 			httpOnly: true,
+	// 			sameSite: 'none',
+	// 			path: '/',
+	// 			secure: true,
+	// 		},
 	// 	},
 	// },
-	// 로컬 호스트에서 pkce를 지정하면 사파리에서 에러가 발생함
-	// pkceCodeVerifier: {
-	// 	name: 'next-auth.pkce.code_verifier',
-	// 	options: {
-	// 		httpOnly: true,
-	// 		sameSite: 'none',
-	// 		path: '/',
-	// 		secure: true,
-	// 	},
-	// },
-	//},
 	...cookiesConfig(),
 };
 
